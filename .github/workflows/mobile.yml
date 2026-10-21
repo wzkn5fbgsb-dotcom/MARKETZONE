@@ -86,7 +86,15 @@ jobs:
       - run: npx cap sync ios
       - name: Compilar para el simulador (sin firma)
         run: |
-          set -o pipefail
-          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+          if [ -d ios/App/App.xcworkspace ]; then TARGET="-workspace ios/App/App.xcworkspace"; else TARGET="-project ios/App/App.xcodeproj"; fi
+          set +e
+          xcodebuild $TARGET -scheme App -configuration Release \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO build | tail -n 30
+            CODE_SIGNING_ALLOWED=NO build > build.log 2>&1
+          code=$?
+          set -e
+          tail -n 40 build.log
+          if [ $code -ne 0 ]; then
+            grep -E "error:|fatal error" build.log | sort -u | head -n 15 | while IFS= read -r l; do echo "::error::${l:0:400}"; done
+            exit $code
+          fi
