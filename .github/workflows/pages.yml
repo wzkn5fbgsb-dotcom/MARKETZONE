@@ -1,0 +1,45 @@
+# Publica MARKETZONE en GitHub Pages en cada push a main.
+# Requisito único: Settings → Pages → Source: "GitHub Actions".
+name: Publicar web
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      # Valores PÚBLICOS (la seguridad la aplican RLS y las funciones del servidor).
+      # Nunca pongas aquí la service_role / secret key.
+      MZ_SUPABASE_URL: ${{ vars.MZ_SUPABASE_URL || 'https://jjhcbsqsnoohyxjnnhjc.supabase.co' }}
+      MZ_SUPABASE_ANON_KEY: ${{ vars.MZ_SUPABASE_ANON_KEY || 'sb_publishable_cAc4HlpqtwGIaMXLzhtINw_m65MLixk' }}
+      MZ_MODE: supabase
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit -p .
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
