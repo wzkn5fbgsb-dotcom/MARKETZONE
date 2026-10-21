@@ -1,5 +1,6 @@
 // Iconos lineales propios (24×24), sin dependencias externas.
 import type { SVGProps } from "react";
+import { t } from "../i18n";
 
 const P: Record<string, string> = {
   home: "M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z",
@@ -63,7 +64,7 @@ export type IconName = keyof typeof P;
 export function Icon({ name, size = 20, stroke = 1.8, ...rest }: { name: IconName; size?: number; stroke?: number } & Omit<SVGProps<SVGSVGElement>, "stroke" | "size" | "ref">) {
   const fillable = name === "heart" || name === "star";
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke}
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={"currentColor"} strokeWidth={stroke}
       strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...rest}>
       <path d={P[name]} fill={fillable && rest.fill ? rest.fill : "none"} />
     </svg>

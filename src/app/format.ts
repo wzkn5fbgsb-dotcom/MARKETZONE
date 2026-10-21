@@ -1,5 +1,6 @@
 // Formatos y etiquetas en español.
 import type { CampaignKind, CampaignStatus, Condition, OfferStatus, OrderStatus, SellerOrderStatus } from "../api/types";
+import { locale, t } from "../i18n";
 
 export function money(cents: number | null | undefined, opts: { always2?: boolean } = {}) {
   if (cents === null || cents === undefined) return "—";
@@ -16,43 +17,43 @@ export function parseMoney(input: string): number | null {
 }
 
 export const CONDITIONS: Record<Condition, { code: string; label: string; hint: string }> = {
-  new_with_tags: { code: "Con etiqueta", label: "Nuevo con etiquetas", hint: "Sin usar, con etiquetas originales" },
-  new_without_tags: { code: "Nuevo", label: "Nuevo sin etiquetas", hint: "Sin usar, sin etiquetas" },
-  used_excellent: { code: "Como nuevo", label: "Usado, como nuevo", hint: "Uso mínimo, sin defectos visibles" },
-  used_good: { code: "Usado", label: "Usado, buen estado", hint: "Señales normales de uso" },
-  used_flawed: { code: "Con detalles", label: "Usado, con detalles", hint: "Tiene defectos que se describen en la publicación" },
+  new_with_tags: { code: t("Con etiqueta"), label: t("Nuevo con etiquetas"), hint: t("Sin usar, con etiquetas originales") },
+  new_without_tags: { code: t("Nuevo"), label: t("Nuevo sin etiquetas"), hint: t("Sin usar, sin etiquetas") },
+  used_excellent: { code: t("Como nuevo"), label: t("Usado, como nuevo"), hint: t("Uso mínimo, sin defectos visibles") },
+  used_good: { code: t("Usado"), label: t("Usado, buen estado"), hint: t("Señales normales de uso") },
+  used_flawed: { code: t("Con detalles"), label: t("Usado, con detalles"), hint: t("Tiene defectos que se describen en la publicación") },
 };
 
 export const ORDER_STATUS: Record<OrderStatus, string> = {
-  pending_payment: "Pendiente de pago", paid: "Pagado", cancelled: "Cancelado", expired: "Vencido",
-  refunded: "Reembolsado", partially_refunded: "Reembolso parcial",
+  pending_payment: t("Pendiente de pago"), paid: t("Pagado"), cancelled: t("Cancelado"), expired: t("Vencido"),
+  refunded: t("Reembolsado"), partially_refunded: t("Reembolso parcial"),
 };
 
 export const FULFILLMENT_STATUS: Record<SellerOrderStatus, string> = {
-  pending_payment: "Pendiente de pago", paid: "Pagado", preparing: "Preparando", shipped: "Enviado",
-  delivered: "Entregado", cancelled: "Cancelado", refunded: "Reembolsado",
+  pending_payment: t("Pendiente de pago"), paid: t("Pagado"), preparing: t("Preparando"), shipped: t("Enviado"),
+  delivered: t("Entregado"), cancelled: t("Cancelado"), refunded: t("Reembolsado"),
 };
 
 export const OFFER_STATUS: Record<OfferStatus, string> = {
-  pending: "Pendiente", countered: "Contraoferta recibida", accepted: "Aceptada", declined: "Rechazada",
-  expired: "Expirada", cancelled: "Cancelada", completed: "Trato hecho",
+  pending: t("Pendiente"), countered: t("Contraoferta recibida"), accepted: t("Aceptada"), declined: t("Rechazada"),
+  expired: t("Expirada"), cancelled: t("Cancelada"), completed: t("Trato hecho"),
 };
 
 export const CAMPAIGN_STATUS: Record<CampaignStatus, string> = {
-  draft: "Borrador", pending_review: "Pendiente de revisión", pending_payment: "Pendiente de pago", active: "Activa",
-  paused: "Pausada", finished: "Finalizada", rejected: "Rechazada",
+  draft: t("Borrador"), pending_review: t("Pendiente de revisión"), pending_payment: t("Pendiente de pago"), active: t("Activa"),
+  paused: t("Pausada"), finished: t("Finalizada"), rejected: t("Rechazada"),
 };
 
 export const CAMPAIGN_KIND: Record<CampaignKind, { label: string; hint: string }> = {
-  promoted_product: { label: "Un artículo promocionado", hint: "Ese artículo aparece en la sección Patrocinado del inicio." },
-  home_store: { label: "Toda tu tienda en portada", hint: "Tu tienda completa (tu clóset) o tu negocio aparece destacado en el inicio para atraer más visitas a todos tus artículos." },
-  category_spotlight: { label: "Destacado en categoría", hint: "Tu producto aparece primero al explorar su categoría." },
-  temporary_promo: { label: "Promoción temporal", hint: "Un anuncio de tu negocio durante unos días." },
-  featured_offer: { label: "Oferta destacada", hint: "Destaca un producto con un mensaje de oferta (sin inventar descuentos)." },
+  promoted_product: { label: t("Un artículo promocionado"), hint: t("Ese artículo aparece en la sección Patrocinado del inicio.") },
+  home_store: { label: t("Toda tu tienda en portada"), hint: t("Tu tienda completa (tu clóset) o tu negocio aparece destacado en el inicio para atraer más visitas a todos tus artículos.") },
+  category_spotlight: { label: t("Destacado en categoría"), hint: t("Tu producto aparece primero al explorar su categoría.") },
+  temporary_promo: { label: t("Promoción temporal"), hint: t("Un anuncio de tu negocio durante unos días.") },
+  featured_offer: { label: t("Oferta destacada"), hint: t("Destaca un producto con un mensaje de oferta (sin inventar descuentos).") },
 };
 
 export const BUSINESS_CATEGORIES: Record<string, string> = {
-  moda: "Moda", sneakers: "Sneakers", belleza: "Belleza", accesorios: "Accesorios", reventa: "Reventa", servicios: "Servicios", otro: "Otro",
+  moda: t("Moda"), sneakers: t("Sneakers"), belleza: t("Belleza"), accesorios: t("Accesorios"), reventa: t("Reventa"), servicios: t("Servicios"), otro: t("Otro"),
 };
 
 export function tone(status: string): "ok" | "warn" | "bad" | "info" | "muted" | "accent" {
@@ -63,24 +64,24 @@ export function tone(status: string): "ok" | "warn" | "bad" | "info" | "muted" |
   return "muted";
 }
 
-const rtf = typeof Intl !== "undefined" && "RelativeTimeFormat" in Intl ? new Intl.RelativeTimeFormat("es", { numeric: "auto" }) : null;
+const rtf = typeof Intl !== "undefined" && "RelativeTimeFormat" in Intl ? new Intl.RelativeTimeFormat(locale, { numeric: "auto" }) : null;
 export function ago(iso: string | null | undefined) {
   if (!iso) return "";
   const diff = (new Date(iso).getTime() - Date.now()) / 1000;
   const abs = Math.abs(diff);
   const [v, u]: [number, Intl.RelativeTimeFormatUnit] = abs < 60 ? [diff, "second"] : abs < 3600 ? [diff / 60, "minute"]
     : abs < 86400 ? [diff / 3600, "hour"] : abs < 2592000 ? [diff / 86400, "day"] : [diff / 2592000, "month"];
-  return rtf ? rtf.format(Math.round(v), u) : new Date(iso).toLocaleDateString("es");
+  return rtf ? rtf.format(Math.round(v), u) : new Date(iso).toLocaleDateString(locale);
 }
 
 export function dateTime(iso: string | null | undefined) {
   if (!iso) return "—";
-  return new Date(iso).toLocaleString("es", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  return new Date(iso).toLocaleString(locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 }
 
 export function dateOnly(iso: string | null | undefined) {
   if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("es", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" });
 }
 
 export function remaining(iso: string | null | undefined) {
@@ -90,14 +91,14 @@ export function remaining(iso: string | null | undefined) {
   const m = Math.floor(ms / 60000);
   if (m < 60) return `${m} min`;
   const h = Math.floor(m / 60);
-  if (h < 48) return `${h} h ${m % 60} min`;
-  return `${Math.floor(h / 24)} días`;
+  if (h < 48) return t("{0} h {1} min", [h, m % 60]);
+  return t("{0} días", [Math.floor(h / 24)]);
 }
 
-export function pct(bps: number) { return `${(bps / 100).toLocaleString("es", { maximumFractionDigits: 2 })} %`; }
+export function pct(bps: number) { return `${(bps / 100).toLocaleString(locale, { maximumFractionDigits: 2 })} %`; }
 
 export function sizeLabel(size: string | null, color: string | null) {
-  return [color, size].filter(Boolean).join(" · ") || "Unidad única";
+  return [color, size].filter(Boolean).join(" · ") || t("Unidad única");
 }
 
 export function slugify(s: string) {

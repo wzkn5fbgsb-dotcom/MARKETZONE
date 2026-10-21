@@ -1,6 +1,7 @@
 // Caché de datos mínima con suscripción e invalidación por prefijo.
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { ApiError } from "../api/backend";
+import { t } from "../i18n";
 
 interface Entry { data?: unknown; error?: ApiError | null; promise?: Promise<unknown> | null; fn: () => Promise<unknown>; at: number }
 const cache = new Map<string, Entry>();
@@ -10,8 +11,8 @@ function emit(key: string) { subs.get(key)?.forEach((f) => f()); }
 
 function toApiError(e: unknown): ApiError {
   if (e instanceof ApiError) return e;
-  if (e && typeof e === "object" && "code" in e) return new ApiError(String((e as any).code), String((e as any).message ?? "Error"));
-  return new ApiError("unknown", "Algo salió mal. Inténtalo de nuevo.");
+  if (e && typeof e === "object" && "code" in e) return new ApiError(String((e as any).code), String((e as any).message ?? t("Error")));
+  return new ApiError("unknown", t("Algo salió mal. Inténtalo de nuevo."));
 }
 
 function load(key: string, force = false) {

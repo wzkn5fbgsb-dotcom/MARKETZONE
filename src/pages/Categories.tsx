@@ -4,6 +4,7 @@ import { Link, withQuery } from "../app/router";
 import { categoryArt, categoryBackdrop, countLabel } from "../app/categories";
 import { Page } from "../components/layout";
 import { Icon } from "../ui/icons";
+import { t } from "../i18n";
 
 export default function Categories() {
   const { categories } = useApp();
@@ -15,10 +16,10 @@ export default function Categories() {
       <div className="stack-xl">
         <header className="row between" style={{ alignItems: "flex-end", gap: 16 }}>
           <div className="stack" style={{ gap: 6 }}>
-            <h1 className="h1">Categorías</h1>
-            <span className="muted">{total > 0 ? `${countLabel(total)} en ${top.length} categorías.` : "Elige una categoría para ver lo que hay o para vender lo tuyo."}</span>
+            <h1 className="h1">{t("Categorías")}</h1>
+            <span className="muted">{total > 0 ? t("{0} en {1} categorías.", [countLabel(total), top.length]) : t("Elige una categoría para ver lo que hay o para vender lo tuyo.")}</span>
           </div>
-          <Link to="/explorar" className="btn btn-outline btn-sm"><Icon name="grid" size={16} />Ver todo</Link>
+          <Link to="/explorar" className="btn btn-outline btn-sm"><Icon name="grid" size={16} />{t("Ver todo")}</Link>
         </header>
 
         <div className="catblocks">
@@ -36,7 +37,7 @@ export default function Categories() {
                     <span className="small muted">{countLabel(c.active_count)}</span>
                   </Link>
                   {subs.length > 0 && (
-                    <ul className="subcats" aria-label={`Subcategorías de ${c.name}`}>
+                    <ul className="subcats" aria-label={t("Subcategorías de {0}", [c.name])}>
                       {subs.map((s) => (
                         <li key={s.id}>
                           <Link to={withQuery("/explorar", { cat: s.id })} className="subcat">
@@ -49,7 +50,7 @@ export default function Categories() {
                     </ul>
                   )}
                   {c.active_count === 0 && (
-                    <Link to={withQuery("/publicar", { cat: c.id })} className="link small">Vende el primero en {c.name}</Link>
+                    <Link to={withQuery("/publicar", { cat: c.id })} className="link small">{t("Vende el primero en")}{" "}{c.name}</Link>
                   )}
                 </div>
               </article>

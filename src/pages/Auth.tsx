@@ -7,6 +7,7 @@ import { Button, Callout, ErrorBox, Field, Input } from "../ui/kit";
 import { ApiError } from "../api/backend";
 import { DemoBackend } from "../api/demo/backend";
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from "../api/demo/seed";
+import { t } from "../i18n";
 
 function useNext() {
   const loc = useLocation();
@@ -37,14 +38,14 @@ function DemoAccounts() {
   };
   return (
     <div className="panel stack">
-      <span className="eyebrow">Cuentas de demostración</span>
-      <span className="small muted">Prueba los distintos papeles sin crear cuenta. Contraseña de todas: <span className="mono">{DEMO_PASSWORD}</span></span>
+      <span className="eyebrow">{t("Cuentas de demostración")}</span>
+      <span className="small muted">{t("Prueba los distintos papeles sin crear cuenta. Contraseña de todas:")}{" "}<span className="mono">{DEMO_PASSWORD}</span></span>
       <div className="stack" style={{ gap: 8 }}>
-        <Button variant="dark" block onClick={() => go(DEMO_ACCOUNTS.buyer.email)}>Entrar como comprador</Button>
-        <Button variant="dark" block onClick={() => go(DEMO_ACCOUNTS.seller.email)}>Entrar como vendedor (con tienda e inventario)</Button>
-        <Button variant="dark" block onClick={() => go(DEMO_ACCOUNTS.admin.email)}>Entrar como administrador</Button>
+        <Button variant="dark" block onClick={() => go(DEMO_ACCOUNTS.buyer.email)}>{t("Entrar como comprador")}</Button>
+        <Button variant="dark" block onClick={() => go(DEMO_ACCOUNTS.seller.email)}>{t("Entrar como vendedor (con tienda e inventario)")}</Button>
+        <Button variant="dark" block onClick={() => go(DEMO_ACCOUNTS.admin.email)}>{t("Entrar como administrador")}</Button>
       </div>
-      <Callout>Las cuentas de la demo se guardan solo en este dispositivo y no son autenticación real. La versión conectada a Supabase usa cuentas reales con contraseña cifrada y recuperación por correo.</Callout>
+      <Callout>{t("Las cuentas de la demo se guardan solo en este dispositivo y no son autenticación real. La versión conectada a Supabase usa cuentas reales con contraseña cifrada y recuperación por correo.")}</Callout>
     </div>
   );
 }
@@ -63,13 +64,13 @@ export function Login() {
     catch (err) { setError(err as ApiError); } finally { setBusy(false); }
   };
   return (
-    <AuthShell title="Entrar" sub="Compra, vende y gestiona tu tienda con la misma cuenta.">
+    <AuthShell title={t("Entrar")} sub={t("Compra, vende y gestiona tu tienda con la misma cuenta.")}>
       <form className="stack" onSubmit={submit}>
-        <Field label="Correo electrónico"><Input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
-        <Field label="Contraseña"><Input type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
+        <Field label={t("Correo electrónico")}><Input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
+        <Field label={t("Contraseña")}><Input type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
         <ErrorBox error={error} />
-        <Button variant="primary" size="lg" block loading={busy} type="submit">Entrar</Button>
-        <div className="row between small"><Link to="/recuperar" className="link">¿Olvidaste tu contraseña?</Link><Link to={`/registro?next=${encodeURIComponent(next)}`} className="link">Crear cuenta</Link></div>
+        <Button variant="primary" size="lg" block loading={busy} type="submit">{t("Entrar")}</Button>
+        <div className="row between small"><Link to="/recuperar" className="link">{t("¿Olvidaste tu contraseña?")}</Link><Link to={`/registro?next=${encodeURIComponent(next)}`} className="link">{t("Crear cuenta")}</Link></div>
       </form>
       <DemoAccounts />
     </AuthShell>
@@ -91,18 +92,18 @@ export function Register() {
       if (r.needsConfirmation) setSent(true); else navigate(next, { replace: true });
     } catch (err) { setError(err as ApiError); } finally { setBusy(false); }
   };
-  if (sent) return <AuthShell title="Revisa tu correo" sub={`Te enviamos un enlace de confirmación a ${f.email}. Ábrelo para activar tu cuenta.`}><Link to="/entrar" className="btn btn-outline">Ya la confirmé: entrar</Link></AuthShell>;
+  if (sent) return <AuthShell title={t("Revisa tu correo")} sub={t("Te enviamos un enlace de confirmación a {0}. Ábrelo para activar tu cuenta.", [f.email])}><Link to="/entrar" className="btn btn-outline">{t("Ya la confirmé: entrar")}</Link></AuthShell>;
   return (
-    <AuthShell title="Crear cuenta" sub="Una sola cuenta para comprar y vender.">
+    <AuthShell title={t("Crear cuenta")} sub={t("Una sola cuenta para comprar y vender.")}>
       <form className="stack" onSubmit={submit}>
-        <Field label="Nombre visible" required><Input required maxLength={60} value={f.display_name} onChange={(e) => setF({ ...f, display_name: e.target.value })} /></Field>
-        <Field label="Nombre de usuario" hint="Minúsculas, números, punto o guion bajo. Se usa en tu tienda."><Input value={f.username} pattern="[a-z0-9_.]{3,30}" onChange={(e) => setF({ ...f, username: e.target.value.toLowerCase() })} /></Field>
-        <Field label="Correo electrónico" required><Input type="email" autoComplete="email" required value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} /></Field>
-        <Field label="Contraseña" required hint="Mínimo 8 caracteres."><Input type="password" autoComplete="new-password" minLength={8} required value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} /></Field>
+        <Field label={t("Nombre visible")} required><Input required maxLength={60} value={f.display_name} onChange={(e) => setF({ ...f, display_name: e.target.value })} /></Field>
+        <Field label={t("Nombre de usuario")} hint={t("Minúsculas, números, punto o guion bajo. Se usa en tu tienda.")}><Input value={f.username} pattern="[a-z0-9_.]{3,30}" onChange={(e) => setF({ ...f, username: e.target.value.toLowerCase() })} /></Field>
+        <Field label={t("Correo electrónico")} required><Input type="email" autoComplete="email" required value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} /></Field>
+        <Field label={t("Contraseña")} required hint={t("Mínimo 8 caracteres.")}><Input type="password" autoComplete="new-password" minLength={8} required value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} /></Field>
         <ErrorBox error={error} />
-        <Button variant="primary" size="lg" block loading={busy} type="submit">Crear cuenta</Button>
-        <span className="small dim">Al crear la cuenta confirmas que tienes 18 años o más y aceptas los <Link to="/terminos" className="link">Términos de uso</Link> y el <Link to="/privacidad" className="link">Aviso de privacidad</Link>.</span>
-        <Link to="/entrar" className="link small">Ya tengo cuenta</Link>
+        <Button variant="primary" size="lg" block loading={busy} type="submit">{t("Crear cuenta")}</Button>
+        <span className="small dim">{t("Al crear la cuenta confirmas que tienes 18 años o más y aceptas los")}{" "}<Link to="/terminos" className="link">{t("Términos de uso")}</Link> y el <Link to="/privacidad" className="link">{t("Aviso de privacidad")}</Link>.</span>
+        <Link to="/entrar" className="link small">{t("Ya tengo cuenta")}</Link>
       </form>
     </AuthShell>
   );
@@ -124,15 +125,15 @@ export function Forgot() {
     } catch (err) { setError(err as ApiError); } finally { setBusy(false); }
   };
   return (
-    <AuthShell title="Recuperar contraseña" sub="Te enviaremos un enlace para crear una nueva contraseña.">
-      {done ? <Callout kind="ok">Si existe una cuenta con <b>{email}</b>, recibirás un correo con el enlace en unos minutos.</Callout> : (
+    <AuthShell title={t("Recuperar contraseña")} sub={t("Te enviaremos un enlace para crear una nueva contraseña.")}>
+      {done ? <Callout kind="ok">{t("Si existe una cuenta con")}{" "}<b>{email}</b>{t(", recibirás un correo con el enlace en unos minutos.")}</Callout> : (
         <form className="stack" onSubmit={submit}>
-          <Field label="Correo electrónico"><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
+          <Field label={t("Correo electrónico")}><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
           <ErrorBox error={error} />
-          <Button variant="primary" size="lg" block loading={busy} type="submit">Enviar enlace</Button>
+          <Button variant="primary" size="lg" block loading={busy} type="submit">{t("Enviar enlace")}</Button>
         </form>
       )}
-      <Link to="/entrar" className="link small">Volver a entrar</Link>
+      <Link to="/entrar" className="link small">{t("Volver a entrar")}</Link>
     </AuthShell>
   );
 }
@@ -148,14 +149,14 @@ export function ResetPassword() {
     setBusy(true); setError(null);
     try { await backend.auth.updatePassword(pw); setDone(true); } catch (err) { setError(err as ApiError); } finally { setBusy(false); }
   };
-  if (!session) return <AuthShell title="Enlace no válido" sub="Abre el enlace del correo de recuperación en este navegador o solicita uno nuevo."><Link to="/recuperar" className="btn btn-outline">Solicitar enlace</Link></AuthShell>;
+  if (!session) return <AuthShell title={t("Enlace no válido")} sub={t("Abre el enlace del correo de recuperación en este navegador o solicita uno nuevo.")}><Link to="/recuperar" className="btn btn-outline">{t("Solicitar enlace")}</Link></AuthShell>;
   return (
-    <AuthShell title="Nueva contraseña">
-      {done ? <><Callout kind="ok">Contraseña actualizada.</Callout><Link to="/" className="btn btn-primary">Ir al inicio</Link></> : (
+    <AuthShell title={t("Nueva contraseña")}>
+      {done ? <><Callout kind="ok">{t("Contraseña actualizada.")}</Callout><Link to="/" className="btn btn-primary">{t("Ir al inicio")}</Link></> : (
         <form className="stack" onSubmit={submit}>
-          <Field label="Nueva contraseña" hint="Mínimo 8 caracteres."><Input type="password" autoComplete="new-password" minLength={8} required value={pw} onChange={(e) => setPw(e.target.value)} /></Field>
+          <Field label={t("Nueva contraseña")} hint={t("Mínimo 8 caracteres.")}><Input type="password" autoComplete="new-password" minLength={8} required value={pw} onChange={(e) => setPw(e.target.value)} /></Field>
           <ErrorBox error={error} />
-          <Button variant="primary" size="lg" block loading={busy} type="submit">Guardar contraseña</Button>
+          <Button variant="primary" size="lg" block loading={busy} type="submit">{t("Guardar contraseña")}</Button>
         </form>
       )}
     </AuthShell>

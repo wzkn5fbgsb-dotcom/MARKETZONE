@@ -7,6 +7,7 @@ import type { DemoRuntime } from "../api/demo/persist";
 import type { AppConfig } from "./config";
 import { clearCache, useQuery } from "./query";
 import { navigate } from "./router";
+import { t } from "../i18n";
 
 interface AppState {
   config: AppConfig;
@@ -55,7 +56,7 @@ export function AppProvider({ config, backend, demo, children }: { config: AppCo
     accountLoading: !!uid && acc.loading,
     reloadAccount: acc.reload,
     settings: settings.data ?? null,
-    categories: cats.data ?? [],
+    categories: (cats.data ?? []).map((c) => ({ ...c, name: t(c.name) })), // nombres guardados en español
     sessionId,
     requireAuth: (next) => {
       if (backend.auth.getSession()) return true;
@@ -68,7 +69,7 @@ export function AppProvider({ config, backend, demo, children }: { config: AppCo
 
 export function useApp(): AppState {
   const v = useContext(Ctx);
-  if (!v) throw new Error("AppProvider ausente");
+  if (!v) throw new Error(t("AppProvider ausente"));
   return v;
 }
 

@@ -1,0 +1,1202 @@
+{
+"Disponible": [
+"Available",
+"Disponible",
+"可用"
+],
+"Duración": [
+"Duration",
+"Durée",
+"时长"
+],
+"Editar": [
+"Edit",
+"Modifier",
+"编辑"
+],
+"Editar negocio": [
+"Edit business",
+"Modifier l'entreprise",
+"编辑商家"
+],
+"Editar publicación": [
+"Edit listing",
+"Modifier l'annonce",
+"编辑商品"
+],
+"Editar página": [
+"Edit page",
+"Modifier la page",
+"编辑页面"
+],
+"Editar tienda": [
+"Edit shop",
+"Modifier la boutique",
+"编辑店铺"
+],
+"Ejemplo": [
+"Example",
+"Exemple",
+"示例"
+],
+"Ejemplo de cómo funciona una oferta": [
+"Example of how an offer works",
+"Exemple du fonctionnement d'une offre",
+"出价流程示例"
+],
+"Ejemplo de una negociación": [
+"Example of a negotiation",
+"Exemple de négociation",
+"议价示例"
+],
+"El artículo se agotó: la oferta se canceló y se liberó el pago": [
+"The item sold out: the offer was cancelled and the payment released",
+"L'article est épuisé : l'offre a été annulée et le paiement libéré",
+"商品已售罄：出价已取消，款项已释放"
+],
+"El comprador reportó un problema. Tu pago queda retenido mientras el equipo lo revisa. Tu cuenta no tiene ninguna sanción.": [
+"The buyer reported a problem. Your payment is on hold while the team reviews it. Your account has no penalty.",
+"L'acheteur a signalé un problème. Votre paiement est bloqué pendant que l'équipe l'examine. Votre compte ne fait l'objet d'aucune sanction.",
+"买家报告了问题。团队审核期间你的款项将被冻结。你的账户不会受到任何处罚。"
+],
+"El comprador ya pagó. Si aceptas, la venta queda cerrada.": [
+"The buyer already paid. If you accept, the sale is final.",
+"L'acheteur a déjà payé. Si vous acceptez, la vente est conclue.",
+"买家已付款。你接受即成交。"
+],
+"El enlace ha caducado o ya se usó. Solicita uno nuevo.": [
+"The link has expired or was already used. Request a new one.",
+"Le lien a expiré ou a déjà été utilisé. Demandez-en un nouveau.",
+"链接已过期或已被使用，请重新申请。"
+],
+"El equipo de MARKETZONE revisa que el anuncio cumpla las normas (sin descuentos ni testimonios inventados).": [
+"The MARKETZONE team checks that the ad follows the rules (no made-up discounts or testimonials).",
+"L'équipe MARKETZONE vérifie que l'annonce respecte les règles (pas de réductions ni de témoignages inventés).",
+"MARKETZONE 团队会审核广告是否合规（不得虚构折扣或评价）。"
+],
+"El pago real requiere el proveedor de pagos (pendiente de integración).": [
+"Real payment requires the payment provider (integration pending).",
+"Le paiement réel nécessite le prestataire de paiement (intégration en attente).",
+"真实付款需要支付服务商（尚待接入）。"
+],
+"El pago real requiere integrar el proveedor de pagos (pendiente de configuración).": [
+"Real payment requires integrating the payment provider (setup pending).",
+"Le paiement réel nécessite d'intégrer le prestataire de paiement (configuration en attente).",
+"真实付款需要接入支付服务商（尚待配置）。"
+],
+"El plazo de pago venció y se liberó la reserva": [
+"The payment deadline passed and the reservation was released",
+"Le délai de paiement a expiré et la réservation a été libérée",
+"付款期限已过，预留已释放"
+],
+"El precio anterior estuvo publicado; no es un descuento inventado.": [
+"The previous price was actually listed; it's not a made-up discount.",
+"L'ancien prix a réellement été affiché ; ce n'est pas une réduction inventée.",
+"原价曾真实标出，并非虚构折扣。"
+],
+"El precio final, el envío y las tarifas se muestran antes de pagar. El servidor revisa el precio y la disponibilidad al confirmar.": [
+"The final price, shipping and fees are shown before you pay. The server checks price and availability when you confirm.",
+"Le prix final, la livraison et les frais s'affichent avant de payer. Le serveur vérifie le prix et la disponibilité à la confirmation.",
+"付款前会显示最终价格、运费和各项费用。确认时服务器会核对价格和库存。"
+],
+"El precio se negocia.": [
+"The price is negotiable.",
+"Le prix se négocie.",
+"价格可以商量。"
+],
+"El servidor vuelve a comprobar precios y stock. Al confirmar, reservamos las unidades durante": [
+"The server rechecks prices and stock. When you confirm, we hold the units for",
+"Le serveur revérifie les prix et le stock. À la confirmation, nous réservons les unités pendant",
+"服务器会重新核对价格和库存。确认后，我们会为你预留商品"
+],
+"El vendedor no añadió número de guía.": [
+"The seller didn't add a tracking number.",
+"Le vendeur n'a pas ajouté de numéro de suivi.",
+"卖家未填写运单号。"
+],
+"Elige la dirección de envío": [
+"Choose the shipping address",
+"Choisissez l'adresse de livraison",
+"选择收货地址"
+],
+"Elige un producto": [
+"Choose a product",
+"Choisissez un produit",
+"选择商品"
+],
+"Elige una categoría para ver lo que hay o para vender lo tuyo.": [
+"Pick a category to see what's there or to sell your own.",
+"Choisissez une catégorie pour voir ce qu'il y a ou vendre vos articles.",
+"选择一个分类浏览商品，或出售你的物品。"
+],
+"Elige una talla": [
+"Choose a size",
+"Choisissez une taille",
+"选择尺码"
+],
+"Eliges qué promocionar, el tipo de espacio, la duración y el presupuesto. Ves una vista previa.": [
+"You choose what to promote, the type of spot, the duration and the budget. You see a preview.",
+"Vous choisissez quoi promouvoir, le type d'emplacement, la durée et le budget. Vous voyez un aperçu.",
+"选择推广内容、广告位类型、时长和预算，并可预览。"
+],
+"Eliminada": [
+"Deleted",
+"Supprimée",
+"已删除"
+],
+"Eliminar": [
+"Delete",
+"Supprimer",
+"删除"
+],
+"Eliminar foto": [
+"Delete photo",
+"Supprimer la photo",
+"删除照片"
+],
+"Eliminar mi cuenta": [
+"Delete my account",
+"Supprimer mon compte",
+"删除我的账户"
+],
+"Eliminar mi cuenta para siempre": [
+"Delete my account forever",
+"Supprimer définitivement mon compte",
+"永久删除我的账户"
+],
+"Eliminar tu cuenta en cualquier momento desde Ajustes → Eliminar mi cuenta. Se borran tus datos personales. Los pedidos que hiciste o recibiste se conservan sin tu nombre ni tus datos, porque son el comprobante de la otra persona y un registro contable.": [
+"Delete your account at any time from Settings → Delete my account. Your personal data is erased. Orders you placed or received are kept without your name or details, because they are the other person's receipt and an accounting record.",
+"Supprimer votre compte à tout moment depuis Réglages → Supprimer mon compte. Vos données personnelles sont effacées. Les commandes passées ou reçues sont conservées sans votre nom ni vos données, car elles servent de justificatif à l'autre personne et de pièce comptable.",
+"可随时在“设置 → 删除我的账户”中删除账户。你的个人数据将被清除。你下过或收到的订单会去除你的姓名和资料后保留，因为它们是对方的凭证和会计记录。"
+],
+"En cualquier producto que acepte ofertas verás el botón “Hacer una oferta”.": [
+"On any product that accepts offers you'll see the “Make an offer” button.",
+"Sur tout produit qui accepte les offres, vous verrez le bouton « Faire une offre ».",
+"在接受出价的商品上，你会看到“出价”按钮。"
+],
+"En pedidos sin pagar": [
+"In unpaid orders",
+"Dans des commandes non payées",
+"在未付款订单中"
+],
+"En tu teléfono:": [
+"On your phone:",
+"Sur votre téléphone :",
+"在你的手机上："
+],
+"Enlace completo (https://…)": [
+"Full link (https://…)",
+"Lien complet (https://…)",
+"完整链接（https://…）"
+],
+"Enlace copiado": [
+"Link copied",
+"Lien copié",
+"链接已复制"
+],
+"Enlace de la tienda copiado": [
+"Shop link copied",
+"Lien de la boutique copié",
+"店铺链接已复制"
+],
+"Enlace no válido": [
+"Invalid link",
+"Lien non valide",
+"链接无效"
+],
+"Entrar": [
+"Sign in",
+"Connexion",
+"登录"
+],
+"Entrar como administrador": [
+"Sign in as admin",
+"Se connecter en administrateur",
+"以管理员身份登录"
+],
+"Entrar como comprador": [
+"Sign in as buyer",
+"Se connecter en acheteur",
+"以买家身份登录"
+],
+"Entrar como vendedor (con tienda e inventario)": [
+"Sign in as seller (with shop and inventory)",
+"Se connecter en vendeur (avec boutique et stock)",
+"以卖家身份登录（含店铺和库存）"
+],
+"Entre": [
+"Between",
+"Entre",
+"介于"
+],
+"Entre {0} y {1}": [
+"Between {0} and {1}",
+"Entre {0} et {1}",
+"介于 {0} 和 {1} 之间"
+],
+"Entrega confirmada": [
+"Delivery confirmed",
+"Livraison confirmée",
+"已确认收货"
+],
+"Entregadas": [
+"Delivered",
+"Livrées",
+"已送达"
+],
+"Entregado": [
+"Delivered",
+"Livré",
+"已送达"
+],
+"Entregados": [
+"Delivered",
+"Livrés",
+"已送达"
+],
+"Enviada a revisión": [
+"Sent for review",
+"Envoyée pour vérification",
+"已提交审核"
+],
+"Enviadas": [
+"Sent",
+"Envoyées",
+"已发出"
+],
+"Enviadas y recibidas": [
+"Sent and received",
+"Envoyées et reçues",
+"已发出和已收到"
+],
+"Enviado": [
+"Shipped",
+"Expédié",
+"已发货"
+],
+"Enviados": [
+"Shipped",
+"Expédiés",
+"已发货"
+],
+"Enviar a": [
+"Ship to",
+"Livrer à",
+"寄往"
+],
+"Enviar a revisión": [
+"Send for review",
+"Envoyer pour vérification",
+"提交审核"
+],
+"Enviar contraoferta": [
+"Send counteroffer",
+"Envoyer la contre-offre",
+"发送还价"
+],
+"Enviar enlace": [
+"Send link",
+"Envoyer le lien",
+"发送链接"
+],
+"Enviar reporte": [
+"Send report",
+"Envoyer le signalement",
+"提交举报"
+],
+"Envío": [
+"Shipping",
+"Livraison",
+"运费"
+],
+"Envío a": [
+"Ship to",
+"Livraison à",
+"寄往"
+],
+"Envío:": [
+"Shipping:",
+"Livraison :",
+"运费："
+],
+"Eres responsable de lo que pase con tu cuenta. No compartas tu contraseña.": [
+"You're responsible for what happens with your account. Don't share your password.",
+"Vous êtes responsable de ce qui se passe sur votre compte. Ne partagez pas votre mot de passe.",
+"你须对账户中发生的一切负责，请勿泄露密码。"
+],
+"Error": [
+"Error",
+"Erreur",
+"错误"
+],
+"Es tu propio producto": [
+"It's your own product",
+"C'est votre propre produit",
+"这是你自己的商品"
+],
+"Es tu publicación. Estado:": [
+"This is your listing. Status:",
+"C'est votre annonce. Statut :",
+"这是你发布的商品。状态："
+],
+"Escribe ELIMINAR para confirmar": [
+"Type ELIMINAR to confirm",
+"Tapez ELIMINAR pour confirmer",
+"输入 ELIMINAR 以确认"
+],
+"Ese artículo aparece en la sección Patrocinado del inicio.": [
+"That item appears in the Sponsored section of the home page.",
+"Cet article apparaît dans la section Sponsorisé de l'accueil.",
+"该商品会出现在首页的“赞助”栏目中。"
+],
+"Espera a que terminen de subirse las fotos.": [
+"Wait for the photos to finish uploading.",
+"Attendez la fin de l'envoi des photos.",
+"请等待照片上传完成。"
+],
+"Esperando el pago del comprador. No envíes nada todavía.": [
+"Waiting for the buyer's payment. Don't ship anything yet.",
+"En attente du paiement de l'acheteur. N'envoyez rien pour l'instant.",
+"等待买家付款，请先不要发货。"
+],
+"Esta función no está configurada todavía.": [
+"This feature isn't set up yet.",
+"Cette fonction n'est pas encore configurée.",
+"此功能尚未配置。"
+],
+"Esta función todavía no está desplegada en el servidor.": [
+"This feature isn't deployed on the server yet.",
+"Cette fonction n'est pas encore déployée sur le serveur.",
+"此功能尚未部署到服务器。"
+],
+"Esta publicación fue bloqueada por moderación. Puedes editarla pero no publicarla.": [
+"This listing was blocked by moderation. You can edit it but not publish it.",
+"Cette annonce a été bloquée par la modération. Vous pouvez la modifier mais pas la publier.",
+"该商品已被审核屏蔽。你可以编辑但不能发布。"
+],
+"Esta tienda todavía no tiene publicaciones activas.": [
+"This shop has no active listings yet.",
+"Cette boutique n'a pas encore d'annonces actives.",
+"该店铺还没有在售商品。"
+],
+"Esta vista no puede enviar fotos a la IA.": [
+"This view can't send photos to the AI.",
+"Cette vue ne peut pas envoyer de photos à l'IA.",
+"此页面无法将照片发送给 AI。"
+],
+"Estado": [
+"Status",
+"Statut",
+"状态"
+],
+"Estado / región": [
+"State / region",
+"État / région",
+"州 / 地区"
+],
+"Estado del artículo": [
+"Item condition",
+"État de l'article",
+"商品成色"
+],
+"Estado del proyecto": [
+"Project status",
+"État du projet",
+"项目状态"
+],
+"Estadísticas": [
+"Statistics",
+"Statistiques",
+"统计"
+],
+"Este aviso explica qué datos guarda MARKETZONE, para qué los usa y qué puedes hacer con ellos. No vendemos tus datos.": [
+"This notice explains what data MARKETZONE stores, what it uses it for and what you can do about it. We don't sell your data.",
+"Cette politique explique quelles données MARKETZONE conserve, à quoi elles servent et ce que vous pouvez en faire. Nous ne vendons pas vos données.",
+"本声明说明 MARKETZONE 保存哪些数据、用途以及你可以如何处理。我们不会出售你的数据。"
+],
+"Estimación de la IA:": [
+"AI estimate:",
+"Estimation de l'IA :",
+"AI 估价："
+],
+"Etiquetas": [
+"Tags",
+"Étiquettes",
+"标签"
+],
+"Expirada": [
+"Expired",
+"Expirée",
+"已过期"
+],
+"Explorar": [
+"Explore",
+"Explorer",
+"浏览"
+],
+"Favoritos": [
+"Favorites",
+"Favoris",
+"收藏"
+],
+"Fecha": [
+"Date",
+"Date",
+"日期"
+],
+"Fecha de publicación": [
+"Date listed",
+"Date de publication",
+"发布日期"
+],
+"Filtros": [
+"Filters",
+"Filtres",
+"筛选"
+],
+"Finalizada": [
+"Ended",
+"Terminée",
+"已结束"
+],
+"Formato no admitido. Usa JPG, PNG o WebP.": [
+"Unsupported format. Use JPG, PNG or WebP.",
+"Format non pris en charge. Utilisez JPG, PNG ou WebP.",
+"格式不支持，请使用 JPG、PNG 或 WebP。"
+],
+"Formato: Lun–Vie: 10:00–18:00": [
+"Format: Mon–Fri: 10:00–18:00",
+"Format : Lun–Ven : 10:00–18:00",
+"格式：周一至周五：10:00–18:00"
+],
+"Foto {0}": [
+"Photo {0}",
+"Photo {0}",
+"照片 {0}"
+],
+"Función de IA desconocida.": [
+"Unknown AI function.",
+"Fonction d'IA inconnue.",
+"未知的 AI 功能。"
+],
+"GitHub Pages": [
+"GitHub Pages",
+"GitHub Pages",
+"GitHub Pages"
+],
+"Gracias por tu reseña": [
+"Thanks for your review",
+"Merci pour votre avis",
+"感谢你的评价"
+],
+"Guardado": [
+"Saved",
+"Enregistré",
+"已保存"
+],
+"Guardar": [
+"Save",
+"Enregistrer",
+"保存"
+],
+"Guardar borrador": [
+"Save draft",
+"Enregistrer le brouillon",
+"保存草稿"
+],
+"Guardar contraseña": [
+"Save password",
+"Enregistrer le mot de passe",
+"保存密码"
+],
+"Guardar dirección": [
+"Save address",
+"Enregistrer l'adresse",
+"保存地址"
+],
+"Guardar perfil": [
+"Save profile",
+"Enregistrer le profil",
+"保存资料"
+],
+"Guardar precio": [
+"Save price",
+"Enregistrer le prix",
+"保存价格"
+],
+"Guardar página": [
+"Save page",
+"Enregistrer la page",
+"保存页面"
+],
+"Guardar tienda": [
+"Save shop",
+"Enregistrer la boutique",
+"保存店铺"
+],
+"Guardar y publicar": [
+"Save and publish",
+"Enregistrer et publier",
+"保存并发布"
+],
+"Hacer una oferta": [
+"Make an offer",
+"Faire une offre",
+"出价"
+],
+"Hasta 12, desde la cámara del teléfono. Si quieres, la IA propone el título y la descripción a partir de ellas.": [
+"Up to 12, straight from your phone's camera. If you like, the AI suggests the title and description from them.",
+"Jusqu'à 12, directement depuis l'appareil photo. Si vous voulez, l'IA propose le titre et la description à partir de celles-ci.",
+"最多 12 张，可直接用手机拍摄。也可以让 AI 根据照片生成标题和描述。"
+],
+"Hecho": [
+"Done",
+"Terminé",
+"完成"
+],
+"Historial": [
+"History",
+"Historique",
+"记录"
+],
+"Horario": [
+"Hours",
+"Horaires",
+"营业时间"
+],
+"Horario (una línea por día o rango)": [
+"Hours (one line per day or range)",
+"Horaires (une ligne par jour ou plage)",
+"营业时间（每天或每个时段一行）"
+],
+"IA del servidor activa.": [
+"Server AI active.",
+"IA du serveur active.",
+"服务器 AI 已启用。"
+],
+"Idea de precio (opcional)": [
+"Price idea (optional)",
+"Idée de prix (facultatif)",
+"预期价格（选填）"
+],
+"Ideas con IA": [
+"AI ideas",
+"Idées avec l'IA",
+"AI 创意"
+],
+"Importe": [
+"Amount",
+"Montant",
+"金额"
+],
+"Importe devuelto a compradores.": [
+"Amount returned to buyers.",
+"Montant rendu aux acheteurs.",
+"退还给买家的金额。"
+],
+"Impresiones": [
+"Impressions",
+"Impressions",
+"曝光"
+],
+"Impresiones por día": [
+"Impressions per day",
+"Impressions par jour",
+"每日曝光"
+],
+"Impuestos": [
+"Taxes",
+"Taxes",
+"税费"
+],
+"Información para clientes (opcional)": [
+"Information for customers (optional)",
+"Informations pour les clients (facultatif)",
+"顾客须知（选填）"
+],
+"Ingresos brutos": [
+"Gross revenue",
+"Revenus bruts",
+"总收入"
+],
+"Ingresos netos estimados": [
+"Estimated net revenue",
+"Revenus nets estimés",
+"预计净收入"
+],
+"Inicia sesión para continuar": [
+"Sign in to continue",
+"Connectez-vous pour continuer",
+"登录以继续"
+],
+"Inicia sesión para continuar.": [
+"Sign in to continue.",
+"Connectez-vous pour continuer.",
+"请登录以继续。"
+],
+"Inicio": [
+"Home",
+"Accueil",
+"首页"
+],
+"Instagram (enlace)": [
+"Instagram (link)",
+"Instagram (lien)",
+"Instagram（链接）"
+],
+"Inventario": [
+"Inventory",
+"Stock",
+"库存"
+],
+"Inventario actualizado": [
+"Inventory updated",
+"Stock mis à jour",
+"库存已更新"
+],
+"Ir al inicio": [
+"Go to home",
+"Aller à l'accueil",
+"返回首页"
+],
+"La IA analiza tus fotos y propone título, descripción, categoría y atributos visibles. No inventa modelos, tallas ni materiales, y nunca afirma autenticidad. Tú revisas todo antes de publicar.": [
+"The AI analyzes your photos and suggests a title, description, category and visible attributes. It doesn't invent models, sizes or materials, and never claims authenticity. You review everything before publishing.",
+"L'IA analyse vos photos et propose un titre, une description, une catégorie et les attributs visibles. Elle n'invente ni modèles, ni tailles, ni matières, et n'affirme jamais l'authenticité. Vous vérifiez tout avant de publier.",
+"AI 会分析你的照片并建议标题、描述、分类和可见属性。它不会编造型号、尺码或材质，也绝不声称正品。发布前由你审核全部内容。"
+],
+"La IA no devolvió un resultado válido. Inténtalo de nuevo.": [
+"The AI didn't return a valid result. Try again.",
+"L'IA n'a pas renvoyé de résultat valide. Réessayez.",
+"AI 未返回有效结果，请重试。"
+],
+"La IA no está configurada en el servidor (falta la clave). Puedes publicar manualmente.": [
+"AI isn't set up on the server (the key is missing). You can list manually.",
+"L'IA n'est pas configurée sur le serveur (clé manquante). Vous pouvez publier manuellement.",
+"服务器未配置 AI（缺少密钥）。你可以手动发布。"
+],
+"La IA no está disponible en esta versión de demostración fuera de Claude. Puedes publicar manualmente.": [
+"AI isn't available in this demo outside Claude. You can list manually.",
+"L'IA n'est pas disponible dans cette démo hors de Claude. Vous pouvez publier manuellement.",
+"在 Claude 之外，此演示版无法使用 AI。你可以手动发布。"
+],
+"La IA no está disponible en esta versión.": [
+"AI isn't available in this version.",
+"L'IA n'est pas disponible dans cette version.",
+"此版本无法使用 AI。"
+],
+"La IA no pudo analizar estas fotos.": [
+"The AI couldn't analyze these photos.",
+"L'IA n'a pas pu analyser ces photos.",
+"AI 无法分析这些照片。"
+],
+"La IA no respondió. Inténtalo de nuevo o continúa manualmente.": [
+"The AI didn't respond. Try again or continue manually.",
+"L'IA n'a pas répondu. Réessayez ou continuez manuellement.",
+"AI 未响应，请重试或手动继续。"
+],
+"La IA no respondió. Puedes continuar manualmente.": [
+"The AI didn't respond. You can continue manually.",
+"L'IA n'a pas répondu. Vous pouvez continuer manuellement.",
+"AI 未响应，你可以手动继续。"
+],
+"La IA no tiene datos suficientes para estimar un precio.": [
+"The AI doesn't have enough data to estimate a price.",
+"L'IA n'a pas assez de données pour estimer un prix.",
+"AI 数据不足，无法估价。"
+],
+"La contraseña debe tener al menos 8 caracteres.": [
+"Password must be at least 8 characters.",
+"Le mot de passe doit contenir au moins 8 caractères.",
+"密码至少需要 8 个字符。"
+],
+"La dirección no existe o se movió.": [
+"This page doesn't exist or has moved.",
+"Cette page n'existe pas ou a été déplacée.",
+"该页面不存在或已移动。"
+],
+"La función de IA no está desplegada todavía. Puedes publicar manualmente.": [
+"The AI feature isn't deployed yet. You can list manually.",
+"La fonction d'IA n'est pas encore déployée. Vous pouvez publier manuellement.",
+"AI 功能尚未部署。你可以手动发布。"
+],
+"La imagen supera el tamaño máximo (8 MB).": [
+"The image exceeds the maximum size (8 MB).",
+"L'image dépasse la taille maximale (8 Mo).",
+"图片超过最大尺寸（8 MB）。"
+],
+"Largo × ancho × alto (cm)": [
+"Length × width × height (cm)",
+"Longueur × largeur × hauteur (cm)",
+"长 × 宽 × 高（厘米）"
+],
+"Las cuentas de la demo se guardan solo en este dispositivo y no son autenticación real. La versión conectada a Supabase usa cuentas reales con contraseña cifrada y recuperación por correo.": [
+"Demo accounts are stored only on this device and aren't real authentication. The version connected to Supabase uses real accounts with encrypted passwords and email recovery.",
+"Les comptes de démo ne sont stockés que sur cet appareil et ne constituent pas une vraie authentification. La version connectée à Supabase utilise de vrais comptes avec mot de passe chiffré et récupération par e-mail.",
+"演示账户只保存在此设备上，并非真实认证。连接 Supabase 的版本使用真实账户、加密密码和邮箱找回。"
+],
+"Las reseñas solo pueden dejarlas compradores con un pedido entregado.": [
+"Only buyers with a delivered order can leave reviews.",
+"Seuls les acheteurs dont la commande a été livrée peuvent laisser un avis.",
+"只有订单已送达的买家才能评价。"
+],
+"Las reseñas solo se pueden dejar sobre pedidos entregados.": [
+"Reviews can only be left on delivered orders.",
+"Les avis ne peuvent porter que sur des commandes livrées.",
+"只能对已送达的订单进行评价。"
+],
+"Las tallas con 0 unidades se muestran como agotadas. Cada combinación tiene su propio inventario y no se puede vender más de lo disponible.": [
+"Sizes with 0 units show as sold out. Each combination has its own inventory and you can't sell more than what's available.",
+"Les tailles à 0 unité apparaissent épuisées. Chaque combinaison a son propre stock et on ne peut pas vendre plus que le disponible.",
+"数量为 0 的尺码会显示为售罄。每种组合都有独立库存，不能超卖。"
+],
+"Las unidades están reservadas para ti hasta": [
+"The units are held for you until",
+"Les unités vous sont réservées jusqu'à",
+"商品为你预留至"
+],
+"Lee también el": [
+"Also read the",
+"Lisez aussi la",
+"另请阅读"
+],
+"Liberación": [
+"Release",
+"Libération",
+"释放"
+],
+"Limpiar": [
+"Clear",
+"Effacer",
+"清除"
+],
+"Liquidado": [
+"Paid out",
+"Versé",
+"已结算"
+],
+"Lo que más gente agregó a favoritos.": [
+"What the most people added to favorites.",
+"Ce que le plus de gens ont ajouté aux favoris.",
+"被最多人加入收藏的商品。"
+],
+"Lo que publicas:": [
+"What you post:",
+"Ce que vous publiez :",
+"你发布的内容："
+],
+"Lo vendido no es lo cobrado: aquí ves por separado lo pagado, lo pendiente, las comisiones y los reembolsos.": [
+"Sold isn't the same as collected: here you see paid, pending, commissions and refunds separately.",
+"Vendu n'est pas encaissé : vous voyez ici séparément le payé, l'en attente, les commissions et les remboursements.",
+"售出不等于到账：这里分别显示已付、待结算、佣金和退款。"
+],
+"Logotipo": [
+"Logo",
+"Logo",
+"标志"
+],
+"Los filtros se aplican al instante.": [
+"Filters apply instantly.",
+"Les filtres s'appliquent immédiatement.",
+"筛选会立即生效。"
+],
+"Los más guardados": [
+"Most saved",
+"Les plus enregistrés",
+"收藏最多"
+],
+"Los negocios marcados como “Patrocinado” pagaron por aparecer primero.": [
+"Businesses marked “Sponsored” paid to appear first.",
+"Les entreprises marquées « Sponsorisé » ont payé pour apparaître en premier.",
+"标有“赞助”的商家为置顶付费。"
+],
+"Los negocios pueden pagar por aparecer en espacios destacados. Todo espacio pagado se marca como \"Patrocinado\" o \"Publicidad\". Los anuncios no pueden prometer descuentos, testimonios ni resultados falsos.": [
+"Businesses can pay to appear in featured spots. Every paid spot is labeled \"Sponsored\" or \"Ad\". Ads can't promise fake discounts, testimonials or results.",
+"Les entreprises peuvent payer pour apparaître dans des emplacements mis en avant. Tout espace payant est signalé « Sponsorisé » ou « Publicité ». Les annonces ne peuvent pas promettre de fausses réductions, de faux témoignages ou de faux résultats.",
+"商家可付费出现在推荐位置。所有付费位置都会标注“赞助”或“广告”。广告不得承诺虚假折扣、评价或效果。"
+],
+"Los pagos se procesan con un proveedor autorizado. MARKETZONE nunca guarda números de tarjeta.": [
+"Payments are processed by an authorized provider. MARKETZONE never stores card numbers.",
+"Les paiements sont traités par un prestataire agréé. MARKETZONE n'enregistre jamais les numéros de carte.",
+"付款由授权服务商处理。MARKETZONE 从不保存银行卡号。"
+],
+"Los productos son de ejemplo, lo que publiques se guarda solo en este teléfono y no se cobra dinero.": [
+"Products are examples, what you post is saved only on this phone, and no money is charged.",
+"Les produits sont des exemples, ce que vous publiez n'est enregistré que sur ce téléphone et aucun argent n'est prélevé.",
+"商品均为示例，你发布的内容只保存在此手机上，且不会扣款。"
+],
+"Los reembolsos reales se tramitarán con el proveedor de pagos (pendiente de integración).": [
+"Real refunds will go through the payment provider (integration pending).",
+"Les vrais remboursements passeront par le prestataire de paiement (intégration en attente).",
+"真实退款将通过支付服务商处理（尚待接入）。"
+],
+"MARKETZONE cobra una comisión": [
+"MARKETZONE charges a commission",
+"MARKETZONE prélève une commission",
+"MARKETZONE 收取佣金"
+],
+"MARKETZONE es para mayores de 18 años. Si detectamos una cuenta de un menor, la eliminamos.": [
+"MARKETZONE is for people 18 and over. If we detect an account belonging to a minor, we delete it.",
+"MARKETZONE est réservé aux plus de 18 ans. Si nous détectons le compte d'un mineur, nous le supprimons.",
+"MARKETZONE 仅限 18 岁以上用户。如发现未成年人账户，我们会将其删除。"
+],
+"Marca": [
+"Brand",
+"Marque",
+"品牌"
+],
+"Marca + tipo + color + detalle": [
+"Brand + type + color + detail",
+"Marque + type + couleur + détail",
+"品牌 + 类型 + 颜色 + 细节"
+],
+"Marca, talla, medidas, detalles…": [
+"Brand, size, measurements, details…",
+"Marque, taille, mesures, détails…",
+"品牌、尺码、尺寸、细节……"
+],
+"Marca:": [
+"Brand:",
+"Marque :",
+"品牌："
+],
+"Marcar como enviado": [
+"Mark as shipped",
+"Marquer comme expédié",
+"标记为已发货"
+],
+"Marcar en preparación": [
+"Mark as preparing",
+"Marquer en préparation",
+"标记为准备中"
+],
+"Marcar todo como leído": [
+"Mark all as read",
+"Tout marquer comme lu",
+"全部标为已读"
+],
+"Marfil": [
+"Ivory",
+"Ivoire",
+"象牙白"
+],
+"Material": [
+"Material",
+"Matière",
+"材质"
+],
+"Medidas, estado real, detalles, qué incluye…": [
+"Measurements, actual condition, details, what's included…",
+"Mesures, état réel, détails, ce qui est inclus…",
+"尺寸、实际成色、细节、包含哪些物品……"
+],
+"Mejora tus fotos:": [
+"Improve your photos:",
+"Améliorez vos photos :",
+"优化你的照片："
+],
+"Menores de edad": [
+"Minors",
+"Mineurs",
+"未成年人"
+],
+"Menos stock": [
+"Lowest stock",
+"Stock le plus bas",
+"库存最少"
+],
+"Mi perfil": [
+"My profile",
+"Mon profil",
+"我的资料"
+],
+"Mi tienda": [
+"My shop",
+"Ma boutique",
+"我的店铺"
+],
+"Mientras lo revisamos, el pago al vendedor queda congelado. Si se confirma el problema, se te reembolsa.": [
+"While we review it, the seller's payment is frozen. If the problem is confirmed, you get a refund.",
+"Pendant notre examen, le paiement du vendeur est gelé. Si le problème est confirmé, vous êtes remboursé.",
+"审核期间卖家款项将被冻结。如问题属实，你将获得退款。"
+],
+"Minúsculas, números, punto o guion bajo. Se usa en tu tienda.": [
+"Lowercase letters, numbers, dot or underscore. Used for your shop.",
+"Minuscules, chiffres, point ou tiret bas. Utilisé pour votre boutique.",
+"小写字母、数字、点或下划线。用于你的店铺。"
+],
+"Mis campañas": [
+"My campaigns",
+"Mes campagnes",
+"我的推广"
+],
+"Mis negocios": [
+"My businesses",
+"Mes entreprises",
+"我的商家"
+],
+"Mis ofertas": [
+"My offers",
+"Mes offres",
+"我的出价"
+],
+"Mis pedidos": [
+"My orders",
+"Mes commandes",
+"我的订单"
+],
+"Moda": [
+"Fashion",
+"Mode",
+"时尚"
+],
+"Moderación": [
+"Moderation",
+"Modération",
+"审核"
+],
+"Modo claro": [
+"Light mode",
+"Mode clair",
+"浅色模式"
+],
+"Modo de prueba activo: las ventas de la columna “Prueba” no movieron dinero real. Las liquidaciones reales requieren integrar el proveedor de pagos (Stripe Connect).": [
+"Test mode is on: sales in the “Test” column didn't move real money. Real payouts require integrating the payment provider (Stripe Connect).",
+"Mode test actif : les ventes de la colonne « Test » n'ont pas déplacé d'argent réel. Les vrais versements nécessitent d'intégrer le prestataire de paiement (Stripe Connect).",
+"测试模式已开启：“测试”列中的销售未涉及真实资金。真实结算需接入支付服务商（Stripe Connect）。"
+],
+"Modo de prueba.": [
+"Test mode.",
+"Mode test.",
+"测试模式。"
+],
+"Modo de prueba: el pago es simulado y no se cobra dinero real.": [
+"Test mode: payment is simulated and no real money is charged.",
+"Mode test : le paiement est simulé et aucun argent réel n'est prélevé.",
+"测试模式：付款为模拟，不会扣除真实资金。"
+],
+"Modo de prueba: los pagos de campañas son simulados y no se cobra dinero real. Las campañas así activadas se marcan como “prueba”.": [
+"Test mode: campaign payments are simulated and no real money is charged. Campaigns activated this way are marked “test”.",
+"Mode test : les paiements de campagne sont simulés et aucun argent réel n'est prélevé. Les campagnes ainsi activées sont marquées « test ».",
+"测试模式：推广付款为模拟，不会扣除真实资金。以此方式启用的推广会标记为“测试”。"
+],
+"Modo de prueba: no se cobra dinero real ni se piden datos de tarjeta.": [
+"Test mode: no real money is charged and no card details are requested.",
+"Mode test : aucun argent réel n'est prélevé et aucune donnée de carte n'est demandée.",
+"测试模式：不会扣除真实资金，也不需要银行卡信息。"
+],
+"Modo oscuro": [
+"Dark mode",
+"Mode sombre",
+"深色模式"
+],
+"Mostrar a cada vendedor la dirección de envío solo de sus propios pedidos.": [
+"Show each seller the shipping address only for their own orders.",
+"Montrer à chaque vendeur l'adresse de livraison de ses seules commandes.",
+"仅向每位卖家显示其自己订单的收货地址。"
+],
+"Motivo": [
+"Reason",
+"Motif",
+"原因"
+],
+"Movimientos": [
+"Movements",
+"Mouvements",
+"变动"
+],
+"Movimientos de inventario": [
+"Inventory movements",
+"Mouvements de stock",
+"库存变动"
+],
+"Muestra en la página los productos de una de tus tiendas.": [
+"Show the products of one of your shops on the page.",
+"Affiche sur la page les produits de l'une de vos boutiques.",
+"在页面上展示你某个店铺的商品。"
+],
+"Más en {0}": [
+"More in {0}",
+"Plus dans {0}",
+"更多{0}"
+],
+"Más guardados": [
+"Most saved",
+"Les plus enregistrés",
+"收藏最多"
+],
+"Más recientes": [
+"Newest",
+"Plus récents",
+"最新"
+],
+"Mínimo 8 caracteres.": [
+"At least 8 characters.",
+"8 caractères minimum.",
+"至少 8 个字符。"
+],
+"Mínimo {0} ({1} % del precio). Debe ser menor que {2}.": [
+"Minimum {0} ({1}% of the price). Must be less than {2}.",
+"Minimum {0} ({1} % du prix). Doit être inférieur à {2}.",
+"最低 {0}（价格的 {1}%），且须低于 {2}。"
+],
+"Mínimo {0}. Sin cargos ocultos.": [
+"Minimum {0}. No hidden fees.",
+"Minimum {0}. Sans frais cachés.",
+"最低 {0}。无隐藏费用。"
+],
+"Navegación inferior": [
+"Bottom navigation",
+"Navigation inférieure",
+"底部导航"
+],
+"Necesitas al menos un producto publicado.": [
+"You need at least one published product.",
+"Il vous faut au moins un produit publié.",
+"你至少需要一件已发布的商品。"
+],
+"Necesitas una cuenta para acceder a esta sección.": [
+"You need an account to access this section.",
+"Il vous faut un compte pour accéder à cette section.",
+"需要账户才能访问此栏目。"
+],
+"Necesitas una dirección de envío para ofertar.": [
+"You need a shipping address to make an offer.",
+"Il vous faut une adresse de livraison pour faire une offre.",
+"出价需要先填写收货地址。"
+],
+"Negocio": [
+"Business",
+"Entreprise",
+"商家"
+],
+"Negocio (opcional)": [
+"Business (optional)",
+"Entreprise (facultatif)",
+"商家（选填）"
+],
+"Negocio demo": [
+"Demo business",
+"Entreprise démo",
+"演示商家"
+],
+"Negocios": [
+"Businesses",
+"Entreprises",
+"商家"
+],
+"Neto de ventas pagadas que aún no se ha transferido.": [
+"Net from paid sales not yet transferred.",
+"Net des ventes payées pas encore versé.",
+"已付款但尚未转出的销售净额。"
+],
+"Ninguno de los dos podrá comprarle ni hacerle ofertas al otro.": [
+"Neither of you will be able to buy from or make offers to the other.",
+"Aucun de vous ne pourra acheter ni faire d'offre à l'autre.",
+"你们双方都无法向对方购买或出价。"
+],
+"No configurada": [
+"Not set up",
+"Non configurée",
+"未配置"
+],
+"No has bloqueado a nadie. Puedes bloquear a alguien desde su tienda o desde uno de sus productos.": [
+"You haven't blocked anyone. You can block someone from their shop or from one of their products.",
+"Vous n'avez bloqué personne. Vous pouvez bloquer quelqu'un depuis sa boutique ou l'un de ses produits.",
+"你还没有屏蔽任何人。可在对方的店铺或商品页面进行屏蔽。"
+],
+"No has enviado ofertas": [
+"You haven't sent any offers",
+"Vous n'avez envoyé aucune offre",
+"你还没有出过价"
+],
+"No has recibido ofertas": [
+"You haven't received any offers",
+"Vous n'avez reçu aucune offre",
+"你还没有收到出价"
+],
+"No hay conexión con el servidor. Revisa tu conexión e inténtalo de nuevo.": [
+"Can't reach the server. Check your connection and try again.",
+"Impossible de joindre le serveur. Vérifiez votre connexion et réessayez.",
+"无法连接服务器，请检查网络后重试。"
+],
+"No hay negocios en esta categoría": [
+"No businesses in this category",
+"Aucune entreprise dans cette catégorie",
+"此分类暂无商家"
+],
+"No hay pedidos aquí": [
+"No orders here",
+"Aucune commande ici",
+"这里没有订单"
+],
+"No hay publicaciones con estos filtros": [
+"No listings match these filters",
+"Aucune annonce ne correspond à ces filtres",
+"没有符合筛选条件的商品"
+],
+"No hay suficientes unidades": [
+"Not enough units",
+"Pas assez d'unités",
+"库存不足"
+],
+"No se aplican en modo de prueba": [
+"Not applied in test mode",
+"Non appliqués en mode test",
+"测试模式下不适用"
+],
+"No se concedió permiso para usar Claude en esta página. Puedes publicar manualmente.": [
+"Permission to use Claude on this page wasn't granted. You can list manually.",
+"L'autorisation d'utiliser Claude sur cette page n'a pas été accordée. Vous pouvez publier manuellement.",
+"未授予此页面使用 Claude 的权限。你可以手动发布。"
+],
+"No se le avisa. Puedes desbloquearlo cuando quieras desde Ajustes.": [
+"They aren't notified. You can unblock them anytime from Settings.",
+"La personne n'est pas prévenue. Vous pouvez la débloquer à tout moment dans Réglages.",
+"对方不会收到通知。你可随时在设置中解除屏蔽。"
+],
+"No se pudo subir la foto. Revisa tu conexión e inténtalo de nuevo.": [
+"The photo couldn't be uploaded. Check your connection and try again.",
+"La photo n'a pas pu être envoyée. Vérifiez votre connexion et réessayez.",
+"照片上传失败，请检查网络后重试。"
+],
+"No se pudo subir la imagen.": [
+"The image couldn't be uploaded.",
+"L'image n'a pas pu être envoyée.",
+"图片上传失败。"
+],
+"No tienes direcciones guardadas.": [
+"You don't have any saved addresses.",
+"Vous n'avez aucune adresse enregistrée.",
+"你还没有保存地址。"
+],
+"No tienes permiso para realizar esta acción.": [
+"You don't have permission to do this.",
+"Vous n'avez pas l'autorisation d'effectuer cette action.",
+"你无权执行此操作。"
+],
+"Nombre comercial": [
+"Business name",
+"Nom commercial",
+"商号"
+],
+"Nombre completo": [
+"Full name",
+"Nom complet",
+"全名"
+],
+"Nombre de usuario": [
+"Username",
+"Nom d'utilisateur",
+"用户名"
+],
+"Nombre del negocio": [
+"Business name",
+"Nom de l'entreprise",
+"商家名称"
+],
+"Nombre visible": [
+"Display name",
+"Nom affiché",
+"显示名称"
+]
+}

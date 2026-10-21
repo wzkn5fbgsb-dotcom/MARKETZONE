@@ -7,6 +7,7 @@ import { useApp } from "../app/state";
 import { invalidate } from "../app/query";
 import { Badge, Img, useToast } from "../ui/kit";
 import { Icon } from "../ui/icons";
+import { t } from "../i18n";
 
 export function ConditionTag({ condition, long = false }: { condition: Card["condition"]; long?: boolean }) {
   const c = CONDITIONS[condition];
@@ -48,7 +49,7 @@ export function FavoriteButton({ productId, initial, className = "pcard-fav" }: 
   const [busy, setBusy] = useState(false);
   useEffect(() => setOn(initial), [initial]);
   return (
-    <button className={`${className} ${on ? "on" : ""}`} aria-pressed={on} aria-label={on ? "Quitar de favoritos" : "Añadir a favoritos"} disabled={busy}
+    <button className={`${className} ${on ? "on" : ""}`} aria-pressed={on} aria-label={on ? t("Quitar de favoritos") : t("Añadir a favoritos")} disabled={busy}
       onClick={async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -82,11 +83,11 @@ export function ProductCard({ p, eager }: { p: Card; eager?: boolean }) {
       <Link to={`/p/${p.id}${p.sponsored && p.campaign_id ? `?c=${p.campaign_id}` : ""}`} onClick={onClick} className={`pcard-media ${p.sponsored ? "zone" : ""}`} aria-label={p.title}>
         <Img src={p.image_url} alt={p.title} loading={eager ? "eager" : "lazy"} />
         <div className="pcard-top">
-          {p.sponsored && <Badge kind="accent" title="Publicación patrocinada">Patrocinado</Badge>}
-          {p.compare_at_cents && !p.sponsored && <Badge kind="bad">Bajó de precio</Badge>}
-          {p.is_demo && <Badge kind="demo" title="Producto de ejemplo para la demostración">Ejemplo</Badge>}
+          {p.sponsored && <Badge kind="accent" title={t("Publicación patrocinada")}>{t("Patrocinado")}</Badge>}
+          {p.compare_at_cents && !p.sponsored && <Badge kind="bad">{t("Bajó de precio")}</Badge>}
+          {p.is_demo && <Badge kind="demo" title={t("Producto de ejemplo para la demostración")}>{t("Ejemplo")}</Badge>}
         </div>
-        {soldOut && <div className="pcard-soldout">Agotado</div>}
+        {soldOut && <div className="pcard-soldout">{t("Agotado")}</div>}
       </Link>
       <FavoriteButton productId={p.id} initial={p.is_favorite} />
       <div className="pcard-body">

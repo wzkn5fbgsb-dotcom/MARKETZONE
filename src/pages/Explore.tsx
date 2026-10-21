@@ -8,6 +8,7 @@ import { GridSkeleton, ProductGrid } from "../components/product";
 import { Page } from "../components/layout";
 import { Button, Empty, ErrorBox, Field, MoneyInput, Select, Sheet, Toggle } from "../ui/kit";
 import { Icon } from "../ui/icons";
+import { t } from "../i18n";
 
 const APPAREL = ["XS", "S", "M", "L", "XL", "XXL"];
 const SHOES = ["US 6", "US 7", "US 8", "US 9", "US 10", "US 11", "US 12"];
@@ -59,12 +60,12 @@ export default function Explore() {
       <div className="stack-lg">
         <div className="stack" style={{ gap: 6 }}>
           {parent && cat?.id !== parent.id && <span className="eyebrow">{parent.name}</span>}
-          <h1 className="h1">{params.q ? `“${params.q}”` : cat?.name ?? "Todo lo publicado"}</h1>
-          <span className="small dim">{res.data ? `${res.data.total} artículo${res.data.total === 1 ? "" : "s"}` : "Cargando…"}</span>
+          <h1 className="h1">{params.q ? `“${params.q}”` : cat?.name ?? t("Todo lo publicado")}</h1>
+          <span className="small dim">{res.data ? t("{0} artículo{1}", [res.data.total, res.data.total === 1 ? "" : "s"]) : t("Cargando…")}</span>
         </div>
 
         <div className="cat-strip" style={{ paddingBottom: 0 }}>
-          <button className={`chip ${!params.category ? "on" : ""}`} onClick={() => set({ cat: null, sizes: null })}>Todo</button>
+          <button className={`chip ${!params.category ? "on" : ""}`} onClick={() => set({ cat: null, sizes: null })}>{t("Todo")}</button>
           {top.map((c) => <button key={c.id} className={`chip ${parent?.id === c.id ? "on" : ""}`} onClick={() => set({ cat: c.id, sizes: null })}>{c.name}</button>)}
         </div>
         {subs.length > 0 && (
@@ -74,15 +75,15 @@ export default function Explore() {
         )}
 
         <div className="row between">
-          <Button variant="outline" size="sm" icon="filter" onClick={() => setOpen(true)}>Filtros{activeFilters ? ` (${activeFilters})` : ""}</Button>
+          <Button variant="outline" size="sm" icon="filter" onClick={() => setOpen(true)}>{t("Filtros")}{activeFilters ? ` (${activeFilters})` : ""}</Button>
           <div className="row" style={{ gap: 8 }}>
-            <label className="small dim" htmlFor="sort">Ordenar</label>
+            <label className="small dim" htmlFor="sort">{t("Ordenar")}</label>
             <div style={{ width: 190 }}>
               <Select id="sort" value={params.sort} onChange={(e) => set({ sort: e.target.value })}>
-                <option value="recent">Más recientes</option>
-                <option value="price_asc">Precio: menor a mayor</option>
-                <option value="price_desc">Precio: mayor a menor</option>
-                <option value="popular">Más guardados</option>
+                <option value="recent">{t("Más recientes")}</option>
+                <option value="price_asc">{t("Precio: menor a mayor")}</option>
+                <option value="price_desc">{t("Precio: mayor a menor")}</option>
+                <option value="popular">{t("Más guardados")}</option>
               </Select>
             </div>
           </div>
@@ -90,7 +91,7 @@ export default function Explore() {
 
         {res.data && res.data.spotlight.length > 0 && (
           <div className="stack">
-            <span className="eyebrow">Patrocinado en {cat?.name}</span>
+            <span className="eyebrow">{t("Patrocinado en")}{" "}{cat?.name}</span>
             <ProductGrid items={res.data.spotlight} />
           </div>
         )}
@@ -100,20 +101,19 @@ export default function Explore() {
           <>
             <ProductGrid items={items} wide />
             {res.data && items.length < res.data.total && (
-              <div className="center"><Button variant="outline" loading={loadingMore} onClick={loadMore}>Cargar más</Button></div>
+              <div className="center"><Button variant="outline" loading={loadingMore} onClick={loadMore}>{t("Cargar más")}</Button></div>
             )}
           </>
         ) : res.data ? (
-          <Empty icon="search" title="Sin resultados" action={<Button variant="outline" onClick={() => navigate("/explorar")}>Quitar filtros</Button>}>
-            Prueba con otra palabra, otra talla o una categoría más amplia.
-          </Empty>
+          <Empty icon="search" title={t("Sin resultados")} action={<Button variant="outline" onClick={() => navigate("/explorar")}>{t("Quitar filtros")}</Button>}>
+            {t("Prueba con otra palabra, otra talla o una categoría más amplia.")}</Empty>
         ) : null}
       </div>
 
-      <Sheet open={open} onClose={() => setOpen(false)} title="Filtros" footer={
+      <Sheet open={open} onClose={() => setOpen(false)} title={t("Filtros")} footer={
         <>
-          <Button variant="ghost" onClick={() => { set({ sizes: null, cond: null, min: null, max: null, avail: null, deals: null }); setOpen(false); }}>Limpiar</Button>
-          <Button variant="primary" onClick={() => setOpen(false)}>Ver resultados</Button>
+          <Button variant="ghost" onClick={() => { set({ sizes: null, cond: null, min: null, max: null, avail: null, deals: null }); setOpen(false); }}>{t("Limpiar")}</Button>
+          <Button variant="primary" onClick={() => setOpen(false)}>{t("Ver resultados")}</Button>
         </>
       }>
         <FilterBody params={params} set={set} sizeSystem={sizeSystem} />
@@ -127,12 +127,12 @@ function FilterBody({ params, set, sizeSystem }: { params: SearchParams; set: (p
   const toggle = (list: string[] | undefined, v: string) => { const s = new Set(list ?? []); s.has(v) ? s.delete(v) : s.add(v); return [...s]; };
   return (
     <>
-      <Field label="Talla">
+      <Field label={t("Talla")}>
         <div className="segmented">
           {sizes.map((s) => <button key={s} className={`seg ${params.sizes?.includes(s) ? "on" : ""}`} onClick={() => set({ sizes: toggle(params.sizes, s) })}>{s}</button>)}
         </div>
       </Field>
-      <Field label="Estado">
+      <Field label={t("Estado")}>
         <div className="segmented">
           {(Object.keys(CONDITIONS) as Condition[]).map((c) => (
             <button key={c} className={`seg ${params.conditions?.includes(c) ? "on" : ""}`} onClick={() => set({ cond: toggle(params.conditions, c) })}>
@@ -142,13 +142,13 @@ function FilterBody({ params, set, sizeSystem }: { params: SearchParams; set: (p
         </div>
       </Field>
       <div className="grid-2">
-        <Field label="Precio mínimo"><MoneyInput cents={params.min_price_cents ?? null} onChange={(c) => set({ min: c })} /></Field>
-        <Field label="Precio máximo"><MoneyInput cents={params.max_price_cents ?? null} onChange={(c) => set({ max: c })} /></Field>
+        <Field label={t("Precio mínimo")}><MoneyInput cents={params.min_price_cents ?? null} onChange={(c) => set({ min: c })} /></Field>
+        <Field label={t("Precio máximo")}><MoneyInput cents={params.max_price_cents ?? null} onChange={(c) => set({ max: c })} /></Field>
       </div>
-      {(params.min_price_cents || params.max_price_cents) ? <span className="small dim">Entre {money(params.min_price_cents ?? 0)} y {params.max_price_cents ? money(params.max_price_cents) : "sin límite"}</span> : null}
-      <Toggle checked={!!params.only_available} onChange={(v) => set({ avail: v ? 1 : null })} label="Solo con unidades disponibles" />
-      <Toggle checked={!!params.only_deals} onChange={(v) => set({ deals: v ? 1 : null })} label="Solo artículos que bajaron de precio" />
-      <span className="small dim"><Icon name="info" size={14} /> Los filtros se aplican al instante.</span>
+      {(params.min_price_cents || params.max_price_cents) ? <span className="small dim">{t("Entre")}{" "}{money(params.min_price_cents ?? 0)} {t("y")} {params.max_price_cents ? money(params.max_price_cents) : t("sin límite")}</span> : null}
+      <Toggle checked={!!params.only_available} onChange={(v) => set({ avail: v ? 1 : null })} label={t("Solo con unidades disponibles")} />
+      <Toggle checked={!!params.only_deals} onChange={(v) => set({ deals: v ? 1 : null })} label={t("Solo artículos que bajaron de precio")} />
+      <span className="small dim"><Icon name="info" size={14} /> {" "}{t("Los filtros se aplican al instante.")}</span>
     </>
   );
 }

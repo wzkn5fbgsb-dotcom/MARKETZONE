@@ -163,6 +163,12 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .tabbar a.on { color: var(--text); }
 .tabbar a.sell { color: var(--text); }
 .tabbar a.sell .sell-dot { width: 46px; height: 34px; border-radius: 12px; background: var(--crimson); display: grid; place-items: center; margin-top: -2px; }
+/* Teléfonos angostos o idiomas con palabras largas: la cabecera nunca se desborda */
+@media (max-width: 430px) {
+  .header-inner .logo-word { font-size: 14.5px !important; }
+  .header-inner .btn-sm { padding: 0 10px; }
+  .header-inner .icon-btn { width: 38px; }
+}
 /* En móvil, Favoritos y Perfil ya están en la barra inferior */
 @media (max-width: 899px) { .hide-sm { display: none !important; } .header-actions { gap: 0; } .header-inner { gap: 10px; } }
 .has-tabbar { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px)); }

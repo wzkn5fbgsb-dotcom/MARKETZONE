@@ -1,6 +1,7 @@
 // Identidad visual de cada categoría: ilustración propia (sin marcas reales) y color de fondo.
 // La misma tabla se reutilizará en la app de iOS y Android.
 import { artBackdropCss, artDataUri } from "./art";
+import { t } from "../i18n";
 
 const ART: Record<string, string> = {
   ropa: "art:jacket:denim:stone:0:",
@@ -42,5 +43,5 @@ export function categoryBackdrop(id: string): string {
 
 /** "1 artículo" / "12 artículos" / "Sin artículos todavía" */
 export function countLabel(n: number): string {
-  return n === 0 ? "Sin artículos todavía" : n === 1 ? "1 artículo" : `${n} artículos`;
+  return n === 0 ? t("Sin artículos todavía") : n === 1 ? t("1 artículo") : t("{0} artículos", [n]);
 }

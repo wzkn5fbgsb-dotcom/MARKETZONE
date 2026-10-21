@@ -5,6 +5,7 @@ import { Icon, type IconName } from "./icons";
 import { useImageSrc } from "../app/images";
 import { remaining, tone } from "../app/format";
 import type { ApiError } from "../api/backend";
+import { t } from "../i18n";
 
 type BtnVariant = "primary" | "dark" | "outline" | "ghost" | "danger" | "white";
 export function Button({ variant = "dark", size, block, loading, icon, children, className = "", ...rest }:
@@ -17,7 +18,7 @@ export function Button({ variant = "dark", size, block, loading, icon, children,
   );
 }
 
-export function Spinner({ label = "Cargando" }: { label?: string }) {
+export function Spinner({ label = t("Cargando") }: { label?: string }) {
   return <div className="loading-block" role="status" aria-live="polite"><div className="spin" /><span className="sr-only" hidden>{label}</span></div>;
 }
 
@@ -103,7 +104,7 @@ export function ErrorBox({ error, onRetry }: { error: ApiError | null; onRetry?:
     <Callout kind="bad">
       <div className="stack" style={{ gap: 8 }}>
         <span>{error.message}</span>
-        {onRetry && <div><Button size="sm" variant="outline" onClick={onRetry} icon="refresh">Reintentar</Button></div>}
+        {onRetry && <div><Button size="sm" variant="outline" onClick={onRetry} icon="refresh">{t("Reintentar")}</Button></div>}
       </div>
     </Callout>
   );
@@ -138,7 +139,7 @@ export function Sheet({ open, onClose, title, children, footer }: { open: boolea
   return (
     <div className="overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="sheet" role="dialog" aria-modal="true">
-        <div className="sheet-h"><div className="h3">{title}</div><button className="icon-btn" onClick={onClose} aria-label="Cerrar"><Icon name="close" /></button></div>
+        <div className="sheet-h"><div className="h3">{title}</div><button className="icon-btn" onClick={onClose} aria-label={t("Cerrar")}><Icon name="close" /></button></div>
         <div className="stack">{children}</div>
         {footer && <div className="row" style={{ marginTop: 18, justifyContent: "flex-end" }}>{footer}</div>}
       </div>
@@ -147,14 +148,14 @@ export function Sheet({ open, onClose, title, children, footer }: { open: boolea
 }
 
 /** Botón con confirmación integrada (los diálogos nativos no están disponibles en todos los visores). */
-export function ConfirmButton({ children, confirmLabel = "Confirmar", onConfirm, variant = "outline", size = "sm", icon, loading }:
+export function ConfirmButton({ children, confirmLabel = t("Confirmar"), onConfirm, variant = "outline", size = "sm", icon, loading }:
   { children: ReactNode; confirmLabel?: string; onConfirm: () => void; variant?: BtnVariant; size?: "sm" | "lg"; icon?: IconName; loading?: boolean }) {
   const [armed, setArmed] = useState(false);
   useEffect(() => { if (!armed) return; const t = setTimeout(() => setArmed(false), 4000); return () => clearTimeout(t); }, [armed]);
   if (armed) return (
     <span className="row" style={{ gap: 6 }}>
       <Button size={size} variant="danger" loading={loading} onClick={() => { setArmed(false); onConfirm(); }}>{confirmLabel}</Button>
-      <Button size={size} variant="ghost" onClick={() => setArmed(false)}>No</Button>
+      <Button size={size} variant="ghost" onClick={() => setArmed(false)}>{t("No")}</Button>
     </span>
   );
   return <Button size={size} variant={variant} icon={icon} loading={loading} onClick={() => setArmed(true)}>{children}</Button>;
@@ -171,16 +172,16 @@ export function Avatar({ name, src, size }: { name: string; src?: string | null;
   return <div className={`avatar ${size ?? ""}`}>{resolved ? <img src={resolved} alt="" /> : (name || "?").slice(0, 1).toUpperCase()}</div>;
 }
 
-export function Countdown({ to, prefix = "Vence en" }: { to: string; prefix?: string }) {
+export function Countdown({ to, prefix = t("Vence en") }: { to: string; prefix?: string }) {
   const [, tick] = useState(0);
   useEffect(() => { const t = setInterval(() => tick((x) => x + 1), 30000); return () => clearInterval(t); }, []);
   const r = remaining(to);
-  return <span className="countdown">{r === "vencido" ? "Plazo vencido" : `${prefix} ${r}`}</span>;
+  return <span className="countdown">{r === "vencido" ? t("Plazo vencido") : `${prefix} ${r}`}</span>;
 }
 
 export function Stars({ value, size = 14 }: { value: number; size?: number }) {
   return (
-    <span className="row" style={{ gap: 2 }} aria-label={`${value} de 5`}>
+    <span className="row" style={{ gap: 2 }} aria-label={t("{0} de 5", [value])}>
       {[1, 2, 3, 4, 5].map((i) => <Icon key={i} name="star" size={size} fill={i <= Math.round(value) ? "currentColor" : undefined} style={{ color: i <= Math.round(value) ? "#F2B544" : "var(--line)" }} />)}
     </span>
   );

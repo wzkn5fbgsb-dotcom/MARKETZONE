@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dir = join(root, "supabase/migrations");
 const files = readdirSync(dir).filter((f) => f.endsWith(".sql")).sort();
-const groups = [["0100", "0200"], ["0300"], ["0400"], ["0500", "0600", "0700", "0800", "0900"], ["1000"]];
+const groups = [["0100", "0200"], ["0300"], ["0400"], ["0500", "0600", "0700", "0800", "0900"], ["1000"], ["1100", "1200"]];
 const parts = groups.map((g, i) => {
   const fs = files.filter((f) => g.some((n) => f.includes(`_${n}`.replace("_", "00") ) || f.split("_")[0].endsWith(n)));
   return { n: i + 1, files: fs, sql: fs.map((f) => `-- ===== ${f}\n` + readFileSync(join(dir, f), "utf8")).join("\n\n") };
@@ -36,7 +36,7 @@ code{background:#141418;padding:2px 6px;border-radius:6px}
 </style>
 <main>
 <h1>MARKET<b>ZONE</b> · instalar base de datos</h1>
-<p>Pega y ejecuta cada parte <b>en orden</b>, una sola vez. <b>Si ya instalaste las partes 1 a 4, ejecuta solo la parte 5</b> (eliminar cuenta y bloquear usuarios).</p>
+<p>Pega y ejecuta cada parte <b>en orden</b>, una sola vez. <b>Si ya instalaste las partes 1 a 5, ejecuta solo la parte 6</b> (ofertas con pago al ofertar, comisión del 7 % y protección contra estafas).</p>
 <div class="card"><ol>
 <li>En Supabase abre <b>SQL Editor</b> → <b>New query</b>.</li>
 <li>Aquí toca <b>Copiar parte 1</b>.</li>

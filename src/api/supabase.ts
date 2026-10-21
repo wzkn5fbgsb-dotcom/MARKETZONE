@@ -1,6 +1,7 @@
 // Cliente ligero para Supabase (Auth + PostgREST + Storage + Edge Functions) sin dependencias.
 // Solo usa la clave pública "anon": todas las reglas se aplican en el servidor (RLS + funciones).
 import { ApiError, FALLBACK_MESSAGES, type AuthApi, type Backend, type Session, type SignUpInput, type UploadResult } from "./backend";
+import { t } from "../i18n";
 
 export interface KeyValueStore { get(key: string): string | null; set(key: string, value: string): void; remove(key: string): void }
 
@@ -28,10 +29,10 @@ function mapAuthError(status: number, body: any): ApiError {
   if (code === "invalid_credentials" || /invalid login/i.test(raw)) return new ApiError("invalid_credentials", FALLBACK_MESSAGES.invalid_credentials, null, status);
   if (code === "user_already_exists" || /already registered/i.test(raw)) return new ApiError("user_already_exists", FALLBACK_MESSAGES.user_already_exists, null, status);
   if (code === "weak_password" || /password/i.test(raw) && /(characters|weak|short)/i.test(raw)) return new ApiError("weak_password", FALLBACK_MESSAGES.weak_password, null, status);
-  if (code === "email_not_confirmed") return new ApiError(code, "Confirma tu correo antes de iniciar sesión.", null, status);
+  if (code === "email_not_confirmed") return new ApiError(code, t("Confirma tu correo antes de iniciar sesión."), null, status);
   if (status === 429 || code === "over_email_send_rate_limit" || code === "over_request_rate_limit")
-    return new ApiError("rate_limited", "Demasiados intentos. Espera unos minutos.", null, status);
-  if (code === "validation_failed" || /email/i.test(raw) && /invalid/i.test(raw)) return new ApiError("validation", "Revisa el correo electrónico.", null, status);
+    return new ApiError("rate_limited", t("Demasiados intentos. Espera unos minutos."), null, status);
+  if (code === "validation_failed" || /email/i.test(raw) && /invalid/i.test(raw)) return new ApiError("validation", t("Revisa el correo electrónico."), null, status);
   return new ApiError(code, raw || FALLBACK_MESSAGES.unknown, body, status);
 }
 
@@ -132,7 +133,7 @@ export class SupabaseBackend implements Backend {
     const idx = Math.max(hash.lastIndexOf("#"), hash.lastIndexOf("?"));
     const params = new URLSearchParams(hash.slice(idx + 1));
     if (params.get("error")) {
-      throw new ApiError("link_expired", "El enlace ha caducado o ya se usó. Solicita uno nuevo.", params.get("error_description"), 400);
+      throw new ApiError("link_expired", t("El enlace ha caducado o ya se usó. Solicita uno nuevo."), params.get("error_description"), 400);
     }
     const access = params.get("access_token");
     const refresh = params.get("refresh_token");
@@ -215,9 +216,9 @@ export class SupabaseBackend implements Backend {
     }
     if (!res.ok) {
       const body = await res.json().catch(() => null);
-      if (res.status === 413) throw new ApiError("too_large", "La imagen supera el tamaño máximo (8 MB).");
-      if (res.status === 415) throw new ApiError("invalid_type", "Formato no admitido. Usa JPG, PNG o WebP.");
-      throw new ApiError("upload_failed", "No se pudo subir la imagen.", body, res.status);
+      if (res.status === 413) throw new ApiError("too_large", t("La imagen supera el tamaño máximo (8 MB)."));
+      if (res.status === 415) throw new ApiError("invalid_type", t("Formato no admitido. Usa JPG, PNG o WebP."));
+      throw new ApiError("upload_failed", t("No se pudo subir la imagen."), body, res.status);
     }
     return { url: `${this.url}/storage/v1/object/public/${opts.bucket}/${path}`, path };
   }
@@ -237,7 +238,7 @@ export class SupabaseBackend implements Backend {
     const data = await res.json().catch(() => null);
     if (!res.ok) {
       throw new ApiError(String(data?.code ?? (res.status === 404 ? "not_configured" : "unknown")),
-        String(data?.message ?? (res.status === 404 ? "Esta función todavía no está desplegada en el servidor." : FALLBACK_MESSAGES.unknown)),
+        String(data?.message ?? (res.status === 404 ? t("Esta función todavía no está desplegada en el servidor.") : FALLBACK_MESSAGES.unknown)),
         data, res.status);
     }
     return data as T;

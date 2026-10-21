@@ -1,3 +1,4 @@
+import { t } from "../i18n";
 // Contrato común de backend. Hay dos implementaciones:
 //  - SupabaseBackend: producción (Auth + PostgREST + Storage + Edge Functions de Supabase)
 //  - DemoBackend: motor local en el navegador con las mismas reglas, para la versión de demostración.
@@ -34,7 +35,7 @@ export class ApiError extends Error {
   detail: unknown;
   status: number;
   constructor(code: string, message: string, detail?: unknown, status = 400) {
-    super(message);
+    super(t(message)); // los mensajes del servidor vienen en español; se muestran en el idioma elegido
     this.name = "ApiError";
     this.code = code;
     this.detail = detail ?? null;
@@ -44,12 +45,12 @@ export class ApiError extends Error {
 
 /** Mensajes en español para errores comunes sin mensaje propio. */
 export const FALLBACK_MESSAGES: Record<string, string> = {
-  auth_required: "Inicia sesión para continuar.",
-  network: "No hay conexión con el servidor. Revisa tu conexión e inténtalo de nuevo.",
-  invalid_credentials: "Correo o contraseña incorrectos.",
-  user_already_exists: "Ya existe una cuenta con ese correo.",
-  weak_password: "La contraseña debe tener al menos 8 caracteres.",
-  permission_denied: "No tienes permiso para realizar esta acción.",
-  not_configured: "Esta función no está configurada todavía.",
-  unknown: "Algo salió mal. Inténtalo de nuevo.",
+  auth_required: t("Inicia sesión para continuar."),
+  network: t("No hay conexión con el servidor. Revisa tu conexión e inténtalo de nuevo."),
+  invalid_credentials: t("Correo o contraseña incorrectos."),
+  user_already_exists: t("Ya existe una cuenta con ese correo."),
+  weak_password: t("La contraseña debe tener al menos 8 caracteres."),
+  permission_denied: t("No tienes permiso para realizar esta acción."),
+  not_configured: t("Esta función no está configurada todavía."),
+  unknown: t("Algo salió mal. Inténtalo de nuevo."),
 };

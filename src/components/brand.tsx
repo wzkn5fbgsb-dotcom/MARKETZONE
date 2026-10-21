@@ -1,3 +1,4 @@
+import { t } from "../i18n";
 // Logotipo original de MARKETZONE: una "Z" geométrica dentro de una zona delimitada por marcas de esquina.
 export function LogoMark({ size = 32 }: { size?: number }) {
   return (
@@ -14,7 +15,7 @@ export function Logo({ size = 30, compact = false }: { size?: number; compact?: 
     <span className="row-nw" style={{ gap: 9 }} aria-label="MARKETZONE">
       <LogoMark size={size} />
       {!compact && (
-        <span className="display" style={{ fontSize: size * 0.56, letterSpacing: "0.02em" }}>
+        <span className="display logo-word" style={{ fontSize: size * 0.56, letterSpacing: "0.02em" }}>
           MARKET<span style={{ color: "var(--muted)" }}>ZONE</span>
         </span>
       )}

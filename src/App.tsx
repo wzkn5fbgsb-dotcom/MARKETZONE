@@ -18,6 +18,7 @@ import Admin from "./pages/Admin";
 import Status from "./pages/Status";
 import { Privacy, Terms } from "./pages/Legal";
 import { Link } from "./app/router";
+import { t } from "./i18n";
 
 const ROUTES: [string, (p: Record<string, string>) => JSX.Element][] = [
   ["/", () => <Home />],
@@ -66,7 +67,7 @@ export default function App() {
     if (!/access_token=|error=/.test(h)) return;
     backend.auth.consumeRedirect(h).then((kind) => {
       navigate(kind === "recovery" ? "/restablecer" : "/", { replace: true });
-      if (kind === "signup") setAuthNotice("Correo confirmado. ¡Bienvenido a MARKETZONE!");
+      if (kind === "signup") setAuthNotice(t("Correo confirmado. ¡Bienvenido a MARKETZONE!"));
     }).catch((e) => { setAuthNotice(e.message); navigate("/recuperar", { replace: true }); });
   }, [backend]);
 
@@ -80,7 +81,7 @@ export default function App() {
       <Header />
       <DemoBanner />
       {authNotice && <div className="wrap" style={{ paddingTop: 12 }}><Callout kind="info">{authNotice}</Callout></div>}
-      {content ?? <Page><Empty icon="search" title="Página no encontrada" action={<Link to="/" className="btn btn-primary">Ir al inicio</Link>}>La dirección no existe o se movió.</Empty></Page>}
+      {content ?? <Page><Empty icon="search" title={t("Página no encontrada")} action={<Link to="/" className="btn btn-primary">{t("Ir al inicio")}</Link>}>{t("La dirección no existe o se movió.")}</Empty></Page>}
       <Footer />
       <TabBar />
     </div>

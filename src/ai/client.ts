@@ -6,6 +6,7 @@ import type { AiProvider } from "../api/demo/backend";
 import { JSON_SHAPE_HINT, listingPrompt, marketingPrompt, normalizeListingResult, normalizeMarketing,
   type ListingAiInput, type ListingAiResult, type MarketingInput } from "../../supabase/functions/_shared/listing-ai";
 import { blobFor, compressImage, toBase64 } from "../app/images";
+import { t } from "../i18n";
 
 export type { ListingAiResult, MarketingInput };
 
@@ -14,23 +15,23 @@ export interface AiStatus { available: boolean; reason: string; provider: "serve
 export async function aiStatus(backend: Backend): Promise<AiStatus> {
   if (backend.mode === "demo") {
     const ok = await artifactAi.available();
-    return ok ? { available: true, reason: "Análisis real con Claude desde el visor (se pide permiso al usarlo).", provider: "claude-viewer" }
-      : { available: false, reason: "La IA no está disponible en esta versión de demostración fuera de Claude. Puedes publicar manualmente.", provider: "none" };
+    return ok ? { available: true, reason: t("Análisis real con Claude desde el visor (se pide permiso al usarlo)."), provider: "claude-viewer" }
+      : { available: false, reason: t("La IA no está disponible en esta versión de demostración fuera de Claude. Puedes publicar manualmente."), provider: "none" };
   }
   try {
     await backend.invokeFunction("ai-listing", { ping: true });
-    return { available: true, reason: "IA del servidor activa.", provider: "server" };
+    return { available: true, reason: t("IA del servidor activa."), provider: "server" };
   } catch (e) {
     const err = e as ApiError;
-    if (err.status === 400 || err.status === 401) return { available: true, reason: "IA del servidor activa.", provider: "server" };
-    return { available: false, reason: err.code === "ai_not_configured" ? "La IA no está configurada en el servidor (falta la clave). Puedes publicar manualmente."
-      : "La función de IA no está desplegada todavía. Puedes publicar manualmente.", provider: "none" };
+    if (err.status === 400 || err.status === 401) return { available: true, reason: t("IA del servidor activa."), provider: "server" };
+    return { available: false, reason: err.code === "ai_not_configured" ? t("La IA no está configurada en el servidor (falta la clave). Puedes publicar manualmente.")
+      : t("La función de IA no está desplegada todavía. Puedes publicar manualmente."), provider: "none" };
   }
 }
 
 export async function analyzeListing(backend: Backend, imageUrls: string[], input: ListingAiInput): Promise<ListingAiResult> {
   const blobs = (await Promise.all(imageUrls.slice(0, 6).map((u) => blobFor(u)))).filter(Boolean) as Blob[];
-  if (!blobs.length) throw new ApiError("validation", "Añade al menos una fotografía para analizar.");
+  if (!blobs.length) throw new ApiError("validation", t("Añade al menos una fotografía para analizar."));
   if (backend.mode === "demo") {
     const small = await Promise.all(blobs.map((b) => compressImage(b, 1280, 0.82).catch(() => b)));
     const res = await backend.invokeFunction<{ proposal: ListingAiResult }>("ai-listing", { blobs: small, input });
@@ -61,13 +62,13 @@ function getSample(): Promise<SampleFn | null> {
 }
 
 const SAMPLE_ERRORS: Record<string, string> = {
-  not_granted: "No se concedió permiso para usar Claude en esta página. Puedes publicar manualmente.",
-  sampling_disabled: "Claude no está disponible para esta cuenta.",
-  rate_limited: "Demasiadas solicitudes a la IA. Espera un momento e inténtalo de nuevo.",
-  image_rejected: "Una de las fotos no se pudo procesar. Prueba con otra.",
-  images_unavailable: "Esta vista no puede enviar fotos a la IA.",
-  invalid_json: "La IA no devolvió un resultado válido. Inténtalo de nuevo.",
-  refused: "La IA no pudo analizar estas fotos.",
+  not_granted: t("No se concedió permiso para usar Claude en esta página. Puedes publicar manualmente."),
+  sampling_disabled: t("Claude no está disponible para esta cuenta."),
+  rate_limited: t("Demasiadas solicitudes a la IA. Espera un momento e inténtalo de nuevo."),
+  image_rejected: t("Una de las fotos no se pudo procesar. Prueba con otra."),
+  images_unavailable: t("Esta vista no puede enviar fotos a la IA."),
+  invalid_json: t("La IA no devolvió un resultado válido. Inténtalo de nuevo."),
+  refused: t("La IA no pudo analizar estas fotos."),
 };
 
 export const artifactAi: AiProvider = {
@@ -78,7 +79,7 @@ export const artifactAi: AiProvider = {
   },
   async invoke(name, body: any) {
     const s = await getSample();
-    if (!s) throw new ApiError("ai_not_configured", "La IA no está disponible en esta versión.", null, 503);
+    if (!s) throw new ApiError("ai_not_configured", t("La IA no está disponible en esta versión."), null, 503);
     try {
       if (name === "ai-listing") {
         const input = body.input as ListingAiInput;
@@ -91,8 +92,8 @@ export const artifactAi: AiProvider = {
       }
     } catch (e: any) {
       if (e instanceof ApiError) throw e;
-      throw new ApiError(String(e?.code ?? "ai_error"), SAMPLE_ERRORS[e?.code] ?? "La IA no respondió. Inténtalo de nuevo o continúa manualmente.");
+      throw new ApiError(String(e?.code ?? "ai_error"), SAMPLE_ERRORS[e?.code] ?? t("La IA no respondió. Inténtalo de nuevo o continúa manualmente."));
     }
-    throw new ApiError("not_found", "Función de IA desconocida.");
+    throw new ApiError("not_found", t("Función de IA desconocida."));
   },
 };
