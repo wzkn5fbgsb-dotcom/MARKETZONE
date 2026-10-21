@@ -5,7 +5,7 @@ import { Link, navigate } from "../app/router";
 import { ago, slugify } from "../app/format";
 import type { Address } from "../api/types";
 import { ProductGrid } from "../components/product";
-import { Page } from "../components/layout";
+import { Page, ThemePicker } from "../components/layout";
 import { Avatar, Badge, Button, Callout, ConfirmButton, Empty, ErrorBox, Field, Img, Input, Select, Spinner, TextArea, useToast } from "../ui/kit";
 import { Icon, type IconName } from "../ui/icons";
 import { compressImage } from "../app/images";
@@ -64,7 +64,7 @@ export function Profile() {
         </nav>
         {config.mode === "demo" && (
           <div className="panel stack">
-            <span className="eyebrow">Demo · cambiar de papel</span>
+            <span className="eyebrow">Demo: probar como otro usuario</span>
             <span className="small muted">Para probar ofertas entre comprador y vendedor, cambia de cuenta aquí.</span>
             <div className="row">
               <Button size="sm" variant="dark" onClick={() => switchTo(DEMO_ACCOUNTS.buyer.email)}>Comprador</Button>
@@ -87,10 +87,10 @@ export function Favorites() {
   return (
     <Page>
       <div className="stack-lg">
-        <div className="stack" style={{ gap: 6 }}><span className="eyebrow">Guardados</span><h1 className="h1">Favoritos</h1></div>
+        <h1 className="h1">Favoritos</h1>
         <ErrorBox error={res.error} onRetry={res.reload} />
         {res.loading ? <Spinner /> : res.data?.length ? <ProductGrid items={res.data} /> :
-          <Empty icon="heart" title="Aún no guardaste nada" action={<Link to="/explorar" className="btn btn-outline">Explorar productos</Link>}>Toca el corazón en cualquier producto para guardarlo aquí.</Empty>}
+          <Empty icon="heart" title="Aún no guardaste nada" action={<Link to="/categorias" className="btn btn-outline">Ver categorías</Link>}>Toca el corazón en cualquier producto para guardarlo aquí.</Empty>}
       </div>
     </Page>
   );
@@ -151,6 +151,11 @@ export function Settings() {
     <Page narrow>
       <div className="stack-xl">
         <h1 className="h1">Ajustes</h1>
+        <section className="stack">
+          <h2 className="h3">Apariencia</h2>
+          <span className="small muted">Automático usa el mismo modo que tu teléfono o computadora.</span>
+          <ThemePicker />
+        </section>
         <ProfileForm />
         <Addresses />
         <StoreSettings />

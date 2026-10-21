@@ -70,7 +70,7 @@ export function StorePage({ slug }: { slug: string }) {
         {business && <BusinessCard b={business} />}
 
         <section>
-          <SectionHeader title="Catálogo" eyebrow={`${products.length} productos`} action={
+          <SectionHeader title="Catálogo" note={products.length === 1 ? "1 artículo" : `${products.length} artículos`} action={
             <div style={{ width: 180 }}><Select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Ordenar catálogo">
               <option value="recent">Más recientes</option><option value="price_asc">Precio ascendente</option><option value="price_desc">Precio descendente</option>
             </Select></div>} />
@@ -78,7 +78,7 @@ export function StorePage({ slug }: { slug: string }) {
         </section>
 
         <section>
-          <SectionHeader title="Reseñas" eyebrow="Solo de compras entregadas" />
+          <SectionHeader title="Reseñas" note="Solo pueden dejarlas quienes recibieron un pedido de esta tienda." />
           {reviews.length ? (
             <div className="stack">{reviews.map((r) => (
               <div key={r.id} className="panel stack" style={{ gap: 6 }}>
@@ -119,7 +119,7 @@ export function BusinessPage({ slug }: { slug: string }) {
         </div>
         {res.data.is_owner && <div className="row"><Link to={`/promociona/negocio/${b.id}`} className="btn btn-dark btn-sm"><Icon name="edit" size={16} />Editar página</Link><Link to="/promociona/campana" className="btn btn-primary btn-sm"><Icon name="megaphone" size={16} />Crear campaña</Link></div>}
         {promotions.map((p) => (
-          <div key={p.id} className="promo-card"><div className="row between"><Badge kind="accent">Promoción</Badge>{p.is_test && <Badge kind="demo">Prueba · sin cobro</Badge>}</div>
+          <div key={p.id} className="promo-card"><div className="row between"><Badge kind="accent">Promoción</Badge>{p.is_test && <Badge kind="demo">Prueba, sin cobro</Badge>}</div>
             <span className="h3">{p.headline}</span>{p.body && <span className="muted small">{p.body}</span>}</div>
         ))}
         <div className="grid-2" style={{ alignItems: "start" }}>
@@ -146,7 +146,7 @@ export function BusinessPage({ slug }: { slug: string }) {
         </div>
         {store && (
           <section>
-            <SectionHeader title="Catálogo" eyebrow={store.name} action={<Link to={`/tienda/${store.slug}`} className="link small">Ver tienda</Link>} />
+            <SectionHeader title={`Catálogo de ${store.name}`} action={<Link to={`/tienda/${store.slug}`} className="link small">Ver tienda</Link>} />
             {products.length ? <ProductGrid items={products} /> : <Empty title="Sin productos todavía" />}
           </section>
         )}
@@ -163,7 +163,7 @@ export function BusinessesPage() {
     <Page>
       <div className="stack-lg">
         <div className="row between">
-          <div className="stack" style={{ gap: 6 }}><span className="eyebrow">Directorio</span><h1 className="h1">Negocios en MARKETZONE</h1></div>
+          <h1 className="h1">Negocios</h1>
           <Link to="/promociona" className="btn btn-primary"><Icon name="megaphone" size={18} />Promociona tu negocio</Link>
         </div>
         <div className="cat-strip">

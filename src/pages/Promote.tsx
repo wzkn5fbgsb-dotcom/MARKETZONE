@@ -41,9 +41,9 @@ export function PromoteHome() {
         <section className="stack">
           <span className="eyebrow">Cómo funciona y qué cuesta</span>
           <div className="grid-3">
-            <div className="panel stack" style={{ gap: 6 }}><span className="h3">1 · Configura</span><span className="small muted">Eliges qué promocionar, el tipo de espacio, la duración y el presupuesto. Ves una vista previa.</span></div>
-            <div className="panel stack" style={{ gap: 6 }}><span className="h3">2 · Revisión</span><span className="small muted">El equipo de MARKETZONE revisa que el anuncio cumpla las normas (sin descuentos ni testimonios inventados).</span></div>
-            <div className="panel stack" style={{ gap: 6 }}><span className="h3">3 · Pago y activación</span><span className="small muted">Pagas exactamente el presupuesto indicado (mínimo {money(settings?.min_campaign_cents ?? 500)}). La campaña se activa solo cuando el pago está confirmado.</span></div>
+            <div className="panel stack" style={{ gap: 6 }}><span className="h3">1. Configura</span><span className="small muted">Eliges qué promocionar, el tipo de espacio, la duración y el presupuesto. Ves una vista previa.</span></div>
+            <div className="panel stack" style={{ gap: 6 }}><span className="h3">2. Revisión</span><span className="small muted">El equipo de MARKETZONE revisa que el anuncio cumpla las normas (sin descuentos ni testimonios inventados).</span></div>
+            <div className="panel stack" style={{ gap: 6 }}><span className="h3">3. Pago y activación</span><span className="small muted">Pagas exactamente el presupuesto indicado (mínimo {money(settings?.min_campaign_cents ?? 500)}). La campaña se activa solo cuando el pago está confirmado.</span></div>
           </div>
           {settings?.test_mode && <Callout kind="warn">Modo de prueba: los pagos de campañas son simulados y no se cobra dinero real. Las campañas así activadas se marcan como “prueba”.</Callout>}
           <span className="small dim">Todo espacio pagado se muestra con la etiqueta “Patrocinado”. Las impresiones y clics no son ventas: las ventas atribuidas solo se mostrarán cuando puedan medirse de forma fiable.</span>
@@ -87,7 +87,7 @@ export function BusinessEditor({ id }: { id?: string }) {
   return (
     <Page narrow>
       <form className="stack-lg" onSubmit={(e) => { e.preventDefault(); void save.run(); }}>
-        <div className="stack" style={{ gap: 6 }}><span className="eyebrow">Página comercial</span><h1 className="h1">{id ? "Editar negocio" : "Crear página de negocio"}</h1></div>
+        <div className="stack" style={{ gap: 6 }}><h1 className="h1">{id ? "Editar negocio" : "Crear página de negocio"}</h1></div>
         <div className="cover accent-crimson" style={{ height: 130 }}>{f.cover_url ? <Img src={f.cover_url} alt="" /> : <div className="cover-grid" />}</div>
         <div className="row">
           <label className="btn btn-outline btn-sm">{busy === "logo_url" ? <span className="spin" /> : <Icon name="camera" size={16} />}Logotipo<input type="file" accept="image/*" hidden onChange={(e) => void upload("logo_url", e.target.files?.[0])} /></label>
@@ -151,7 +151,7 @@ export function CampaignWizard() {
   return (
     <Page narrow>
       <div className="stack-lg">
-        <div className="stack" style={{ gap: 6 }}><span className="eyebrow">Nueva campaña</span><h1 className="h1">Promocionar</h1></div>
+        <h1 className="h1">Nueva campaña</h1>
         <Field label="Tipo de promoción">
           <div className="stack" style={{ gap: 6 }}>{(Object.keys(CAMPAIGN_KIND) as CampaignKind[]).map((k) => (
             <button key={k} type="button" className={`title-option ${f.kind === k ? "on" : ""}`} onClick={() => setF({ ...f, kind: k })}>
@@ -247,7 +247,7 @@ function CampaignCard({ c, open }: { c: Campaign; open: boolean }) {
       {c.status === "pending_payment" && (
         <Callout kind="warn"><div className="stack" style={{ gap: 8 }}>
           <span>Aprobada. Se activará cuando se confirme el pago de <b>{money(c.budget_cents)}</b>.</span>
-          {settings?.test_mode ? <div><Button size="sm" variant="primary" loading={pay.pending} onClick={() => void pay.run()}>Pagar {money(c.budget_cents)} · modo de prueba</Button></div>
+          {settings?.test_mode ? <div><Button size="sm" variant="primary" loading={pay.pending} onClick={() => void pay.run()}>Pagar {money(c.budget_cents)} (prueba, sin cobro)</Button></div>
             : <span>El pago real requiere el proveedor de pagos (pendiente de integración).</span>}
         </div></Callout>
       )}

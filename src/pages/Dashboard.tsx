@@ -22,7 +22,7 @@ export default function Dashboard({ tab }: { tab?: string }) {
     <Page>
       <div className="stack-lg">
         <div className="row between">
-          <div className="stack" style={{ gap: 4 }}><span className="eyebrow">Panel del vendedor</span><h1 className="h1">{d?.stores[0]?.name ?? "Mi tienda"}</h1></div>
+          <div className="stack" style={{ gap: 4 }}><span className="eyebrow">Tu panel de ventas</span><h1 className="h1">{d?.stores[0]?.name ?? "Mi tienda"}</h1></div>
           <div className="row">
             {d?.stores[0] && <Link to={`/tienda/${d.stores[0].slug}`} className="btn btn-outline btn-sm"><Icon name="eye" size={16} />Ver tienda</Link>}
             <Link to="/publicar" className="btn btn-primary btn-sm"><Icon name="plus" size={16} />Publicar</Link>
@@ -73,7 +73,7 @@ function Overview() {
         <Stat label="Campañas activas" value={d.campaigns.active} sub={`${d.campaigns.pending} en trámite`} />
       </div>
       <div className="stack">
-        <span className="eyebrow">Dinero · sin confundir pedidos con dinero recibido</span>
+        <span className="h3">Tu dinero</span><span className="small dim">Lo vendido no es lo cobrado: aquí ves por separado lo pagado, lo pendiente, las comisiones y los reembolsos.</span>
         <div className="table-wrap">
           <table className="table money-table">
             <thead><tr><th>Concepto</th><th>Real</th><th>Prueba</th></tr></thead>
@@ -152,7 +152,7 @@ function Catalog() {
           {res.data.items.map((it) => <CatalogRow key={it.id} it={it} checked={selected.includes(it.id)}
             onCheck={(v) => setSelected((s) => (v ? [...s, it.id] : s.filter((x) => x !== it.id)))} onHistory={() => setHistoryFor(it)} />)}
         </div>
-      ) : <Empty icon="tag" title="No hay publicaciones con estos filtros" action={<Link to="/publicar" className="btn btn-primary">Publicar un producto</Link>} />}
+      ) : <Empty icon="tag" title="No hay publicaciones con estos filtros" action={<Link to="/publicar" className="btn btn-primary">Vender algo</Link>} />}
       {historyFor && <HistorySheet item={historyFor} onClose={() => setHistoryFor(null)} />}
     </div>
   );

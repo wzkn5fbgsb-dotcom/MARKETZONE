@@ -50,6 +50,10 @@ const P: Record<string, string> = {
   menu: "M4 7h16M4 12h16M4 17h16",
   minus: "M5 12h14",
   map: "M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14",
+  sun: "M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4",
+  moon: "M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z",
+  auto: "M12 3a9 9 0 1 0 0 18zM12 3a9 9 0 0 1 0 18",
+  categories: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z",
 };
 
 export type IconName = keyof typeof P;

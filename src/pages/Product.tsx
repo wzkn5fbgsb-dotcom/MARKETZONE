@@ -73,7 +73,7 @@ function ProductView({ d }: { d: ProductDetail }) {
           {d.is_owner && (
             <Callout kind={p.status === "active" && p.moderation_status === "ok" ? "info" : "warn"}>
               <div className="stack" style={{ gap: 8 }}>
-                <span>Es tu publicación · estado: <b>{p.moderation_status === "blocked" ? "bloqueada por moderación" : { active: "publicada", draft: "borrador", paused: "pausada", removed: "eliminada" }[p.status]}</b>.</span>
+                <span>Es tu publicación. Estado: <b>{p.moderation_status === "blocked" ? "bloqueada por moderación" : { active: "publicada", draft: "borrador", paused: "pausada", removed: "eliminada" }[p.status]}</b>.</span>
                 <div className="row"><Link to={`/publicar/${p.id}`} className="btn btn-sm btn-dark"><Icon name="edit" size={16} />Editar</Link><Link to="/panel/catalogo" className="btn btn-sm btn-ghost">Ver en el panel</Link></div>
               </div>
             </Callout>
@@ -113,7 +113,7 @@ function ProductView({ d }: { d: ProductDetail }) {
               </Field>
             </div>
           ) : (
-            <span className="small muted">{totalAvail > 0 ? (totalAvail === 1 ? "Artículo único · 1 unidad" : `${totalAvail} unidades disponibles`) : "Agotado"}</span>
+            <span className="small muted">{totalAvail > 0 ? (totalAvail === 1 ? "Pieza única: solo hay 1" : `${totalAvail} unidades disponibles`) : "Agotado"}</span>
           )}
 
           {d.is_owner && variant && (
@@ -199,7 +199,7 @@ function ProductView({ d }: { d: ProductDetail }) {
 
       {d.similar.length > 0 && (
         <section style={{ marginTop: 48 }}>
-          <SectionHeader title="También te puede interesar" eyebrow={d.category.name} />
+          <SectionHeader title={`Más en ${d.category.name}`} />
           <ProductGrid items={d.similar} />
         </section>
       )}

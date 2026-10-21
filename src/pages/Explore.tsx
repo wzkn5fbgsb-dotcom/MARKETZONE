@@ -58,9 +58,9 @@ export default function Explore() {
     <Page>
       <div className="stack-lg">
         <div className="stack" style={{ gap: 6 }}>
-          <span className="eyebrow">{parent && cat?.id !== parent.id ? parent.name : "Explorar"}</span>
-          <h1 className="h1">{params.q ? `“${params.q}”` : cat?.name ?? "Todo MARKETZONE"}</h1>
-          <span className="small dim">{res.data ? `${res.data.total} resultado${res.data.total === 1 ? "" : "s"}` : "Buscando…"}</span>
+          {parent && cat?.id !== parent.id && <span className="eyebrow">{parent.name}</span>}
+          <h1 className="h1">{params.q ? `“${params.q}”` : cat?.name ?? "Todo lo publicado"}</h1>
+          <span className="small dim">{res.data ? `${res.data.total} artículo${res.data.total === 1 ? "" : "s"}` : "Cargando…"}</span>
         </div>
 
         <div className="cat-strip" style={{ paddingBottom: 0 }}>
@@ -74,7 +74,7 @@ export default function Explore() {
         )}
 
         <div className="row between">
-          <Button variant="outline" size="sm" icon="filter" onClick={() => setOpen(true)}>Filtros{activeFilters ? ` · ${activeFilters}` : ""}</Button>
+          <Button variant="outline" size="sm" icon="filter" onClick={() => setOpen(true)}>Filtros{activeFilters ? ` (${activeFilters})` : ""}</Button>
           <div className="row" style={{ gap: 8 }}>
             <label className="small dim" htmlFor="sort">Ordenar</label>
             <div style={{ width: 190 }}>
@@ -90,7 +90,7 @@ export default function Explore() {
 
         {res.data && res.data.spotlight.length > 0 && (
           <div className="stack">
-            <span className="eyebrow">Destacado en {cat?.name} · Patrocinado</span>
+            <span className="eyebrow">Patrocinado en {cat?.name}</span>
             <ProductGrid items={res.data.spotlight} />
           </div>
         )}
@@ -136,7 +136,7 @@ function FilterBody({ params, set, sizeSystem }: { params: SearchParams; set: (p
         <div className="segmented">
           {(Object.keys(CONDITIONS) as Condition[]).map((c) => (
             <button key={c} className={`seg ${params.conditions?.includes(c) ? "on" : ""}`} onClick={() => set({ cond: toggle(params.conditions, c) })}>
-              <span className="code">{CONDITIONS[c].code}</span>{CONDITIONS[c].label}
+              {CONDITIONS[c].label}
             </button>
           ))}
         </div>

@@ -5,8 +5,9 @@ import { useApp } from "../app/state";
 import { Icon } from "../ui/icons";
 import { Logo } from "./brand";
 import { Avatar } from "../ui/kit";
+import { useTheme, type ThemePref } from "../app/theme";
 
-export function SearchBox({ initial = "", autoFocus = false, placeholder = "Busca marcas, prendas, tallas…" }: { initial?: string; autoFocus?: boolean; placeholder?: string }) {
+export function SearchBox({ initial = "", autoFocus = false, placeholder = "Busca marca, prenda o talla" }: { initial?: string; autoFocus?: boolean; placeholder?: string }) {
   const [q, setQ] = useState(initial);
   const submit = (e: FormEvent) => { e.preventDefault(); navigate(withQuery("/explorar", { q: q.trim() })); };
   return (
@@ -22,20 +23,21 @@ export function Header() {
   const { account, session } = useApp();
   const loc = useLocation();
   const on = (p: string) => (loc.path === p || loc.path.startsWith(p + "/") ? "on" : "");
-  const showMobileSearch = loc.path === "/" || loc.path === "/explorar";
+  const showMobileSearch = loc.path === "/" || loc.path === "/explorar" || loc.path === "/categorias";
   return (
     <header className="header">
       <div className="wrap">
         <div className="header-inner">
           <Link to="/" aria-label="Inicio"><Logo size={30} /></Link>
           <nav className="nav-desktop" aria-label="Principal">
+            <Link to="/categorias" className={on("/categorias")}>Categorías</Link>
             <Link to="/explorar" className={on("/explorar")}>Explorar</Link>
             <Link to="/negocios" className={on("/negocios")}>Negocios</Link>
             <Link to="/publicar" className={on("/publicar")}>Vender</Link>
-            <Link to="/promociona" className={on("/promociona")}>Promociona</Link>
           </nav>
           <div className="header-search"><SearchBox key={loc.path === "/explorar" ? loc.query.get("q") ?? "" : "h"} initial={loc.path === "/explorar" ? loc.query.get("q") ?? "" : ""} /></div>
           <div className="header-actions">
+            <ThemeButton />
             {session && (
               <Link to="/notificaciones" className="icon-btn" aria-label="Notificaciones">
                 <Icon name="bell" />{!!account?.unread_notifications && <span className="dot">{account.unread_notifications}</span>}
@@ -69,8 +71,8 @@ export function TabBar() {
   return (
     <nav className="tabbar" aria-label="Navegación inferior">
       {item("/", "home", "Inicio", p === "/")}
-      {item("/explorar", "search", "Explorar", p.startsWith("/explorar") || p.startsWith("/p/"))}
-      <Link to="/publicar" className="sell" aria-label="Publicar"><span className="sell-dot"><Icon name="plus" size={22} stroke={2.4} /></span>Publicar</Link>
+      {item("/categorias", "categories", "Categorías", p.startsWith("/categorias") || p.startsWith("/explorar") || p.startsWith("/p/"))}
+      <Link to="/publicar" className={`sell ${p.startsWith("/publicar") ? "on" : ""}`} aria-current={p.startsWith("/publicar") ? "page" : undefined}><span className="sell-dot"><Icon name="plus" size={22} stroke={2.4} /></span>Vender</Link>
       {item("/favoritos", "heart", "Favoritos", p.startsWith("/favoritos"))}
       {item("/perfil", "user", "Perfil", ["/perfil", "/panel", "/pedidos", "/ofertas", "/ajustes", "/admin"].some((x) => p.startsWith(x)))}
     </nav>
@@ -86,10 +88,10 @@ export function DemoBanner() {
         <Icon name="info" size={16} />
         <span className="grow">
           {config.mode === "demo"
-            ? <><b>Versión de demostración.</b> Productos y tiendas de ejemplo; tus datos se guardan solo en este dispositivo. Pagos en modo de prueba: no se cobra dinero real.</>
-            : <><b>Modo de prueba.</b> Los pagos son simulados y no se cobra dinero real.</>}
+            ? <><b>Demo.</b> Los productos son de ejemplo, lo que publiques se guarda solo en este teléfono y no se cobra dinero.</>
+            : <><b>Modo de prueba.</b> Puedes comprar y vender, pero los pagos son simulados: no se cobra dinero.</>}
         </span>
-        <Link to="/estado" className="link small" style={{ whiteSpace: "nowrap" }}>Estado del proyecto</Link>
+        <Link to="/estado" className="link small" style={{ whiteSpace: "nowrap" }}>Qué funciona</Link>
       </div>
     </div>
   );
@@ -99,18 +101,22 @@ export function Footer() {
   const { config } = useApp();
   return (
     <footer className="footer">
-      <div className="wrap row between" style={{ alignItems: "flex-start", gap: 20 }}>
+      <div className="wrap footer-inner">
         <div className="stack" style={{ gap: 8 }}>
           <Logo size={24} />
-          <span>Marketplace de moda, sneakers y streetwear con inventario por talla, ofertas y herramientas para negocios.</span>
+          <span style={{ maxWidth: "38ch" }}>Compra y vende ropa, sneakers y streetwear. Haz ofertas y negocia el precio con el vendedor.</span>
         </div>
-        <div className="row" style={{ gap: 16 }}>
-          <Link to="/explorar" className="link">Explorar</Link>
+        <nav className="footer-links" aria-label="Pie de página">
+          <Link to="/categorias" className="link">Categorías</Link>
           <Link to="/publicar" className="link">Vender</Link>
           <Link to="/promociona" className="link">Promociona tu negocio</Link>
-          <Link to="/estado" className="link">Estado del proyecto</Link>
+          <Link to="/estado" className="link">Qué funciona</Link>
+        </nav>
+        <div className="stack" style={{ gap: 8 }}>
+          <span className="small">Apariencia</span>
+          <ThemePicker />
         </div>
-        <span className="mono tiny">v{config.version} · {config.mode === "demo" ? "demo local" : "Supabase"}</span>
+        <span className="tiny">Versión {config.version}{config.mode === "demo" ? " (demo)" : ""}</span>
       </div>
     </footer>
   );
@@ -122,4 +128,31 @@ export function Page({ children, narrow }: { children: ReactNode; narrow?: boole
 
 export function BackLink({ to, label = "Volver" }: { to: string; label?: string }) {
   return <Link to={to} className="row-nw small muted" style={{ gap: 4, marginBottom: 12 }}><Icon name="back" size={16} />{label}</Link>;
+}
+
+const THEME_LABEL: Record<ThemePref, string> = { dark: "Oscuro", light: "Claro", auto: "Automático" };
+
+/** Botón de la cabecera: cambia entre claro y oscuro con un toque. */
+export function ThemeButton() {
+  const { theme, set } = useTheme();
+  const next = theme === "dark" ? "light" : "dark";
+  return (
+    <button type="button" className="icon-btn" onClick={() => set(next)} aria-label={next === "light" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"} title={next === "light" ? "Modo claro" : "Modo oscuro"}>
+      <Icon name={theme === "dark" ? "sun" : "moon"} />
+    </button>
+  );
+}
+
+/** Selector completo: oscuro, claro o automático (sigue el ajuste del teléfono). */
+export function ThemePicker() {
+  const { pref, set } = useTheme();
+  return (
+    <div className="segmented" role="radiogroup" aria-label="Apariencia">
+      {(["dark", "light", "auto"] as ThemePref[]).map((k) => (
+        <button key={k} type="button" role="radio" aria-checked={pref === k} className={`seg ${pref === k ? "on" : ""}`} onClick={() => set(k)}>
+          <Icon name={k === "dark" ? "moon" : k === "light" ? "sun" : "auto"} size={16} />{THEME_LABEL[k]}
+        </button>
+      ))}
+    </div>
+  );
 }

@@ -223,3 +223,10 @@ export function artDataUri(spec: string): string {
   }
   return uri;
 }
+
+/** Fondo CSS que continúa la pared de una ilustración (para mostrarla completa sin recortes). */
+export function artBackdropCss(spec: string): string {
+  const [, , , backdrop = "stone"] = spec.split(":");
+  const bd = BACKDROPS[backdrop] ?? BACKDROPS.stone;
+  return `linear-gradient(180deg, ${bd[0]} 0%, ${bd[1]} 72%, ${bd[2]} 100%)`;
+}

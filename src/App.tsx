@@ -5,6 +5,7 @@ import { DemoBanner, Footer, Header, Page, TabBar } from "./components/layout";
 import { Callout, Empty } from "./ui/kit";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
+import Categories from "./pages/Categories";
 import Product from "./pages/Product";
 import { BusinessPage, BusinessesPage, StorePage } from "./pages/Store";
 import { Forgot, Login, Register, ResetPassword } from "./pages/Auth";
@@ -19,6 +20,7 @@ import { Link } from "./app/router";
 
 const ROUTES: [string, (p: Record<string, string>) => JSX.Element][] = [
   ["/", () => <Home />],
+  ["/categorias", () => <Categories />],
   ["/explorar", () => <Explore />],
   ["/p/:id", (p) => <Product key={p.id} id={p.id} />],
   ["/tienda/:slug", (p) => <StorePage key={p.slug} slug={p.slug} />],

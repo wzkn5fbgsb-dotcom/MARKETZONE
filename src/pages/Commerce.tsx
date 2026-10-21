@@ -35,7 +35,7 @@ export function CartPage() {
       <div className="stack-lg">
         <h1 className="h1">Carrito</h1>
         {cart.loading ? <Spinner /> : !c?.lines.length ? (
-          <Empty icon="bag" title="Tu carrito está vacío" action={<Link to="/explorar" className="btn btn-primary">Explorar productos</Link>}>Añade productos eligiendo la talla en su página.</Empty>
+          <Empty icon="bag" title="Tu carrito está vacío" action={<Link to="/categorias" className="btn btn-primary">Ver categorías</Link>}>Añade productos eligiendo la talla en su página.</Empty>
         ) : (
           <div className="split">
             <div className="stack">
@@ -118,7 +118,7 @@ export function OrdersPage() {
               <span className="price">{money(o.total_cents)}</span>
             </Link>
           ))}</div>
-        ) : <Empty icon="box" title="Todavía no tienes pedidos" action={<Link to="/explorar" className="btn btn-outline">Explorar</Link>} />}
+        ) : <Empty icon="box" title="Todavía no tienes pedidos" action={<Link to="/categorias" className="btn btn-outline">Ver categorías</Link>}>Aquí aparecerán tus compras con su estado de pago y envío.</Empty>}
       </div>
     </Page>
   );
@@ -170,7 +170,7 @@ export function OrderPage({ id }: { id: string }) {
             <ErrorBox error={pay.error ?? cancel.error} />
             <div className="row">
               {o.is_test && settings?.test_mode ? (
-                <Button variant="primary" size="lg" loading={pay.pending} disabled={needsAddress} onClick={() => void pay.run()}>Pagar {money(o.total_cents)} · modo de prueba</Button>
+                <Button variant="primary" size="lg" loading={pay.pending} disabled={needsAddress} onClick={() => void pay.run()}>Pagar {money(o.total_cents)} (prueba, sin cobro)</Button>
               ) : <Callout kind="warn">El pago real requiere integrar el proveedor de pagos (pendiente de configuración).</Callout>}
               <ConfirmButton confirmLabel="Sí, cancelar" onConfirm={() => void cancel.run()} variant="ghost" size="lg">Cancelar pedido</ConfirmButton>
             </div>

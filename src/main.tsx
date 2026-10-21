@@ -11,8 +11,10 @@ import type { DemoRuntime } from "./api/demo/persist";
 import { setLocalImageResolver } from "./app/images";
 import { LOGO_SVG } from "./components/brand";
 import "./styles.css";
+import { applyTheme } from "./app/theme";
 
 async function boot() {
+  applyTheme();
   const config = loadConfig();
   setRouterMode(config.router);
   let backend: Backend;

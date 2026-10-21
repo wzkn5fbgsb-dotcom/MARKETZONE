@@ -39,7 +39,7 @@ function ListingEditor({ initial }: { initial?: any }) {
   const isEdit = !!initial;
   const [photos, setPhotos] = useState<Photo[]>(initial?.images ?? []);
   const [f, setF] = useState({
-    title: initial?.title ?? "", description: initial?.description ?? "", brand: initial?.brand ?? "", category_id: initial?.category_id ?? "",
+    title: initial?.title ?? "", description: initial?.description ?? "", brand: initial?.brand ?? "", category_id: initial?.category_id ?? loc.query.get("cat") ?? "",
     condition: (initial?.condition ?? "") as Condition | "", flaws: initial?.flaws ?? "", color: initial?.color ?? "", material: initial?.material ?? "",
     fit: initial?.fit ?? "", price_cents: (initial?.price_cents ?? null) as number | null, tags: (initial?.tags ?? []) as string[],
     offers_enabled: initial?.offers_enabled ?? true, weight_grams: initial?.weight_grams ?? "", length_cm: initial?.length_cm ?? "",
@@ -79,7 +79,7 @@ function ListingEditor({ initial }: { initial?: any }) {
         setPhotos((p) => p.map((x) => (x.preview === preview ? { url: up.url, storage_path: up.path, preview } : x)));
       } catch (e: any) {
         setPhotos((p) => p.filter((x) => x.preview !== preview));
-        toast(e.message ?? "No se pudo subir la foto", "bad");
+        toast(e.message ?? "No se pudo subir la foto. Revisa tu conexión e inténtalo de nuevo.", "bad");
       }
     }
   };
@@ -148,14 +148,14 @@ function ListingEditor({ initial }: { initial?: any }) {
       <div className="stack-xl" ref={top}>
         <div className="stack" style={{ gap: 6 }}>
           <span className="eyebrow">{isEdit ? "Editar publicación" : "Nueva publicación"}</span>
-          <h1 className="h1">{isEdit ? f.title || "Editar" : wantsAi ? "Crear publicación con IA" : "Publicar un producto"}</h1>
+          <h1 className="h1">{isEdit ? f.title || "Editar" : wantsAi ? "Crear publicación con IA" : "Vender un artículo"}</h1>
           {isEdit && initial.moderation_status === "blocked" && <Callout kind="bad">Esta publicación fue bloqueada por moderación. Puedes editarla pero no publicarla.</Callout>}
         </div>
         {errors && !errors.field && <ErrorBox error={new ApiError("x", errors.message)} />}
 
         {/* 1 · Fotos */}
         <section className="stack">
-          <div className="row between"><span className="h3">1 · Fotografías</span><span className="small dim">{photos.length}/12 · la primera es la portada</span></div>
+          <div className="row between"><span className="h3">1. Fotos</span><span className="small dim">{photos.length} de 12. La primera es la portada.</span></div>
           <div className="photo-grid">
             {photos.map((p, i) => (
               <div key={p.preview ?? p.url} className="photo">
@@ -186,7 +186,7 @@ function ListingEditor({ initial }: { initial?: any }) {
         {/* IA */}
         <section className="ai-panel stack">
           <div className="row between"><span className="ai-mark"><Icon name="sparkle" size={14} />Crear publicación con IA</span>
-            {ai && <Badge kind={ai.available ? "ok" : "outline"}>{ai.available ? (ai.provider === "claude-viewer" ? "Disponible · Claude" : "Disponible") : "No configurada"}</Badge>}</div>
+            {ai && <Badge kind={ai.available ? "ok" : "outline"}>{ai.available ? (ai.provider === "claude-viewer" ? "Disponible" : "Disponible") : "No configurada"}</Badge>}</div>
           {!ai ? <span className="small dim">Comprobando disponibilidad…</span> : !ai.available ? (
             <span className="small muted">{ai.reason}</span>
           ) : (
@@ -211,7 +211,7 @@ function ListingEditor({ initial }: { initial?: any }) {
 
         {/* 2 · Datos */}
         <section className="stack">
-          <span className="h3">2 · Datos del artículo</span>
+          <span className="h3">2. Qué vendes</span>
           <Field label="Título" required error={err("title")} hint={`${f.title.length}/120`}>
             <Input value={f.title} maxLength={120} onChange={(e) => set("title", e.target.value)} placeholder="Marca + tipo + color + detalle" />
           </Field>
@@ -230,7 +230,7 @@ function ListingEditor({ initial }: { initial?: any }) {
             <div className="segmented">
               {(Object.keys(CONDITIONS) as Condition[]).map((c) => (
                 <button type="button" key={c} className={`seg ${f.condition === c ? "on" : ""}`} onClick={() => set("condition", c)} title={CONDITIONS[c].hint}>
-                  <span className="code">{CONDITIONS[c].code}</span>{CONDITIONS[c].label}
+                  {CONDITIONS[c].label}
                 </button>
               ))}
             </div>
@@ -261,14 +261,14 @@ function ListingEditor({ initial }: { initial?: any }) {
 
         {/* 3 · Inventario */}
         <section className="stack">
-          <div className="row between"><span className="h3">3 · Tallas, colores e inventario</span><span className="small dim">{totalUnits} unidad(es)</span></div>
+          <div className="row between"><span className="h3">3. Tallas y cantidades</span><span className="small dim">{totalUnits} unidad(es)</span></div>
           <VariantEditor value={variants} onChange={setVariants} sizeSystem={sizeSystem} />
           {err("variants") && <span className="error-text">{err("variants")}</span>}
         </section>
 
         {/* 4 · Precio */}
         <section className="stack">
-          <span className="h3">4 · Precio y ofertas</span>
+          <span className="h3">4. Precio y ofertas</span>
           <Field label="Precio" required error={err("price_cents")}><MoneyInput cents={f.price_cents} onChange={(c) => set("price_cents", c)} /></Field>
           {f.price_cents ? (
             <Callout>Tarifa de MARKETZONE: <b>{pct(commission)}</b> del precio cuando se complete la venta (≈ {money(Math.round(f.price_cents * commission / 10000))}). Recibirías ≈ <b>{money(f.price_cents - Math.round(f.price_cents * commission / 10000))}</b> por unidad. El envío ({money(settings?.shipping_flat_cents ?? 799)}) lo paga el comprador.</Callout>
@@ -309,7 +309,7 @@ function ProposalView({ p, categories, onApply }: { p: ListingAiResult; categori
   return (
     <div className="stack" style={{ marginTop: 6 }}>
       <hr className="divider" />
-      <span className="eyebrow">Propuesta de la IA · revisa antes de usarla</span>
+      <span className="h3">Propuesta de la IA</span><span className="small dim">Revísala antes de usarla: puedes cambiar cualquier dato.</span>
       <div className="stack" style={{ gap: 6 }}>
         {opts.filter(([, t]) => t).map(([k, t]) => (
           <button type="button" key={k} className={`title-option ${pick === t ? "on" : ""}`} onClick={() => setPick(t)}><span className="k">{k}</span><span>{t}</span></button>

@@ -91,7 +91,7 @@ export function Register() {
       if (r.needsConfirmation) setSent(true); else navigate(next, { replace: true });
     } catch (err) { setError(err as ApiError); } finally { setBusy(false); }
   };
-  if (sent) return <AuthShell title="Revisa tu correo" sub={`Te enviamos un enlace de confirmación a ${f.email}. Ábrelo para activar tu cuenta.`}><Link to="/entrar" className="btn btn-outline">Ir a entrar</Link></AuthShell>;
+  if (sent) return <AuthShell title="Revisa tu correo" sub={`Te enviamos un enlace de confirmación a ${f.email}. Ábrelo para activar tu cuenta.`}><Link to="/entrar" className="btn btn-outline">Ya la confirmé: entrar</Link></AuthShell>;
   return (
     <AuthShell title="Crear cuenta" sub="Una sola cuenta para comprar y vender.">
       <form className="stack" onSubmit={submit}>

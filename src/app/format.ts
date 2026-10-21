@@ -16,11 +16,11 @@ export function parseMoney(input: string): number | null {
 }
 
 export const CONDITIONS: Record<Condition, { code: string; label: string; hint: string }> = {
-  new_with_tags: { code: "NWT", label: "Nuevo con etiquetas", hint: "Sin usar, con etiquetas originales" },
-  new_without_tags: { code: "NWOT", label: "Nuevo sin etiquetas", hint: "Sin usar, sin etiquetas" },
-  used_excellent: { code: "EUC", label: "Usado · excelente estado", hint: "Uso mínimo, sin defectos visibles" },
-  used_good: { code: "GUC", label: "Usado · buen estado", hint: "Señales normales de uso" },
-  used_flawed: { code: "DEF", label: "Usado · defectos declarados", hint: "Describe los defectos" },
+  new_with_tags: { code: "Con etiqueta", label: "Nuevo con etiquetas", hint: "Sin usar, con etiquetas originales" },
+  new_without_tags: { code: "Nuevo", label: "Nuevo sin etiquetas", hint: "Sin usar, sin etiquetas" },
+  used_excellent: { code: "Como nuevo", label: "Usado, como nuevo", hint: "Uso mínimo, sin defectos visibles" },
+  used_good: { code: "Usado", label: "Usado, buen estado", hint: "Señales normales de uso" },
+  used_flawed: { code: "Con detalles", label: "Usado, con detalles", hint: "Tiene defectos que se describen en la publicación" },
 };
 
 export const ORDER_STATUS: Record<OrderStatus, string> = {

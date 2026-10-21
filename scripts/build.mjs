@@ -25,8 +25,14 @@ if (/service_role/.test(Buffer.from((build.supabaseAnonKey.split(".")[1] ?? ""),
   process.exit(1);
 }
 
-const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
-  '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400..700&display=swap">';
+// Fuentes propias (OFL) alojadas con la web: no dependen de Google y funcionarán igual en la app nativa.
+function fontFaces(inline) {
+  const src = (f) => inline ? `data:font/woff;base64,${readFileSync(join(root, "public/fonts", f)).toString("base64")}` : `fonts/${f}`;
+  return `<style>@font-face{font-family:"Archivo";src:url("${src("archivo.woff")}") format("woff");font-weight:100 900;font-stretch:62% 125%;font-display:swap}` +
+    `@font-face{font-family:"Instrument Sans";src:url("${src("instrument-sans.woff")}") format("woff");font-weight:400 700;font-stretch:75% 100%;font-display:swap}</style>`;
+}
+// Aplica el tema guardado antes del primer pintado (mismo algoritmo que src/app/theme.ts).
+const THEME_BOOT = `<script>(function(){try{var p=localStorage.getItem("mz.theme")||"dark";var t=p==="auto"?(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"):p;document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme="dark";}})();</script>`;
 const DESCRIPTION = "MARKETZONE: marketplace de moda, sneakers y streetwear con inventario por talla, ofertas y herramientas para negocios.";
 
 const options = {
@@ -53,13 +59,14 @@ function htmlShell({ head, body }) {
 <title>MARKETZONE</title>
 <meta name="description" content="${DESCRIPTION}">
 <meta name="theme-color" content="#0B0B0D">
+${THEME_BOOT}
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MARKETZONE">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-${FONTS}
+${fontFaces(false)}
 ${head}
 </head>
 <body>
@@ -96,16 +103,17 @@ async function buildArtifact(outdir) {
   const css = res.outputFiles.find((f) => f.path.endsWith(".css")).text.replace(/<\/style/gi, "<\\/style");
   // Formato de página de Artifact: sin <html>/<head>/<body> (el visor añade el esqueleto).
   const page = `<title>MARKETZONE</title>
+${THEME_BOOT}
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="${DESCRIPTION}">
-${FONTS}
+${fontFaces(true)}
 <style>${css}</style>
 <div id="root"></div>
 <script>${js}</script>
 `;
   writeFileSync(join(outdir, "index.html"), page);
   // Versión independiente (abrir el archivo directamente en un navegador)
-  writeFileSync(join(outdir, "standalone.html"), htmlShell({ head: `<style>${css}</style>`, body: `<script>${js}</script>` }).replace('<link rel="manifest" href="manifest.webmanifest">', "").replace('<link rel="icon" type="image/svg+xml" href="icon.svg">', "").replace('<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">', ""));
+  writeFileSync(join(outdir, "standalone.html"), htmlShell({ head: `${fontFaces(true)}<style>${css}</style>`, body: `<script>${js}</script>` }).replace('<link rel="manifest" href="manifest.webmanifest">', "").replace('<link rel="icon" type="image/svg+xml" href="icon.svg">', "").replace('<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">', ""));
   console.log(`artifact: ${(page.length / 1024).toFixed(0)} KB`);
 }
 
