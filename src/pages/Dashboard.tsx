@@ -25,6 +25,7 @@ export default function Dashboard({ tab }: { tab?: string }) {
           <div className="stack" style={{ gap: 4 }}><span className="eyebrow">Tu panel de ventas</span><h1 className="h1">{d?.stores[0]?.name ?? "Mi tienda"}</h1></div>
           <div className="row">
             {d?.stores[0] && <Link to={`/tienda/${d.stores[0].slug}`} className="btn btn-outline btn-sm"><Icon name="eye" size={16} />Ver tienda</Link>}
+            {d?.stores[0] && <Link to={`/promociona/campana?tipo=home_store&tienda=${d.stores[0].id}`} className="btn btn-outline btn-sm"><Icon name="megaphone" size={16} />Promocionar mi tienda</Link>}
             <Link to="/publicar" className="btn btn-primary btn-sm"><Icon name="plus" size={16} />Publicar</Link>
           </div>
         </div>
@@ -248,7 +249,7 @@ function SellerOrderCard({ so }: { so: SellerOrder }) {
   const [reason, setReason] = useState("");
   const [restock, setRestock] = useState(true);
   const inv = ["seller-orders", "dashboard", `order:${so.order_id}`];
-  const step = useAction((s: "preparing" | "shipped" | "delivered") => api.fulfill(so.id, s, carrier, tracking), { invalidates: inv, onSuccess: () => { setShipOpen(false); toast("Pedido actualizado", "ok"); }, onError: (e) => toast(e.message, "bad") });
+  const step = useAction((s: "preparing" | "shipped") => api.fulfill(so.id, s, carrier, tracking), { invalidates: inv, onSuccess: () => { setShipOpen(false); toast("Pedido actualizado", "ok"); }, onError: (e) => toast(e.message, "bad") });
   const refund = useAction(() => api.refund(so.id, reason, restock), { invalidates: [...inv, "catalog", "product:"], onSuccess: () => { setRefundOpen(false); toast("Reembolso de prueba registrado", "ok"); } });
   const addr = so.shipping_address;
   return (
@@ -262,15 +263,16 @@ function SellerOrderCard({ so }: { so: SellerOrder }) {
       <span className="small dim">Subtotal {money(so.subtotal_cents)} · comisión {money(so.commission_cents)} · neto {money(so.seller_net_cents)} · envío cobrado {money(so.shipping_cents)}</span>
       {addr && <span className="small muted"><Icon name="truck" size={14} /> {addr.full_name} · {addr.line1}{addr.line2 ? `, ${addr.line2}` : ""}, {addr.city}, {addr.region} {addr.postal_code}</span>}
       {so.status === "pending_payment" && <span className="small dim">Esperando el pago del comprador. No envíes nada todavía.</span>}
+      {so.dispute_status === "open" && <Callout kind="warn">El comprador reportó un problema. Tu pago queda retenido mientras el equipo lo revisa. Tu cuenta no tiene ninguna sanción.</Callout>}
+      {so.status === "shipped" && so.dispute_status !== "open" && so.auto_complete_at && <span className="small dim">Recibes tu pago cuando el comprador confirme la entrega, o automáticamente el {new Date(so.auto_complete_at).toLocaleDateString()} si no reporta ningún problema.</span>}
       <div className="row" style={{ gap: 6 }}>
         {so.status === "paid" && <Button size="sm" variant="dark" loading={step.pending} onClick={() => void step.run("preparing")}>Marcar en preparación</Button>}
         {(so.status === "paid" || so.status === "preparing") && <Button size="sm" variant="primary" onClick={() => setShipOpen(true)}>Marcar como enviado</Button>}
-        {so.status === "shipped" && <Button size="sm" variant="dark" loading={step.pending} onClick={() => void step.run("delivered")}>Marcar como entregado</Button>}
         {(so.status === "paid" || so.status === "preparing") && <Button size="sm" variant="ghost" onClick={() => setRefundOpen(true)}>Reembolsar</Button>}
       </div>
       <Sheet open={shipOpen} onClose={() => setShipOpen(false)} title="Datos de envío" footer={<><Button variant="ghost" onClick={() => setShipOpen(false)}>Cancelar</Button><Button variant="primary" loading={step.pending} onClick={() => void step.run("shipped")}>Confirmar envío</Button></>}>
         <Field label="Transportista (opcional)"><Input value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder="USPS, UPS, FedEx…" /></Field>
-        <Field label="Número de seguimiento (opcional)" hint="Escríbelo exactamente como aparece en la etiqueta. MARKETZONE no genera números de seguimiento."><Input value={tracking} onChange={(e) => setTracking(e.target.value)} /></Field>
+        <Field label="Número de guía (recomendado)" hint="Con guía, el pago se libera 7 días después del envío si no hay reportes; sin guía, a los 21 días. Escríbelo tal como aparece en la etiqueta."><Input value={tracking} onChange={(e) => setTracking(e.target.value)} /></Field>
       </Sheet>
       <Sheet open={refundOpen} onClose={() => setRefundOpen(false)} title="Reembolsar pedido" footer={<><Button variant="ghost" onClick={() => setRefundOpen(false)}>Cancelar</Button><Button variant="danger" loading={refund.pending} disabled={reason.trim().length < 3} onClick={() => void refund.run()}>Reembolsar {money(so.subtotal_cents + so.shipping_cents)}</Button></>}>
         <Field label="Motivo"><Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="p. ej. artículo dañado en almacén" /></Field>

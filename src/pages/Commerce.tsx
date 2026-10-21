@@ -213,6 +213,9 @@ function SellerOrderBlock({ so, order }: { so: SellerOrder; order: Order }) {
   const [rating, setRating] = useState(5);
   const [body, setBody] = useState("");
   const confirm = useAction(() => api.confirmDelivery(so.id), { invalidates: [`order:${order.id}`], onSuccess: () => toast("Entrega confirmada", "ok") });
+  const [problemOpen, setProblemOpen] = useState(false);
+  const [problemText, setProblemText] = useState("");
+  const problem = useAction(() => api.reportProblem(so.id, problemText), { invalidates: [`order:${order.id}`], onSuccess: () => { setProblemOpen(false); toast("Reporte enviado. El pago al vendedor queda congelado mientras lo revisamos.", "ok"); } });
   const review = useAction(() => api.review(so.id, rating, body), { invalidates: [`order:${order.id}`, "store:"], onSuccess: () => toast("Gracias por tu reseña", "ok") });
   const steps: [string, string][] = [["paid", "Pagado"], ["preparing", "Preparando"], ["shipped", "Enviado"], ["delivered", "Entregado"]];
   const idx = ["paid", "preparing", "shipped", "delivered"].indexOf(so.status);
@@ -238,10 +241,28 @@ function SellerOrderBlock({ so, order }: { so: SellerOrder; order: Order }) {
         </div>
       )}
       {so.status === "shipped" || so.status === "delivered" ? (
-        <span className="small muted">{so.carrier || so.tracking_number ? `Seguimiento: ${so.carrier ?? ""} ${so.tracking_number ?? ""}` : "El vendedor no añadió número de seguimiento."}</span>
+        <span className="small muted">{so.carrier || so.tracking_number ? `Seguimiento: ${so.carrier ?? ""} ${so.tracking_number ?? ""}` : "El vendedor no añadió número de guía."}</span>
       ) : null}
       {!isBuyer && <span className="small dim">Comisión {pct(so.commission_bps)}: {money(so.commission_cents)} · Neto estimado para el vendedor: {money(so.seller_net_cents)}</span>}
-      {isBuyer && so.status === "shipped" && <div><Button variant="dark" size="sm" loading={confirm.pending} onClick={() => void confirm.run()}>Confirmar que lo recibí</Button></div>}
+      {isBuyer && so.dispute_status === "open" && <Callout kind="info">Reportaste un problema. El pago al vendedor está congelado mientras el equipo lo revisa.</Callout>}
+      {isBuyer && so.status === "shipped" && (
+        <div className="stack" style={{ gap: 8 }}>
+          {so.auto_complete_at && so.dispute_status !== "open" && <span className="small dim">Si no confirmas ni reportas nada, la entrega se confirma sola el {new Date(so.auto_complete_at).toLocaleDateString()}.</span>}
+          <div className="row" style={{ gap: 6 }}>
+            <Button variant="dark" size="sm" loading={confirm.pending} onClick={() => void confirm.run()}>Ya lo recibí</Button>
+            {so.dispute_status !== "open" && <Button variant="ghost" size="sm" icon="flag" onClick={() => setProblemOpen(true)}>Reportar un problema</Button>}
+          </div>
+        </div>
+      )}
+      {isBuyer && (so.status === "paid" || so.status === "preparing") && so.dispute_status !== "open" && <div><Button variant="ghost" size="sm" icon="flag" onClick={() => setProblemOpen(true)}>Reportar un problema</Button></div>}
+      <Sheet open={problemOpen} onClose={() => setProblemOpen(false)} title="Reportar un problema"
+        footer={<><Button variant="ghost" onClick={() => setProblemOpen(false)}>Cancelar</Button><Button variant="primary" loading={problem.pending} disabled={problemText.trim().length < 10} onClick={() => void problem.run()}>Enviar reporte</Button></>}>
+        <span className="small muted">Mientras lo revisamos, el pago al vendedor queda congelado. Si se confirma el problema, se te reembolsa.</span>
+        <Field label="¿Qué pasó?" hint="Por ejemplo: no llegó, llegó otro artículo, o no coincide con la descripción.">
+          <TextArea value={problemText} onChange={(e) => setProblemText(e.target.value)} maxLength={1000} />
+        </Field>
+        <ErrorBox error={problem.error} />
+      </Sheet>
       {isBuyer && so.status === "delivered" && !so.review && (
         <div className="stack" style={{ gap: 8 }}>
           <span className="eyebrow">Califica esta compra</span>
@@ -301,8 +322,8 @@ function OfferCard({ o }: { o: Offer }) {
     invalidates: ["offers:", "product:", "dashboard", "orders"],
     onSuccess: (r) => {
       setCounterOpen(false);
-      if (r.conflict) toast("El artículo se agotó: la oferta se canceló sin cargos", "bad");
-      else toast({ accepted: "Oferta aceptada: se creó la compra pendiente de pago", declined: "Oferta rechazada", countered: "Contraoferta enviada", cancelled: "Oferta retirada" }[r.status as string] ?? "Hecho", "ok");
+      if (r.conflict) toast("El artículo se agotó: la oferta se canceló y se liberó el pago", "bad");
+      else toast({ completed: "Trato hecho: la venta quedó cerrada", declined: "Oferta rechazada. Se liberó el pago del comprador", countered: "Contraoferta enviada", cancelled: "Oferta retirada. Se liberó tu pago" }[r.status as string] ?? "Hecho", "ok");
     },
     onError: (e) => toast(e.message, "bad"),
   });
@@ -326,6 +347,8 @@ function OfferCard({ o }: { o: Offer }) {
           {o.amount_cents !== o.offer_cents && <><Icon name="chevron" size={12} /><span>Contraoferta <b>{money(o.amount_cents)}</b></span></>}
         </div>
         {(o.status === "pending" || o.status === "countered") && <Countdown to={o.expires_at} prefix={myTurn ? "Responde antes de" : "Vence en"} />}
+        {o.payment_status === "held" && <span className="small">{mine === "buyer" ? `Pagaste ${money(o.held_cents ?? 0)}; queda retenido hasta que haya respuesta.` : "El comprador ya pagó. Si aceptas, la venta queda cerrada."}</span>}
+        {o.payment_status === "released" && mine === "buyer" && <span className="small dim">Se liberó tu pago: no se te cobró nada.</span>}
         {o.status === "accepted" && o.order && (
           <div className="row" style={{ gap: 8 }}>
             <Countdown to={o.order.payment_due_at} prefix="Pago pendiente ·" />
@@ -336,12 +359,12 @@ function OfferCard({ o }: { o: Offer }) {
         {o.status === "completed" && o.order && <Link to={`/pedido/${o.order.id}`} className="link small">Ver pedido #{o.order.number}</Link>}
         {myTurn && (
           <div className="row" style={{ gap: 6 }}>
-            <Button size="sm" variant="primary" loading={act.pending} onClick={() => void act.run("accept")}>Aceptar {money(o.amount_cents)}</Button>
+            <Button size="sm" variant="primary" loading={act.pending} onClick={() => void act.run("accept")}>{mine === "seller" ? `Aceptar y vender en ${money(o.amount_cents)}` : `Aceptar y pagar ${money(o.amount_cents)}`}</Button>
             {mine === "seller" && o.status === "pending" && <Button size="sm" variant="dark" onClick={() => setCounterOpen(true)}>Contraofertar</Button>}
             <ConfirmButton confirmLabel="Rechazar" onConfirm={() => void act.run("decline")}>Rechazar</ConfirmButton>
           </div>
         )}
-        {mine === "seller" && myTurn && settings && <span className="tiny dim">Si aceptas: comisión {pct(settings.commission_bps)} ≈ {money(commission)}; recibirías ≈ {money(o.amount_cents * o.quantity - commission)} cuando se pague.</span>}
+        {mine === "seller" && myTurn && settings && <span className="tiny dim">Si aceptas: comisión {pct(settings.commission_bps)} ≈ {money(commission)}; recibirás {money(o.amount_cents * o.quantity - commission)} cuando el comprador reciba el artículo.</span>}
         {mine === "buyer" && (o.status === "pending" || o.status === "countered") && !myTurn && <div><ConfirmButton confirmLabel="Retirar" onConfirm={() => void act.run("cancel")} variant="ghost">Retirar oferta</ConfirmButton></div>}
         {mine === "buyer" && o.status === "countered" && <div><ConfirmButton confirmLabel="Retirar" onConfirm={() => void act.run("cancel")} variant="ghost">Retirar oferta</ConfirmButton></div>}
         <details className="small dim"><summary style={{ cursor: "pointer" }}>Historial</summary>

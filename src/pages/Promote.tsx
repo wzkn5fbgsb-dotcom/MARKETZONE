@@ -23,13 +23,12 @@ export function PromoteHome() {
         <section className="band">
           <div className="band-grid">
             <div className="stack">
-              <span className="eyebrow">Promociona tu negocio</span>
-              <h1 className="h1">Haz que tu negocio se vea en MARKETZONE.</h1>
-              <span className="muted">Crea una página comercial con catálogo, horarios y contacto. Después, destácala en la portada, promociona productos o publica promociones temporales.</span>
+              <h1 className="h1">Consigue más visitas para lo que vendes.</h1>
+              <span className="muted">Promociona un artículo, toda tu tienda o tu negocio. La promoción se paga aparte y no cambia la comisión: cada venta paga la misma comisión, venga de una promoción o no.</span>
             </div>
             <div className="row">
-              <Link to={session ? "/promociona/negocio" : "/entrar?next=/promociona/negocio"} className="btn btn-primary btn-lg">{businesses.length ? "Nueva página" : "Crear página de negocio"}</Link>
-              <Link to={session ? "/promociona/campana" : "/entrar?next=/promociona/campana"} className="btn btn-outline btn-lg">Crear campaña</Link>
+              <Link to={session ? "/promociona/campana" : "/entrar?next=/promociona/campana"} className="btn btn-primary btn-lg">Crear una promoción</Link>
+              <Link to={session ? "/promociona/negocio" : "/entrar?next=/promociona/negocio"} className="btn btn-outline btn-lg">{businesses.length ? "Nueva página de negocio" : "Crear página de negocio"}</Link>
             </div>
           </div>
         </section>
@@ -39,7 +38,7 @@ export function PromoteHome() {
           ))}
         </section>
         <section className="stack">
-          <span className="eyebrow">Cómo funciona y qué cuesta</span>
+          <h2 className="h2">Cómo funciona y qué cuesta</h2>
           <div className="grid-3">
             <div className="panel stack" style={{ gap: 6 }}><span className="h3">1. Configura</span><span className="small muted">Eliges qué promocionar, el tipo de espacio, la duración y el presupuesto. Ves una vista previa.</span></div>
             <div className="panel stack" style={{ gap: 6 }}><span className="h3">2. Revisión</span><span className="small muted">El equipo de MARKETZONE revisa que el anuncio cumpla las normas (sin descuentos ni testimonios inventados).</span></div>
@@ -125,7 +124,7 @@ export function CampaignWizard() {
   const toast = useToast();
   const loc = useLocation();
   const catalog = useQuery(session ? "catalog:promo" : null, () => api.catalog({ status: "active", limit: 100 }));
-  const [f, setF] = useState({ kind: "promoted_product" as CampaignKind, business_id: loc.query.get("negocio") ?? "", store_id: "", product_id: loc.query.get("producto") ?? "",
+  const [f, setF] = useState({ kind: ((loc.query.get("tipo") as CampaignKind | null) ?? (loc.query.get("negocio") || loc.query.get("tienda") ? "home_store" : "promoted_product")) as CampaignKind, business_id: loc.query.get("negocio") ?? "", store_id: loc.query.get("tienda") ?? "", product_id: loc.query.get("producto") ?? "",
     headline: "", body: "", budget_cents: (settings?.min_campaign_cents ?? 500) * 5 as number | null, duration_days: 7, category_id: "" });
   const [ideas, setIdeas] = useState<{ title: string; text: string }[]>([]);
   const [ideasBusy, setIdeasBusy] = useState(false);

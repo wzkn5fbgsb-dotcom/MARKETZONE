@@ -172,32 +172,50 @@ export function defineContract(makeHarness: () => Promise<Harness>) {
       await expectApiError(seller.api.makeOffer(variantId, 4000), "own_item");
     });
 
-    test("comprador ofrece $40, el vendedor acepta y se crea una compra pendiente por el importe acordado", async () => {
+    test("sin dirección de envío no se puede ofertar (la oferta se paga al enviarla)", async () => {
+      const fresh = await h.newUser("sinDireccion");
+      await expectApiError(fresh.api.makeOffer(variantId, 4000), "address_required");
+    });
+
+    test("comprador ofrece $40 y paga al ofertar; el vendedor acepta y el trato queda hecho", async () => {
+      await addressFor(buyer);
       const offer = await buyer.api.makeOffer(variantId, 4000);
       expect(offer.status).toBe("pending");
+      expect(offer.payment_status).toBe("held");
+      expect(offer.held_cents).toBe(4000 + 799);
       await expectApiError(buyer.api.makeOffer(variantId, 4100), "offer_exists");
       await expectApiError(buyer.api.respondOffer(offer.id, "accept"), "not_your_turn");
       const accepted = await seller.api.respondOffer(offer.id, "accept");
-      expect(accepted.status).toBe("accepted");
-      expect(accepted.order?.status).toBe("pending_payment");
+      expect(accepted.status).toBe("completed");
+      expect(accepted.payment_status).toBe("captured");
+      expect(accepted.order?.status).toBe("paid");
       expect(accepted.order?.total_cents).toBe(4000 + 799);
-      const reserved = await buyer2.api.product(productId);
-      expect(reserved.variants[0].available).toBe(0);
-      // Otro comprador no puede llevarse la unidad reservada
-      await expectApiError(buyer2.api.cartAdd(variantId, 1), "insufficient_stock");
-      // El pago se hace por el importe acordado (calculado en el servidor)
-      await addressFor(buyer);
-      const order = await buyer.api.order(accepted.order!.id);
-      expect(order.subtotal_cents).toBe(4000);
-      const paid = await buyer.api.payTest(order.id);
-      expect(paid.status).toBe("paid");
-      const done = (await buyer.api.offers("buyer")).find((o) => o.id === offer.id)!;
-      expect(done.status).toBe("completed");
+      // La unidad ya está vendida: otro comprador no puede llevársela
       const after = await seller.api.product(productId);
       expect(after.variants[0].stock_on_hand).toBe(0);
+      expect(after.variants[0].available).toBe(0);
+      const order = await buyer.api.order(accepted.order!.id);
+      expect(order.subtotal_cents).toBe(4000);
+      expect(order.status).toBe("paid");
+      // Comisión del 7 % sobre el importe acordado
+      const sellerView = await seller.api.order(accepted.order!.id);
+      expect(sellerView.seller_orders[0].commission_cents).toBe(280);
+      expect(sellerView.seller_orders[0].seller_net_cents).toBe(3720);
     });
 
-    test("contraoferta: el comprador la acepta y paga el importe contraofertado", async () => {
+    test("si el vendedor rechaza, se libera el pago sin cargo", async () => {
+      const id = (await seller.api.saveListing({ ...hoodieListing(images, { M: 1 }), title: "Rechazo libera", price_cents: 5000 })).id;
+      const v = (await buyer.api.product(id)).variants[0];
+      const offer = await buyer.api.makeOffer(v.id, 4000);
+      const declined = await seller.api.respondOffer(offer.id, "decline");
+      expect(declined.status).toBe("declined");
+      expect(declined.payment_status).toBe("released");
+      expect(declined.order).toBeNull();
+      expect((await buyer2.api.product(id)).variants[0].available).toBe(1);
+    });
+
+    test("contraoferta: si el comprador la acepta, se cobra el importe contraofertado y queda cerrada", async () => {
+      await addressFor(buyer2);
       const id = (await seller.api.saveListing({ ...hoodieListing(images, { L: 2 }), title: "Sneaker contraoferta", price_cents: 5000 })).id;
       const v = (await buyer2.api.product(id)).variants[0];
       const offer = await buyer2.api.makeOffer(v.id, 3500);
@@ -205,45 +223,32 @@ export function defineContract(makeHarness: () => Promise<Harness>) {
       const countered = await seller.api.respondOffer(offer.id, "counter", 4500);
       expect(countered.status).toBe("countered");
       expect(countered.awaiting).toBe("buyer");
+      expect(countered.payment_status).toBe("held");
       await expectApiError(seller.api.respondOffer(offer.id, "accept"), "not_your_turn");
       const accepted = await buyer2.api.respondOffer(offer.id, "accept");
-      expect(accepted.status).toBe("accepted");
+      expect(accepted.status).toBe("completed");
+      expect(accepted.order?.status).toBe("paid");
       expect(accepted.order?.total_cents).toBe(4500 + 799);
-      expect(accepted.events.map((e) => e.kind)).toEqual(["offer", "counter", "accept"]);
+      expect(accepted.events.map((e) => e.kind)).toContain("accept");
     });
 
-    test("conflicto de inventario al aceptar: la oferta se cancela sin cargos", async () => {
+    test("conflicto de inventario al aceptar: la oferta se cancela y se libera el pago", async () => {
       const id = (await seller.api.saveListing({ ...hoodieListing(images, { S: 1 }), title: "Conflicto stock", price_cents: 5000 })).id;
       const v = (await buyer.api.product(id)).variants[0];
       const offer = await buyer.api.makeOffer(v.id, 4000);
-      // Otro comprador compra la unidad antes de que el vendedor responda
+      // Otro comprador paga el precio completo antes de que el vendedor responda
       await buyer2.api.cartAdd(v.id, 1);
       const co = await buyer2.api.checkout((await addressFor(buyer2)).id);
       await buyer2.api.payTest(co.order_id);
       const res = await seller.api.respondOffer(offer.id, "accept");
       expect(res.status).toBe("cancelled");
       expect(res.conflict).toBe(true);
+      expect(res.payment_status).toBe("released");
       expect(res.order).toBeNull();
     });
   });
 
   describe("Expiración", () => {
-    test("una oferta aceptada que no se paga a tiempo vence y libera la reserva", async () => {
-      const id = (await seller.api.saveListing({ ...hoodieListing(images, { M: 1 }), title: "Expira oferta", price_cents: 6000 })).id;
-      const v = (await buyer.api.product(id)).variants[0];
-      const offer = await buyer.api.makeOffer(v.id, 5000);
-      const accepted = await seller.api.respondOffer(offer.id, "accept");
-      expect((await buyer2.api.product(id)).variants[0].available).toBe(0);
-      await h.backdateOrder(accepted.order!.id);
-      await h.runExpiry();
-      expect((await buyer2.api.product(id)).variants[0].available).toBe(1);
-      const o = (await buyer.api.offers("buyer")).find((x) => x.id === offer.id)!;
-      expect(o.status).toBe("expired");
-      const order = await buyer.api.order(accepted.order!.id);
-      expect(order.status).toBe("expired");
-      await expectApiError(buyer.api.payTest(order.id), "order_not_payable");
-    });
-
     test("pagar después del plazo no confirma la compra (la reserva vence en el acto)", async () => {
       const id = (await seller.api.saveListing({ ...hoodieListing(images, { S: 1 }), title: "Expira checkout" })).id;
       const v = (await buyer.api.product(id)).variants[0];
@@ -258,7 +263,7 @@ export function defineContract(makeHarness: () => Promise<Harness>) {
       expect((await buyer2.api.product(id)).variants[0].available).toBe(1);
     });
 
-    test("ofertas sin respuesta vencen", async () => {
+    test("una oferta pagada sin respuesta vence y libera el pago", async () => {
       const id = (await seller.api.saveListing({ ...hoodieListing(images, { S: 1 }), title: "Oferta sin respuesta", price_cents: 5000 })).id;
       const v = (await buyer.api.product(id)).variants[0];
       const offer = await buyer.api.makeOffer(v.id, 4500);
@@ -266,6 +271,7 @@ export function defineContract(makeHarness: () => Promise<Harness>) {
       await h.runExpiry();
       const o = (await seller.api.offers("seller")).find((x) => x.id === offer.id)!;
       expect(o.status).toBe("expired");
+      expect(o.payment_status).toBe("released");
     });
   });
 
@@ -280,18 +286,42 @@ export function defineContract(makeHarness: () => Promise<Harness>) {
       await buyer.api.payTest(co.order_id);
       const so = (await seller.api.sellerOrders()).find((x) => x.order_id === co.order_id)!;
       expect(so.status).toBe("paid");
-      expect(so.commission_cents).toBe(350);
-      expect(so.seller_net_cents).toBe(3150);
+      expect(so.commission_cents).toBe(245); // 7 % de $35
+      expect(so.seller_net_cents).toBe(3255);
       expect(so.shipping_address?.line1).toBe("123 Main St");
       const shipped = await seller.api.fulfill(so.id, "shipped", "USPS");
       expect(shipped.tracking_number).toBeNull();
       await expectApiError(intruder.api.fulfill(so.id, "delivered"), "not_found");
+      // El vendedor no puede marcar su propio pedido como entregado (protección contra estafas)
+      await expectApiError(seller.api.fulfill(so.id, "delivered"), "buyer_confirms_delivery");
+      expect(shipped.auto_complete_at).not.toBeNull();
       await buyer.api.confirmDelivery(so.id);
       await buyer.api.review(so.id, 5, "Todo perfecto");
       await expectApiError(buyer.api.review(so.id, 4), "already_reviewed");
       const dash = await seller.api.dashboard();
       expect(dash.money_test.gross_cents).toBeGreaterThan(0);
       expect(dash.money_real.gross_cents).toBe(0); // nada de dinero real en modo de prueba
+    });
+
+    test("el comprador reporta un problema: se congela la confirmación automática y nadie es suspendido", async () => {
+      const id = (await seller.api.saveListing({ ...hoodieListing(images, { M: 2 }), title: "Pedido con problema" })).id;
+      const v = (await buyer.api.product(id)).variants[0];
+      await buyer.api.cartAdd(v.id, 1);
+      const co = await buyer.api.checkout((await addressFor(buyer)).id);
+      await buyer.api.payTest(co.order_id);
+      const so = (await seller.api.sellerOrders()).find((x) => x.order_id === co.order_id)!;
+      await expectApiError(seller.api.fulfill(so.id, "shipped", "USPS", "123"), "validation");
+      await seller.api.fulfill(so.id, "shipped", "USPS", "9400111899223");
+      await expectApiError(buyer.api.reportProblem(so.id, "mal"), "validation");
+      await expectApiError(intruder.api.reportProblem(so.id, "Nunca llegó el paquete a mi casa"), "not_found");
+      const r = await buyer.api.reportProblem(so.id, "Nunca llegó el paquete a mi casa");
+      expect(r.dispute_status).toBe("open");
+      await expectApiError(buyer.api.reportProblem(so.id, "Nunca llegó el paquete a mi casa"), "already_reported");
+      // Con disputa abierta, la confirmación automática no se aplica aunque pase el plazo
+      await h.runExpiry();
+      expect((await seller.api.order(co.order_id)).seller_orders[0].status).toBe("shipped");
+      // El vendedor sigue activo: un reporte no suspende a nadie
+      expect((await seller.api.account()).profile.id).toBe(seller.userId);
     });
 
     test("reembolso de prueba antes del envío con reposición de stock", async () => {
@@ -396,7 +426,7 @@ export function defineContract(makeHarness: () => Promise<Harness>) {
       await expectApiError(admin.api.adminSettings({ test_mode: false }), "payments_not_ready");
       await admin.api.adminSettings({ commission_bps: 1200 });
       expect((await buyer.api.settings()).commission_bps).toBe(1200);
-      await admin.api.adminSettings({ commission_bps: 1000 });
+      await admin.api.adminSettings({ commission_bps: 700 });
     });
 
     test("moderación: un producto bloqueado deja de ser visible", async () => {

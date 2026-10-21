@@ -9,18 +9,8 @@ import { artDataUri } from "../app/art";
 import { categoryArt, countLabel } from "../app/categories";
 import { money } from "../app/format";
 
-/** Duración legible de un plazo en minutos: "30 min", "2 h", "1 día". */
-function span(min: number) {
-  if (min < 60) return `${min} min`;
-  if (min < 48 * 60) return `${Math.round(min / 60)} h`;
-  const d = Math.round(min / 1440);
-  return d === 1 ? "1 día" : `${d} días`;
-}
-
 /** Ejemplo ilustrado de una negociación: la función que distingue a MARKETZONE. */
 function OfferStory() {
-  const { settings } = useApp();
-  const pay = settings?.offer_payment_minutes;
   return (
     <figure className="offer-story" aria-label="Ejemplo de cómo funciona una oferta">
       <div className="os-item">
@@ -31,12 +21,12 @@ function OfferStory() {
         </div>
       </div>
       <ol className="os-thread">
-        <li className="os-msg me" style={{ animationDelay: ".35s" }}><span className="os-who">Tú</span>Te ofrezco <b>{money(4000)}</b></li>
+        <li className="os-msg me" style={{ animationDelay: ".35s" }}><span className="os-who">Tú</span>Te ofrezco <b>{money(4000)}</b>, ya pagado</li>
         <li className="os-msg them" style={{ animationDelay: "1.15s" }}><span className="os-who">Vendedor</span>Te la dejo en <b>{money(4500)}</b></li>
         <li className="os-msg me" style={{ animationDelay: "1.95s" }}><span className="os-who">Tú</span>Acepto</li>
         <li className="os-deal" style={{ animationDelay: "2.6s" }}>
           <Icon name="check" size={18} stroke={2.4} />
-          <span>Trato cerrado en <b>{money(4500)}</b>.{pay ? ` Tienes ${span(pay)} para pagar.` : ""}</span>
+          <span>Trato hecho en <b>{money(4500)}</b>. El pago ya estaba hecho, así que la compra queda cerrada.</span>
         </li>
       </ol>
       <figcaption className="tiny dim">Ejemplo de una negociación</figcaption>
@@ -57,7 +47,7 @@ export default function Home() {
         <section className="hero">
           <div className="stack-lg">
             <h1 className="display hero-title"><span>Compra y vende moda.</span> <span>El precio se negocia.</span></h1>
-            <p className="hero-lede">Ropa, sneakers, streetwear y accesorios, nuevos y de segunda mano. Ofrece lo que quieres pagar y quien vende acepta, rechaza o te hace una contraoferta.</p>
+            <p className="hero-lede">Ropa, sneakers, streetwear y accesorios, nuevos y de segunda mano. Ofrece lo que quieres pagar: si quien vende acepta, el trato está hecho. Si no, te regresamos tu dinero.</p>
             <div className="row">
               <Link to="/publicar" className="btn btn-primary btn-lg"><Icon name="plus" size={18} stroke={2.2} />Vender</Link>
               <Link to="/categorias" className="btn btn-outline btn-lg">Ver categorías</Link>

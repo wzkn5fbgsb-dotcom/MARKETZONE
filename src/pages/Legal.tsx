@@ -113,7 +113,7 @@ export function Terms() {
         <ul>
           <li>Solo publica artículos que tengas y puedas enviar. Describe su estado con honestidad e incluye fotos reales de cualquier defecto.</li>
           <li>Prohibido: falsificaciones o réplicas, artículos robados, armas, drogas, contenido sexual, productos de belleza abiertos o vencidos, y cualquier artículo cuya venta sea ilegal.</li>
-          <li>Cuando aceptas una oferta o alguien paga, te comprometes a enviar el artículo por ese precio.</li>
+          <li>Cuando aceptas una oferta o alguien compra, la venta queda cerrada y te comprometes a enviar el artículo por ese precio. Recibes tu dinero cuando el comprador recibe el artículo.</li>
           <li>MARKETZONE cobra una comisión{settings ? ` del ${pct(settings.commission_bps)}` : ""} sobre cada venta completada. Siempre la ves antes de publicar y antes de aceptar una oferta.</li>
         </ul>
       </section>
@@ -121,7 +121,7 @@ export function Terms() {
       <section className="stack">
         <h2 className="h3">Si compras</h2>
         <ul>
-          <li>Una oferta aceptada es un compromiso de compra. Si no pagas dentro del plazo, la oferta vence y el artículo vuelve a estar disponible.</li>
+          <li>Al hacer una oferta pagas en ese momento y el dinero queda retenido. Si el vendedor acepta, el trato está hecho y la compra no se puede cancelar. Si la rechaza, no responde a tiempo o retiras tu oferta antes de que acepte, se libera el pago sin cargo.</li>
           <li>El precio final, el envío y las tarifas se muestran antes de pagar. El servidor revisa el precio y la disponibilidad al confirmar.</li>
           <li>Las reseñas solo se pueden dejar sobre pedidos entregados.</li>
         </ul>

@@ -252,6 +252,7 @@ export interface SellerOrder {
   id: string; order_id: string; seller_id: string; status: SellerOrderStatus; subtotal_cents: number; shipping_cents: number;
   commission_bps: number; commission_cents: number; seller_net_cents: number;
   payout_status: "not_applicable" | "pending" | "paid_out" | "reversed";
+  auto_complete_at: string | null; dispute_status: "none" | "open" | "resolved"; dispute_opened_at: string | null;
   carrier: string | null; tracking_number: string | null; shipped_at: string | null; delivered_at: string | null; created_at: string;
   seller: { username: string; display_name: string }; store: StoreRef | null; items: OrderItem[];
   review: { id: string; rating: number; body: string | null } | null;
@@ -278,6 +279,7 @@ export interface OrderSummary {
 export interface Offer {
   id: string; status: OfferStatus; awaiting: "seller" | "buyer" | "none"; quantity: number;
   list_price_cents: number; offer_cents: number; amount_cents: number; expires_at: string; order_id: string | null;
+  payment_status: "none" | "held" | "captured" | "released"; held_cents: number | null;
   created_at: string; updated_at: string; viewer_role: "buyer" | "seller" | "admin";
   product: ProductCard; variant: { id: string; size: string | null; color: string | null };
   buyer: UserRef; seller: UserRef;

@@ -34,8 +34,8 @@ export const FULFILLMENT_STATUS: Record<SellerOrderStatus, string> = {
 };
 
 export const OFFER_STATUS: Record<OfferStatus, string> = {
-  pending: "Pendiente", countered: "Contraoferta recibida", accepted: "Aceptada · pendiente de pago", declined: "Rechazada",
-  expired: "Expirada", cancelled: "Cancelada", completed: "Compra completada",
+  pending: "Pendiente", countered: "Contraoferta recibida", accepted: "Aceptada", declined: "Rechazada",
+  expired: "Expirada", cancelled: "Cancelada", completed: "Trato hecho",
 };
 
 export const CAMPAIGN_STATUS: Record<CampaignStatus, string> = {
@@ -44,8 +44,8 @@ export const CAMPAIGN_STATUS: Record<CampaignStatus, string> = {
 };
 
 export const CAMPAIGN_KIND: Record<CampaignKind, { label: string; hint: string }> = {
-  promoted_product: { label: "Producto promocionado", hint: "Tu producto aparece en la sección Patrocinado del inicio." },
-  home_store: { label: "Tienda o negocio en portada", hint: "Tu negocio aparece destacado en la página principal." },
+  promoted_product: { label: "Un artículo promocionado", hint: "Ese artículo aparece en la sección Patrocinado del inicio." },
+  home_store: { label: "Toda tu tienda en portada", hint: "Tu tienda completa (tu clóset) o tu negocio aparece destacado en el inicio para atraer más visitas a todos tus artículos." },
   category_spotlight: { label: "Destacado en categoría", hint: "Tu producto aparece primero al explorar su categoría." },
   temporary_promo: { label: "Promoción temporal", hint: "Un anuncio de tu negocio durante unos días." },
   featured_offer: { label: "Oferta destacada", hint: "Destaca un producto con un mensaje de oferta (sin inventar descuentos)." },

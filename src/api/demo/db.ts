@@ -46,6 +46,7 @@ export interface OfferRow {
   id: string; product_id: string; variant_id: string; buyer_id: string; seller_id: string; quantity: number; list_price_cents: number;
   offer_cents: number; amount_cents: number; status: string; awaiting: "seller" | "buyer" | "none"; expires_at: string;
   order_id: string | null; created_at: string; updated_at: string;
+  payment_status?: "none" | "held" | "captured" | "released"; held_cents?: number | null; shipping_address?: Record<string, unknown> | null;
 }
 export interface OfferEventRow { id: number; offer_id: string; actor_id: string | null; actor_role: string; kind: string; amount_cents: number | null; note: string | null; created_at: string }
 export interface OrderRow {
@@ -58,6 +59,7 @@ export interface SellerOrderRow {
   id: string; order_id: string; seller_id: string; store_id: string | null; status: string; subtotal_cents: number; shipping_cents: number;
   commission_bps: number; commission_cents: number; seller_net_cents: number; payout_status: string; carrier: string | null;
   tracking_number: string | null; shipped_at: string | null; delivered_at: string | null; created_at: string; updated_at: string;
+  auto_complete_at?: string | null; dispute_status?: "none" | "open" | "resolved"; dispute_reason?: string | null; dispute_opened_at?: string | null;
 }
 export interface OrderItemRow {
   id: string; order_id: string; seller_order_id: string; product_id: string | null; variant_id: string | null; title: string;
@@ -164,7 +166,7 @@ export function emptyDB(nowIso: string): DemoDB {
     version: 1,
     seq: { order: 100000, movement: 0, event: 0, analytics: 0, audit: 0 },
     settings: {
-      commission_bps: 1000, shipping_flat_cents: 799, checkout_hold_minutes: 15, offer_response_minutes: 2880,
+      commission_bps: 700, shipping_flat_cents: 799, checkout_hold_minutes: 15, offer_response_minutes: 2880,
       offer_payment_minutes: 1440, min_offer_percent: 50, min_campaign_cents: 500, test_mode: true, real_payments_ready: false,
       updated_at: nowIso, updated_by: null,
     },

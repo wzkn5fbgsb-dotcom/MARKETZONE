@@ -75,7 +75,7 @@ function ProductView({ d }: { d: ProductDetail }) {
             <Callout kind={p.status === "active" && p.moderation_status === "ok" ? "info" : "warn"}>
               <div className="stack" style={{ gap: 8 }}>
                 <span>Es tu publicación. Estado: <b>{p.moderation_status === "blocked" ? "bloqueada por moderación" : { active: "publicada", draft: "borrador", paused: "pausada", removed: "eliminada" }[p.status]}</b>.</span>
-                <div className="row"><Link to={`/publicar/${p.id}`} className="btn btn-sm btn-dark"><Icon name="edit" size={16} />Editar</Link><Link to="/panel/catalogo" className="btn btn-sm btn-ghost">Ver en el panel</Link></div>
+                <div className="row"><Link to={`/publicar/${p.id}`} className="btn btn-sm btn-dark"><Icon name="edit" size={16} />Editar</Link><Link to="/panel/catalogo" className="btn btn-sm btn-ghost">Ver en el panel</Link>{p.status === "active" && <Link to={`/promociona/campana?producto=${p.id}`} className="btn btn-sm btn-ghost"><Icon name="megaphone" size={16} />Promocionar este artículo</Link>}</div>
               </div>
             </Callout>
           )}
@@ -213,27 +213,41 @@ function ProductView({ d }: { d: ProductDetail }) {
 }
 
 function OfferSheet({ open, onClose, d, variant }: { open: boolean; onClose: () => void; d: ProductDetail; variant: Variant }) {
-  const { api, reloadAccount } = useApp();
+  const { api, account, reloadAccount } = useApp();
   const toast = useToast();
   const list = variant.price_cents;
   const min = Math.ceil(list * d.offer_rules.min_percent / 100);
+  const ship = d.fees.shipping_flat_cents;
+  const addresses = account?.addresses ?? [];
   const [amount, setAmount] = useState<number | null>(Math.round(list * 0.85 / 100) * 100);
-  const send = useAction(() => api.makeOffer(variant.id, amount ?? 0), {
+  const [addressId, setAddressId] = useState<string>(addresses.find((a) => a.is_default)?.id ?? addresses[0]?.id ?? "");
+  const send = useAction(() => api.makeOffer(variant.id, amount ?? 0, 1, addressId || null), {
     invalidates: ["product:", "offers"],
-    onSuccess: () => { toast("Oferta enviada al vendedor", "ok"); reloadAccount(); onClose(); },
+    onSuccess: () => { toast("Oferta pagada y enviada. Si el vendedor acepta, la compra queda cerrada.", "ok"); reloadAccount(); onClose(); },
   });
   const suggestions = [0.9, 0.85, 0.8].map((f) => Math.max(min, Math.round((list * f) / 100) * 100)).filter((v, i, a) => v < list && a.indexOf(v) === i);
+  const valid = !!amount && amount >= min && amount < list && !!addressId;
   return (
     <Sheet open={open} onClose={onClose} title="Hacer una oferta" footer={
-      <><Button variant="ghost" onClick={onClose}>Cancelar</Button><Button variant="primary" loading={send.pending} disabled={!amount || amount < min || amount >= list} onClick={() => void send.run()}>Enviar oferta</Button></>
+      <><Button variant="ghost" onClick={onClose}>Cancelar</Button><Button variant="primary" loading={send.pending} disabled={!valid} onClick={() => void send.run()}>{valid ? `Ofertar y pagar ${money((amount ?? 0) + ship)}` : "Ofertar y pagar"}</Button></>
     }>
-      <span className="muted small">{d.product.title} · {sizeLabel(variant.size, variant.color)} · precio publicado <b>{money(list)}</b></span>
+      <span className="muted small">{d.product.title}, {sizeLabel(variant.size, variant.color)}. Precio publicado: <b>{money(list)}</b></span>
       <div className="row">{suggestions.map((s) => <button key={s} className={`chip ${amount === s ? "on" : ""}`} onClick={() => setAmount(s)}>{money(s)}</button>)}</div>
       <Field label="Tu oferta" hint={`Mínimo ${money(min)} (${d.offer_rules.min_percent} % del precio). Debe ser menor que ${money(list)}.`}>
         <MoneyInput cents={amount} onChange={setAmount} />
       </Field>
+      {addresses.length > 0 ? (
+        <Field label="Enviar a">
+          <Select value={addressId} onChange={(e) => setAddressId(e.target.value)}>
+            {addresses.map((a) => <option key={a.id} value={a.id}>{a.full_name}, {a.line1}, {a.city}</option>)}
+          </Select>
+        </Field>
+      ) : (
+        <Callout kind="warn">Necesitas una dirección de envío para ofertar. <Link to="/ajustes" className="link">Agrégala en Ajustes</Link>.</Callout>
+      )}
+      {valid && <span className="small">Pagas ahora <b>{money((amount ?? 0) + ship)}</b>: tu oferta de {money(amount ?? 0)} más {money(ship)} de envío.</span>}
       <ErrorBox error={send.error} />
-      <Callout>Si el vendedor acepta, se crea una compra pendiente de pago por ese importe y se reserva la unidad durante el plazo indicado. Aceptar una oferta no cobra nada: pagas después.</Callout>
+      <Callout>Pagas al ofertar y el dinero queda retenido. Si el vendedor acepta, el trato está hecho y la compra queda cerrada. Si la rechaza, no responde a tiempo o retiras tu oferta, se libera el pago y no se te cobra nada.{d.fees.test_mode ? " Por ahora los pagos son de prueba: no se cobra dinero." : ""}</Callout>
     </Sheet>
   );
 }

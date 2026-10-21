@@ -65,13 +65,14 @@ export class MarketApi {
   fulfill(sellerOrderId: string, status: "preparing" | "shipped" | "delivered", carrier?: string, tracking?: string) {
     return this.call<T.SellerOrder>("seller_update_fulfillment", { p_seller_order_id: sellerOrderId, p_status: status, p_carrier: carrier ?? null, p_tracking: tracking ?? null });
   }
+  reportProblem(sellerOrderId: string, reason: string) { return this.call<{ dispute_status: string }>("report_order_problem", { p_seller_order_id: sellerOrderId, p_reason: reason }); }
   confirmDelivery(sellerOrderId: string) { return this.call<T.Order>("buyer_confirm_delivery", { p_seller_order_id: sellerOrderId }); }
   refund(sellerOrderId: string, reason: string, restock = true) {
     return this.call<T.Order>("refund_seller_order", { p_seller_order_id: sellerOrderId, p_reason: reason, p_restock: restock });
   }
 
   // Ofertas
-  makeOffer(variantId: string, amountCents: number, qty = 1) { return this.call<T.Offer>("make_offer", { p_variant_id: variantId, p_amount_cents: amountCents, p_quantity: qty }); }
+  makeOffer(variantId: string, amountCents: number, qty = 1, addressId?: string | null) { return this.call<T.Offer>("make_offer", { p_variant_id: variantId, p_amount_cents: amountCents, p_quantity: qty, p_address_id: addressId ?? null }); }
   respondOffer(offerId: string, action: "accept" | "decline" | "counter" | "cancel", amountCents?: number) {
     return this.call<T.Offer>("respond_offer", { p_offer_id: offerId, p_action: action, p_amount_cents: amountCents ?? null });
   }

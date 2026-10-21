@@ -124,7 +124,18 @@ export class DemoEngine {
     return this.db.images.filter((i) => i.product_id === pid).sort((a, b) => a.position - b.position || a.created_at.localeCompare(b.created_at))[0]?.url ?? null;
   }
   private favCount(pid: string) { return this.db.favorites.filter((f) => f.product_id === pid).length; }
-  private settings() { return this.db.settings; }
+  private settings() {
+    const st = this.db.settings as typeof this.db.settings & { commission_v7?: boolean };
+    if (!st.commission_v7) { if (st.commission_bps === 1000) st.commission_bps = 700; st.commission_v7 = true; }
+    return this.db.settings;
+  }
+  /** Estado del pago retenido de una oferta, derivado de su estado (igual que el disparador de la base de datos). */
+  private holdStatus(o: OfferRow) {
+    if (!o.payment_status || o.payment_status === "none") return "none";
+    if (o.status === "completed") return "captured";
+    if (["declined", "expired", "cancelled"].includes(o.status)) return "released";
+    return o.payment_status;
+  }
   private searchText(p: Partial<ProductRow>) {
     return lower([p.title, p.brand, p.color, p.material, (p.tags ?? []).join(" "), p.category_id, (p.description ?? "").slice(0, 500)].map((x) => x ?? "").join(" "));
   }
@@ -249,8 +260,12 @@ export class DemoEngine {
     for (const o of this.db.orders.filter((x) => x.status === "pending_payment" && this.t(x.payment_due_at) <= now)) this.expireOrder(o.id);
     for (const of of this.db.offers.filter((x) => (x.status === "pending" || x.status === "countered") && this.t(x.expires_at) <= now)) {
       of.status = "expired"; of.awaiting = "none"; of.updated_at = this.iso();
-      this.offerEvent(of.id, null, "system", "expire", null, "La oferta venció sin respuesta.");
-      this.notify(of.buyer_id, "offer_expired", "Tu oferta venció", "No hubo respuesta dentro del plazo.", "/ofertas");
+      this.offerEvent(of.id, null, "system", "expire", null, "La oferta venció sin respuesta. Se liberó el pago.");
+      this.notify(of.buyer_id, "offer_expired", "Tu oferta venció", "No hubo respuesta a tiempo. Se liberó tu pago; no se te cobró nada.", "/ofertas");
+    }
+    for (const so of this.db.seller_orders.filter((x) => x.status === "shipped" && (x.dispute_status ?? "none") === "none" && x.auto_complete_at && this.t(x.auto_complete_at) <= now)) {
+      so.status = "delivered"; so.delivered_at = this.iso(); so.updated_at = this.iso();
+      this.notify(so.seller_id, "order_delivered", "Entrega confirmada automáticamente", "Pasó el plazo sin reportes del comprador. Tu pago queda liberado.", "/panel/pedidos");
     }
     for (const c of this.db.campaigns.filter((x) => (x.status === "active" || x.status === "paused") && x.ends_at && this.t(x.ends_at) <= now)) {
       c.status = "finished"; c.updated_at = this.iso();
@@ -287,6 +302,7 @@ export class DemoEngine {
     const s = this.store(so.store_id);
     const review = this.db.reviews.find((r) => r.seller_order_id === so.id);
     return {
+      auto_complete_at: so.auto_complete_at ?? null, dispute_status: so.dispute_status ?? "none", dispute_opened_at: so.dispute_opened_at ?? null,
       id: so.id, order_id: so.order_id, seller_id: so.seller_id, status: so.status, subtotal_cents: so.subtotal_cents,
       shipping_cents: so.shipping_cents, commission_bps: so.commission_bps, commission_cents: so.commission_cents,
       seller_net_cents: so.seller_net_cents, payout_status: so.payout_status, carrier: so.carrier, tracking_number: so.tracking_number,
@@ -330,6 +346,7 @@ export class DemoEngine {
     return {
       id: o.id, status: o.status, awaiting: o.awaiting, quantity: o.quantity, list_price_cents: o.list_price_cents, offer_cents: o.offer_cents,
       amount_cents: o.amount_cents, expires_at: o.expires_at, order_id: o.order_id, created_at: o.created_at, updated_at: o.updated_at,
+      payment_status: this.holdStatus(o), held_cents: o.held_cents ?? null,
       viewer_role: o.buyer_id === uid ? "buyer" : o.seller_id === uid ? "seller" : "admin",
       product: p ? this.card(p, uid) : null,
       variant: v ? { id: v.id, size: v.size, color: v.color } : null,
@@ -1248,15 +1265,20 @@ export class DemoEngine {
       const so = db().seller_orders.find((x) => x.id === a.p_seller_order_id);
       if (!so || so.seller_id !== uid) fail("not_found", "El pedido no existe.");
       const to = a.p_status;
-      const ok = (so!.status === "paid" && (to === "preparing" || to === "shipped")) || (so!.status === "preparing" && to === "shipped") || (so!.status === "shipped" && to === "delivered");
+      if (to === "delivered") fail("buyer_confirms_delivery", "La entrega la confirma el comprador. Si no reporta un problema, se confirma sola 7 días después del envío con número de guía (21 días sin guía).");
+      const ok = (so!.status === "paid" && (to === "preparing" || to === "shipped")) || (so!.status === "preparing" && to === "shipped");
       if (!ok) fail("invalid_transition", "Ese cambio de estado no es válido para este pedido.", { from: so!.status, to });
+      const tracking = trimOrNull(a.p_tracking) as string | null;
+      if (tracking && tracking.length < 6) fail("validation", "El número de guía parece incompleto. Revísalo o déjalo vacío.", { field: "tracking" });
       so!.status = to; so!.updated_at = this.iso();
-      if (to === "shipped") { so!.carrier = trimOrNull(a.p_carrier) as string | null; so!.tracking_number = trimOrNull(a.p_tracking) as string | null; so!.shipped_at = this.iso(); }
-      if (to === "delivered") so!.delivered_at = this.iso();
+      if (to === "shipped") {
+        so!.carrier = trimOrNull(a.p_carrier) as string | null; so!.tracking_number = tracking; so!.shipped_at = this.iso();
+        so!.auto_complete_at = this.iso((tracking ? 7 : 21) * 86400000);
+      }
       const o = db().orders.find((x) => x.id === so!.order_id)!;
-      const label = to === "preparing" ? "en preparación" : to === "shipped" ? "enviado" : "entregado";
+      const label = to === "preparing" ? "en preparación" : "enviado";
       this.notify(o.buyer_id, `order_${to}`, `Pedido #${o.number}: ${label}`,
-        to === "shipped" && trimOrNull(a.p_tracking) ? `Seguimiento: ${a.p_carrier ?? ""} ${a.p_tracking}` : null, `/pedido/${o.id}`);
+        to === "shipped" ? [tracking ? `Guía: ${a.p_carrier ?? ""} ${tracking}.` : null, "Cuando lo recibas, confírmalo. Si hay un problema, repórtalo desde el pedido."].filter(Boolean).join(" ") : null, `/pedido/${o.id}`);
       return this.sellerOrderJson(so!);
     };
 
@@ -1267,8 +1289,25 @@ export class DemoEngine {
       if (!so || !o || o.buyer_id !== uid) fail("not_found", "El pedido no existe.");
       if (so!.status !== "shipped") fail("invalid_transition", "Solo puedes confirmar la entrega de pedidos enviados.");
       so!.status = "delivered"; so!.delivered_at = this.iso();
-      this.notify(so!.seller_id, "order_delivered", "Entrega confirmada por el comprador", null, "/panel/pedidos");
+      if (so!.dispute_status === "open") so!.dispute_status = "resolved";
+      this.notify(so!.seller_id, "order_delivered", "Entrega confirmada por el comprador", "Tu pago queda liberado.", "/panel/pedidos");
       return this.orderJson(o!, uid);
+    };
+
+    H.report_order_problem = (a, uidIn) => {
+      const uid = this.requireUser(uidIn);
+      const so = db().seller_orders.find((x) => x.id === a.p_seller_order_id);
+      const o = so ? db().orders.find((x) => x.id === so.order_id) : null;
+      if (!so || !o || o.buyer_id !== uid) fail("not_found", "El pedido no existe.");
+      if (!["paid", "preparing", "shipped"].includes(so!.status)) fail("invalid_transition", "Solo puedes reportar problemas de pedidos pagados que aún no se confirman como entregados.");
+      if (so!.dispute_status === "open") fail("already_reported", "Ya reportaste un problema con este pedido. El equipo lo está revisando.");
+      const reason = String(a.p_reason ?? "").trim();
+      if (reason.length < 10) fail("validation", "Cuéntanos qué pasó (al menos 10 caracteres).", { field: "reason" });
+      Object.assign(so!, { dispute_status: "open", dispute_reason: reason.slice(0, 1000), dispute_opened_at: this.iso(), updated_at: this.iso() });
+      this.notify(so!.seller_id, "order_dispute", `Problema reportado en el pedido #${o!.number}`,
+        "El comprador reportó un problema. El pago queda retenido mientras el equipo lo revisa; no se tomó ninguna medida contra tu cuenta.", "/panel/pedidos");
+      db().profiles.filter((p) => p.role === "admin" && p.status === "active").forEach((p) => this.notify(p.id, "order_dispute", `Disputa abierta: pedido #${o!.number}`, reason.slice(0, 200), "/admin/pedidos"));
+      return { seller_order_id: so!.id, dispute_status: "open" };
     };
 
     H.refund_seller_order = (a, uidIn) => {
@@ -1311,6 +1350,7 @@ export class DemoEngine {
       this.assertNotBlocked(uid, p.seller_id);
       if (!p.offers_enabled) fail("offers_disabled", "El vendedor no acepta ofertas en este artículo.");
       if (p.is_demo && !s.test_mode) fail("demo_item", "Este es un producto de ejemplo.");
+      if (!s.test_mode) fail("payments_not_ready", "Los pagos reales todavía no están activos.");
       const qty = a.p_quantity ?? 1;
       if (!Number.isInteger(qty) || qty < 1 || qty > 10) fail("validation", "La cantidad de la oferta debe estar entre 1 y 10.");
       const list = v!.price_cents ?? p.price_cents;
@@ -1318,16 +1358,20 @@ export class DemoEngine {
       const amount = a.p_amount_cents;
       if (amount === null || amount === undefined || amount >= list) fail("offer_too_high", "Tu oferta debe ser menor que el precio publicado. Para pagar el precio completo, añade el artículo al carrito.");
       if (amount < min) fail("offer_too_low", `La oferta mínima para este artículo es ${money(min)}.`, { min_cents: min });
+      const addrRow = db().addresses.filter((x) => x.user_id === uid && (!a.p_address_id || x.id === a.p_address_id))
+        .sort((x, y) => Number(y.is_default) - Number(x.is_default) || x.created_at.localeCompare(y.created_at))[0];
+      if (!addrRow) fail("address_required", "Agrega una dirección de envío: tu oferta se paga al enviarla y, si la aceptan, se envía a esa dirección.");
       if (this.avail(v!) < qty) fail("out_of_stock", "No hay unidades disponibles de esta variante en este momento.");
       if (db().offers.some((o) => o.buyer_id === uid && o.variant_id === v!.id && (o.status === "pending" || o.status === "countered"))) {
         fail("offer_exists", "Ya tienes una oferta abierta para esta variante. Espera la respuesta del vendedor.");
       }
       const offer: OfferRow = { id: uuid(), product_id: p.id, variant_id: v!.id, buyer_id: uid, seller_id: p.seller_id, quantity: qty, list_price_cents: list,
         offer_cents: amount, amount_cents: amount, status: "pending", awaiting: "seller", expires_at: this.iso(s.offer_response_minutes * 60000),
-        order_id: null, created_at: this.iso(), updated_at: this.iso() };
+        order_id: null, created_at: this.iso(), updated_at: this.iso(),
+        payment_status: "held", held_cents: amount * qty + s.shipping_flat_cents, shipping_address: this.addressSnapshot(addrRow!) };
       db().offers.push(offer);
-      this.offerEvent(offer.id, uid, "buyer", "offer", amount);
-      this.notify(p.seller_id, "offer_received", `Nueva oferta: ${money(amount)}`, `Por "${p.title}" (precio publicado ${money(list)}).`, "/ofertas");
+      this.offerEvent(offer.id, uid, "buyer", "offer", amount, "Oferta pagada. El dinero queda retenido hasta que el vendedor responda.");
+      this.notify(p.seller_id, "offer_received", `Oferta pagada: ${money(amount)}`, `Por "${p.title}" (precio publicado ${money(list)}). Si la aceptas, la venta queda cerrada.`, "/ofertas");
       return this.offerJson(offer, uid);
     };
 
@@ -1349,7 +1393,7 @@ export class DemoEngine {
       if (action === "decline") {
         o!.status = "declined"; o!.awaiting = "none"; o!.updated_at = this.iso();
         this.offerEvent(o!.id, uid, role, "decline");
-        this.notify(other, "offer_declined", role === "seller" ? "El vendedor rechazó tu oferta" : "El comprador rechazó tu contraoferta", null, "/ofertas");
+        this.notify(other, "offer_declined", role === "seller" ? "El vendedor rechazó tu oferta" : "El comprador rechazó tu contraoferta", role === "seller" ? "Se liberó tu pago; no se te cobró nada." : null, "/ofertas");
         return this.offerJson(o!, uid);
       }
       if (action === "counter") {
@@ -1360,7 +1404,7 @@ export class DemoEngine {
         }
         Object.assign(o!, { status: "countered", awaiting: "buyer", amount_cents: amt, expires_at: this.iso(s.offer_response_minutes * 60000), updated_at: this.iso() });
         this.offerEvent(o!.id, uid, "seller", "counter", amt);
-        this.notify(o!.buyer_id, "offer_countered", `Contraoferta recibida: ${money(amt)}`, "Acéptala o recházala antes de que venza.", "/ofertas");
+        this.notify(o!.buyer_id, "offer_countered", `Contraoferta recibida: ${money(amt)}`, "Si la aceptas, se cobra ese importe y la compra queda cerrada.", "/ofertas");
         return this.offerJson(o!, uid);
       }
       if (action !== "accept") fail("invalid_action", "Acción no válida.");
@@ -1368,17 +1412,16 @@ export class DemoEngine {
       const p = this.product(o!.product_id)!;
       if (!(v.is_active && this.isPublic(p)) || this.avail(v) < o!.quantity) {
         Object.assign(o!, { status: "cancelled", awaiting: "none", updated_at: this.iso() });
-        this.offerEvent(o!.id, uid, role, "conflict", null, "El artículo ya no tiene unidades disponibles; la oferta se canceló sin cargos.");
-        this.notify(o!.buyer_id, "offer_conflict", "Oferta cancelada por falta de stock", `"${p.title}" se agotó antes de completar la operación. No se realizó ningún cargo.`, "/ofertas");
+        this.offerEvent(o!.id, uid, role, "conflict", null, "El artículo ya no tiene unidades disponibles; la oferta se canceló y se liberó el pago.");
+        this.notify(o!.buyer_id, "offer_conflict", "Oferta cancelada por falta de stock", `"${p.title}" se agotó antes de cerrar el trato. Se liberó tu pago; no se te cobró nada.`, "/ofertas");
         this.notify(o!.seller_id, "offer_conflict", "Oferta cancelada por falta de stock", `"${p.title}" no tenía unidades disponibles al aceptar.`, "/ofertas");
         return { ...this.offerJson(o!, uid), conflict: true };
       }
-      const addr = db().addresses.filter((x) => x.user_id === o!.buyer_id).sort((x, y) => Number(y.is_default) - Number(x.is_default) || x.created_at.localeCompare(y.created_at))[0];
-      const due = this.iso(s.offer_payment_minutes * 60000);
+      const due = this.iso(5 * 60000);
       const subtotal = o!.amount_cents * o!.quantity;
       const order: OrderRow = { id: uuid(), number: ++db().seq.order, buyer_id: o!.buyer_id, source: "offer", offer_id: o!.id, status: "pending_payment",
         is_test: s.test_mode, currency: "USD", subtotal_cents: subtotal, shipping_cents: s.shipping_flat_cents, tax_cents: 0,
-        total_cents: subtotal + s.shipping_flat_cents, shipping_address: addr ? this.addressSnapshot(addr) : {}, payment_due_at: due,
+        total_cents: subtotal + s.shipping_flat_cents, shipping_address: (o!.shipping_address as OrderRow["shipping_address"]) ?? {}, payment_due_at: due,
         paid_at: null, cancelled_at: null, created_at: this.iso(), updated_at: this.iso() };
       db().orders.push(order);
       const commission = Math.round(subtotal * s.commission_bps / 10000);
@@ -1389,10 +1432,16 @@ export class DemoEngine {
       db().order_items.push({ id: uuid(), order_id: order.id, seller_order_id: so.id, product_id: p.id, variant_id: v.id, title: p.title, size: v.size, color: v.color,
         image_url: this.firstImage(p.id), unit_price_cents: o!.amount_cents, quantity: o!.quantity, line_total_cents: subtotal });
       this.reserve(v.id, o!.quantity, order.id, o!.buyer_id, due);
-      Object.assign(o!, { status: "accepted", awaiting: "buyer", order_id: order.id, expires_at: due, updated_at: this.iso() });
-      this.offerEvent(o!.id, uid, role, "accept", o!.amount_cents, "Compra pendiente de pago por el importe acordado.");
-      this.notify(o!.buyer_id, "offer_accepted", `Oferta aceptada: ${money(o!.amount_cents)}`, `Completa el pago antes de ${new Date(due).toLocaleString("es")} para asegurar el artículo.`, `/pedido/${order.id}`);
-      if (role === "buyer") this.notify(o!.seller_id, "offer_accepted", "El comprador aceptó tu contraoferta", "La unidad queda reservada hasta que se complete el pago.", "/ofertas");
+      this.convertOrder(order.id, uid);
+      db().payments.push({ id: uuid(), order_id: order.id, campaign_id: null, payer_id: o!.buyer_id, provider: "test", provider_ref: "test_" + uuid().replace(/-/g, ""),
+        amount_cents: order.total_cents, currency: "USD", status: "succeeded", is_test: true, created_at: this.iso() });
+      Object.assign(o!, { order_id: order.id, held_cents: order.total_cents, updated_at: this.iso() });
+      this.offerEvent(o!.id, uid, role, "accept", o!.amount_cents, "Trato hecho: venta confirmada por el importe acordado.");
+      this.finalizePaid(order, uid);
+      this.notify(other, "offer_accepted",
+        role === "seller" ? `¡Oferta aceptada! Compraste por ${money(o!.amount_cents)}` : `El comprador aceptó tu contraoferta de ${money(o!.amount_cents)}`,
+        role === "seller" ? "La venta está cerrada y el vendedor prepara el envío." : "La venta está cerrada. Prepara el envío.",
+        role === "seller" ? `/pedido/${order.id}` : "/panel/pedidos");
       return this.offerJson(o!, uid);
     };
 
