@@ -521,3 +521,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .chart-bars > div > i { position: absolute; left: 0; right: 0; bottom: 0; background: var(--crimson); border-radius: 4px 4px 0 0; }
 .preview-frame { border: 1px dashed var(--hover-line); border-radius: var(--r-lg); padding: 14px; background: var(--bg); }
 .qr-note { font: 500 11px var(--font-mono); color: var(--dim); letter-spacing: .05em; }
+
+/* ---------- Documentos legales ---------- */
+.legal p, .legal li { color: var(--muted); line-height: 1.6; }
+.legal ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+.legal b { color: var(--text); }

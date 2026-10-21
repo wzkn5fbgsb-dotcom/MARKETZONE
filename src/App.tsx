@@ -16,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import { BusinessEditor, CampaignWizard, CampaignsPage, PromoteHome } from "./pages/Promote";
 import Admin from "./pages/Admin";
 import Status from "./pages/Status";
+import { Privacy, Terms } from "./pages/Legal";
 import { Link } from "./app/router";
 
 const ROUTES: [string, (p: Record<string, string>) => JSX.Element][] = [
@@ -50,6 +51,8 @@ const ROUTES: [string, (p: Record<string, string>) => JSX.Element][] = [
   ["/admin", () => <Admin />],
   ["/admin/:tab", (p) => <Admin tab={p.tab} />],
   ["/estado", () => <Status />],
+  ["/privacidad", () => <Privacy />],
+  ["/terminos", () => <Terms />],
 ];
 
 export default function App() {

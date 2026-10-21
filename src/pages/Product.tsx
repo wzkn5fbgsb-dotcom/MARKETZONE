@@ -8,6 +8,7 @@ import { ConditionTag, FavoriteButton, ProductGrid, SectionHeader } from "../com
 import { Page } from "../components/layout";
 import { Avatar, Badge, Button, Callout, Countdown, ErrorBox, Field, Img, MoneyInput, Select, Sheet, Spinner, Stars, TextArea, useToast } from "../ui/kit";
 import { Icon } from "../ui/icons";
+import { BlockButton } from "../components/block";
 
 export default function Product({ id }: { id: string }) {
   const { api, sessionId } = useApp();
@@ -193,6 +194,7 @@ function ProductView({ d }: { d: ProductDetail }) {
           <div className="row">
             <Button variant="ghost" size="sm" icon="share" onClick={share}>Compartir</Button>
             {!d.is_owner && session && <Button variant="ghost" size="sm" icon="flag" onClick={() => setReportOpen(true)}>Reportar</Button>}
+            {!d.is_owner && <BlockButton userId={d.seller.id} username={d.seller.username} />}
           </div>
         </div>
       </div>

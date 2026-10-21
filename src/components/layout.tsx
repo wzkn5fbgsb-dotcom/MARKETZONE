@@ -111,6 +111,8 @@ export function Footer() {
           <Link to="/publicar" className="link">Vender</Link>
           <Link to="/promociona" className="link">Promociona tu negocio</Link>
           <Link to="/estado" className="link">Qué funciona</Link>
+          <Link to="/terminos" className="link">Términos</Link>
+          <Link to="/privacidad" className="link">Privacidad</Link>
         </nav>
         <div className="stack" style={{ gap: 8 }}>
           <span className="small">Apariencia</span>

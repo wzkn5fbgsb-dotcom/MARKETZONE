@@ -8,7 +8,7 @@ export interface SettingsRow {
 export interface CredentialRow { user_id: string; email: string; salt: string; hash: string }
 export interface ProfileRow {
   id: string; username: string; display_name: string; avatar_url: string | null; bio: string | null; role: "user" | "admin";
-  status: "active" | "suspended"; preferences: Record<string, unknown>; created_at: string; updated_at: string;
+  status: "active" | "suspended" | "deleted"; deleted_at?: string | null; preferences: Record<string, unknown>; created_at: string; updated_at: string;
 }
 export interface AddressRow {
   id: string; user_id: string; full_name: string; line1: string; line2: string | null; city: string; region: string;
@@ -108,6 +108,7 @@ export interface DemoDB {
   images: ImageRow[];
   variants: VariantRow[];
   favorites: { user_id: string; product_id: string; created_at: string }[];
+  blocks?: { blocker_id: string; blocked_id: string; created_at: string }[];
   cart: { id: string; user_id: string; variant_id: string; quantity: number; created_at: string }[];
   offers: OfferRow[];
   offer_events: OfferEventRow[];

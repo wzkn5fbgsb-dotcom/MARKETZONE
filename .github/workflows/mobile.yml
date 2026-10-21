@@ -1,0 +1,92 @@
+# Compila la app nativa de MARKETZONE (Capacitor) para Android e iOS.
+# Se ejecuta en cada push a main o a mano (Actions → "App móvil" → Run workflow).
+#
+# Android: siempre genera un APK de prueba. Si existen los secretos de firma
+#   (ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS), genera también el
+#   AAB firmado que se sube a Google Play.
+# iOS: compila para el simulador (verifica que la app compila). Subir a TestFlight requiere la
+#   cuenta de Apple Developer y sus secretos (se agregan cuando exista la cuenta).
+name: App móvil
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: mobile-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+  MZ_SUPABASE_URL: ${{ vars.MZ_SUPABASE_URL || 'https://jjhcbsqsnoohyxjnnhjc.supabase.co' }}
+  MZ_SUPABASE_ANON_KEY: ${{ vars.MZ_SUPABASE_ANON_KEY || 'sb_publishable_cAc4HlpqtwGIaMXLzhtINw_m65MLixk' }}
+  MZ_MODE: supabase
+  MZ_ROUTER: hash
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    env:
+      HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      - run: npx cap add android
+      - run: npx capacitor-assets generate --android --iconBackgroundColor '#DC143C' --splashBackgroundColor '#0B0B0D' --splashBackgroundColorDark '#0B0B0D'
+      - run: node scripts/native-patch.mjs android
+      - run: npx cap sync android
+      - name: APK de prueba
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: marketzone-android-prueba
+          path: android/app/build/outputs/apk/debug/*.apk
+      - name: AAB firmado para Google Play
+        if: env.HAS_KEYSTORE == 'true'
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        working-directory: android
+        run: |
+          echo "$KEYSTORE" | base64 -d > release.jks
+          ./gradlew bundleRelease --no-daemon \
+            -Pandroid.injected.signing.store.file="$PWD/release.jks" \
+            -Pandroid.injected.signing.store.password="$STORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$STORE_PASSWORD"
+          rm release.jks
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('android/app/build/outputs/bundle/release/*.aab') != '' }}
+        with:
+          name: marketzone-google-play
+          path: android/app/build/outputs/bundle/release/*.aab
+
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      - run: npx cap add ios
+      - run: npx capacitor-assets generate --ios --splashBackgroundColor '#0B0B0D' --splashBackgroundColorDark '#0B0B0D'
+      - run: node scripts/native-patch.mjs ios
+      - run: npx cap sync ios
+      - name: Compilar para el simulador (sin firma)
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build | tail -n 30

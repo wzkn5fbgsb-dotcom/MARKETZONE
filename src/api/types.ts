@@ -362,3 +362,5 @@ export interface InventoryMovement {
   id: number; kind: string; on_hand_delta: number; reserved_delta: number; on_hand_after: number; reserved_after: number;
   note: string | null; created_at: string; order_id: string | null; size: string | null; color: string | null;
 }
+
+export interface BlockedUser { id: string; username: string; display_name: string; avatar_url: string | null; blocked_at: string }

@@ -89,6 +89,9 @@ export class MarketApi {
 
   // Confianza
   review(sellerOrderId: string, rating: number, body?: string) { return this.call<unknown>("create_review", { p_seller_order_id: sellerOrderId, p_rating: rating, p_body: body ?? null }); }
+  deleteAccount(confirm: string) { return this.call<{ deleted: boolean; kept_order_history: boolean }>("delete_my_account", { p_confirm: confirm }); }
+  toggleBlock(userId: string) { return this.call<{ blocked: boolean }>("toggle_block", { p_user_id: userId }); }
+  blocks() { return this.call<T.BlockedUser[]>("my_blocks"); }
   report(targetType: string, targetId: string, reason: string, details?: string) {
     return this.call<{ id: string; status: string }>("create_report", { p_target_type: targetType, p_target_id: targetId, p_reason: reason, p_details: details ?? null });
   }

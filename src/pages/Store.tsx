@@ -9,6 +9,7 @@ import { Page } from "../components/layout";
 import { Avatar, Badge, Button, Callout, Empty, ErrorBox, Img, Select, Spinner, Stars, useToast } from "../ui/kit";
 import { Icon } from "../ui/icons";
 import { ReportSheet } from "./Product";
+import { BlockButton } from "../components/block";
 
 function SocialLinks({ links }: { links: Record<string, string> }) {
   const entries = Object.entries(links ?? {}).filter(([, v]) => v && /^https?:\/\//.test(v));
@@ -89,7 +90,7 @@ export function StorePage({ slug }: { slug: string }) {
             ))}</div>
           ) : <Empty icon="star" title="Sin reseñas todavía">Las reseñas solo pueden dejarlas compradores con un pedido entregado.</Empty>}
         </section>
-        {session && !res.data.is_owner && <div><Button variant="ghost" size="sm" icon="flag" onClick={() => setReportOpen(true)}>Reportar tienda</Button></div>}
+        {session && !res.data.is_owner && <div className="row"><Button variant="ghost" size="sm" icon="flag" onClick={() => setReportOpen(true)}>Reportar tienda</Button><BlockButton userId={s.owner.id} username={s.owner.username} /></div>}
       </div>
       <ReportSheet open={reportOpen} onClose={() => setReportOpen(false)} targetType="store" targetId={s.id} />
     </Page>

@@ -101,7 +101,7 @@ export function Register() {
         <Field label="Contraseña" required hint="Mínimo 8 caracteres."><Input type="password" autoComplete="new-password" minLength={8} required value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} /></Field>
         <ErrorBox error={error} />
         <Button variant="primary" size="lg" block loading={busy} type="submit">Crear cuenta</Button>
-        <span className="small dim">Al crear la cuenta aceptas que tus datos se usen para operar la plataforma. Solo guardamos lo necesario.</span>
+        <span className="small dim">Al crear la cuenta confirmas que tienes 18 años o más y aceptas los <Link to="/terminos" className="link">Términos de uso</Link> y el <Link to="/privacidad" className="link">Aviso de privacidad</Link>.</span>
         <Link to="/entrar" className="link small">Ya tengo cuenta</Link>
       </form>
     </AuthShell>

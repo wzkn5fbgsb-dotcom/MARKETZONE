@@ -412,4 +412,46 @@ export function defineContract(makeHarness: () => Promise<Harness>) {
       await expectApiError(intruder.api.report("product", productId, "counterfeit"), "already_reported");
     });
   });
+
+  describe("Cuenta y bloqueos (requisitos de App Store y Google Play)", () => {
+    const codeOf = async (p: Promise<unknown>) => { try { await p; return "ok"; } catch (e: any) { return String(e.code); } };
+
+    test("bloquear a un vendedor oculta sus productos e impide comprarle u ofertarle", async () => {
+      const res = await seller.api.saveListing({ ...hoodieListing(images, { M: 2 }), title: "Gorra para bloqueo" });
+      const v = (await buyer2.api.product(res.id)).variants[0];
+      expect((await buyer2.api.toggleBlock(seller.userId)).blocked).toBe(true);
+      expect((await buyer2.api.blocks()).some((b) => b.id === seller.userId)).toBe(true);
+      expect((await buyer2.api.search({ q: "gorra para bloqueo" })).items.length).toBe(0);
+      expect(["unavailable", "blocked", "not_found"]).toContain(await codeOf(buyer2.api.cartAdd(v.id, 1)));
+      expect(["unavailable", "blocked", "not_found"]).toContain(await codeOf(buyer2.api.makeOffer(v.id, 2000)));
+      // Los demás siguen viéndolo
+      expect((await buyer.api.search({ q: "gorra para bloqueo" })).items.length).toBe(1);
+      expect((await buyer2.api.toggleBlock(seller.userId)).blocked).toBe(false);
+      expect((await buyer2.api.search({ q: "gorra para bloqueo" })).items.length).toBe(1);
+      await expectApiError(buyer2.api.toggleBlock(buyer2.userId), "validation");
+    });
+
+    test("eliminar una cuenta sin historial la borra y corta el acceso", async () => {
+      const leaver = await h.newUser("leaver");
+      await expectApiError(leaver.api.deleteAccount("no"), "validation");
+      const r = await leaver.api.deleteAccount("eliminar");
+      expect(r.deleted).toBe(true);
+      expect(r.kept_order_history).toBe(false);
+      await expectApiError(leaver.api.account(), "account_deleted");
+    });
+
+    test("eliminar una cuenta con un pedido sin pagar lo cancela y libera el stock", async () => {
+      const res = await seller.api.saveListing({ ...hoodieListing(images, { M: 1 }), title: "Pieza para cuenta eliminada" });
+      const v = (await buyer.api.product(res.id)).variants[0];
+      const leaver = await h.newUser("leaver2");
+      await leaver.api.cartAdd(v.id, 1);
+      const co = await leaver.api.checkout((await addressFor(leaver)).id);
+      expect((await buyer.api.product(res.id)).variants[0].available).toBe(0);
+      const r = await leaver.api.deleteAccount("ELIMINAR");
+      expect(r.kept_order_history).toBe(true);
+      expect((await buyer.api.product(res.id)).variants[0].available).toBe(1);
+      expect((await seller.api.order(co.order_id)).status).toBe("cancelled");
+      await expectApiError(leaver.api.account(), "account_deleted");
+    });
+  });
 }

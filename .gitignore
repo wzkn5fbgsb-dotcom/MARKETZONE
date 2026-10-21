@@ -7,3 +7,6 @@ dist-setup/
 *.log
 .DS_Store
 package-lock.json
+# Proyectos nativos: se generan en GitHub Actions (npx cap add) a partir de capacitor.config.json
+android/
+ios/

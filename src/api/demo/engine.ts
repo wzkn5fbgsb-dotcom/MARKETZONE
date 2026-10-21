@@ -34,11 +34,14 @@ export class DemoEngine {
   private t(iso: string | null) { return iso ? new Date(iso).getTime() : 0; }
 
   has(name: string) { return name in this.handlers; }
+  /** Usuario de la llamada en curso (para ocultar contenido de cuentas bloqueadas). */
+  private viewer: string | null = null;
 
   call<T = unknown>(name: string, args: Args = {}, uid: string | null = null): T {
     const fn = this.handlers[name];
     if (!fn) fail("not_found", `Función desconocida: ${name}`);
     const snapshot = structuredClone(this.db);
+    this.viewer = uid;
     try {
       this.expireDue();
       const result = fn(args ?? {}, uid);
@@ -80,7 +83,7 @@ export class DemoEngine {
   private requireUser(uid: string | null): string {
     if (!uid) fail("auth_required", "Inicia sesión para continuar.");
     const p = this.profile(uid);
-    if (!p) fail("profile_missing", "No encontramos tu perfil. Cierra sesión y vuelve a entrar.");
+    if (!p || p.status === "deleted") fail("account_deleted", "Esta cuenta fue eliminada.");
     if (p!.status === "suspended") fail("account_suspended", "Tu cuenta está suspendida. Contacta con soporte.");
     return uid!;
   }
@@ -107,7 +110,14 @@ export class DemoEngine {
     if (!p || p.status !== "active" || p.moderation_status !== "ok") return false;
     const s = this.store(p.store_id);
     const pr = this.profile(p.seller_id);
-    return !!s && s.status === "active" && !!pr && pr.status === "active";
+    return !!s && s.status === "active" && !!pr && pr.status === "active" && !(this.viewer && this.blockedBetween(this.viewer, p.seller_id));
+  }
+  private blocks() { return (this.db.blocks ??= []); }
+  private blockedBetween(a: string, b: string) {
+    return this.blocks().some((x) => (x.blocker_id === a && x.blocked_id === b) || (x.blocker_id === b && x.blocked_id === a));
+  }
+  private assertNotBlocked(buyer: string, seller: string) {
+    if (this.blockedBetween(buyer, seller)) fail("blocked", "No puedes comprar ni hacer ofertas a esta persona.");
   }
   private publicProducts() { return this.db.products.filter((p) => this.isPublic(p)); }
   private firstImage(pid: string) {
@@ -674,6 +684,68 @@ export class DemoEngine {
       return { ...this.storeCard(s), status: s.status, social_links: s.social_links, business_info: s.business_info };
     };
 
+    H.toggle_block = (a, uidIn) => {
+      const uid = this.requireUser(uidIn);
+      const other = this.profile(a.p_user_id);
+      if (a.p_user_id === uid) fail("validation", "No puedes bloquearte a ti mismo.");
+      if (!other || other.status === "deleted") fail("not_found", "Ese usuario no existe.");
+      const i = this.blocks().findIndex((b) => b.blocker_id === uid && b.blocked_id === other!.id);
+      if (i >= 0) { this.blocks().splice(i, 1); return { blocked: false }; }
+      this.blocks().push({ blocker_id: uid, blocked_id: other!.id, created_at: this.iso() });
+      const pair = (x: string, y: string) => (x === uid && y === other!.id) || (x === other!.id && y === uid);
+      db().offers.filter((o) => ["pending", "countered"].includes(o.status) && pair(o.buyer_id, o.seller_id))
+        .forEach((o) => { o.status = "cancelled"; o.awaiting = "none"; o.updated_at = this.iso(); });
+      db().cart = db().cart.filter((c) => {
+        const v = this.variant(c.variant_id); const p = v ? this.product(v.product_id) : null;
+        return !(p && pair(c.user_id, p.seller_id));
+      });
+      return { blocked: true };
+    };
+
+    H.my_blocks = (_a, uidIn) => {
+      const uid = this.requireUser(uidIn);
+      return this.blocks().filter((b) => b.blocker_id === uid).sort((x, y) => y.created_at.localeCompare(x.created_at)).map((b) => {
+        const pr = this.profile(b.blocked_id)!;
+        return { id: pr.id, username: pr.username, display_name: pr.display_name, avatar_url: pr.avatar_url, blocked_at: b.created_at };
+      });
+    };
+
+    H.delete_my_account = (a, uidIn) => {
+      const uid = this.requireUser(uidIn);
+      if (String(a.p_confirm ?? "").trim().toUpperCase() !== "ELIMINAR") fail("validation", "Escribe ELIMINAR para confirmar.", { field: "confirm" });
+      const open = ["paid", "preparing", "shipped"];
+      if (db().seller_orders.some((so) => so.seller_id === uid && open.includes(so.status)))
+        fail("pending_sales", "Tienes ventas pagadas sin entregar. Envíalas o reembólsalas antes de eliminar tu cuenta.");
+      if (db().seller_orders.some((so) => open.includes(so.status) && db().orders.find((o) => o.id === so.order_id)?.buyer_id === uid))
+        fail("pending_purchases", "Tienes compras pagadas que aún no llegan. Espera a recibirlas antes de eliminar tu cuenta.");
+      for (const o of db().orders.filter((o) => o.status === "pending_payment" && (o.buyer_id === uid || db().seller_orders.some((so) => so.order_id === o.id && so.seller_id === uid)))) {
+        this.releaseOrder(o.id, "released", uid);
+        o.status = "cancelled"; o.cancelled_at = this.iso(); o.updated_at = this.iso();
+        db().seller_orders.filter((so) => so.order_id === o.id).forEach((so) => (so.status = "cancelled"));
+        if (o.offer_id) { const of = db().offers.find((x) => x.id === o.offer_id); if (of) { of.status = "cancelled"; of.awaiting = "none"; } }
+        if (o.buyer_id !== uid) this.notify(o.buyer_id, "order_cancelled", `Pedido #${o.number} cancelado`, "El vendedor cerró su cuenta antes de que pagaras. No se cobró nada.", `/pedido/${o.id}`);
+      }
+      db().offers.filter((o) => ["pending", "countered"].includes(o.status) && (o.buyer_id === uid || o.seller_id === uid))
+        .forEach((o) => { o.status = "cancelled"; o.awaiting = "none"; o.updated_at = this.iso(); });
+      db().products.filter((p) => p.seller_id === uid).forEach((p) => (p.status = "removed"));
+      db().stores.filter((st) => st.owner_id === uid).forEach((st) => { st.status = "suspended"; st.name = "Tienda cerrada"; st.bio = null; st.logo_url = null; st.cover_url = null; });
+      db().businesses.filter((b) => b.owner_id === uid).forEach((b) => (b.status = "suspended"));
+      db().campaigns.filter((c) => c.owner_id === uid && ["draft", "pending_review", "pending_payment", "active", "paused"].includes(c.status)).forEach((c) => (c.status = "finished"));
+      db().addresses = db().addresses.filter((x) => x.user_id !== uid);
+      db().cart = db().cart.filter((x) => x.user_id !== uid);
+      db().favorites = db().favorites.filter((x) => x.user_id !== uid);
+      db().follows = db().follows.filter((x) => x.user_id !== uid);
+      db().notifications = db().notifications.filter((x) => x.user_id !== uid);
+      db().blocks = this.blocks().filter((b) => b.blocker_id !== uid && b.blocked_id !== uid);
+      const kept = db().orders.some((o) => o.buyer_id === uid) || db().seller_orders.some((so) => so.seller_id === uid);
+      const pr = this.profile(uid)!;
+      Object.assign(pr, { username: "eliminado_" + uid.replace(/-/g, "").slice(0, 12), display_name: "Cuenta eliminada", avatar_url: null, bio: null,
+        preferences: {}, status: "deleted", deleted_at: this.iso(), updated_at: this.iso() });
+      db().credentials = db().credentials.filter((c) => c.user_id !== uid);
+      this.audit(null, "account_deleted", "profile", uid, { kept_order_history: kept });
+      return { deleted: true, kept_order_history: kept };
+    };
+
     H.toggle_follow = (a, uidIn) => {
       const uid = this.requireUser(uidIn);
       const s = db().stores.find((x) => x.id === a.p_store_id && x.status === "active");
@@ -1026,6 +1098,7 @@ export class DemoEngine {
       const p = this.product(v!.product_id)!;
       if (!this.isPublic(p)) fail("unavailable", "Este producto ya no está disponible.");
       if (p.seller_id === uid) fail("own_item", "No puedes comprar tus propios productos.");
+      this.assertNotBlocked(uid, p.seller_id);
       if (p.is_demo && !this.settings().test_mode) fail("demo_item", "Este es un producto de ejemplo y no se puede comprar.");
       const line = db().cart.find((c) => c.user_id === uid && c.variant_id === v!.id);
       const av = Math.max(this.avail(v!), 0);
@@ -1235,6 +1308,7 @@ export class DemoEngine {
       const p = this.product(v!.product_id)!;
       if (!this.isPublic(p)) fail("unavailable", "Este producto ya no está disponible.");
       if (p.seller_id === uid) fail("own_item", "No puedes hacer ofertas a tus propios productos.");
+      this.assertNotBlocked(uid, p.seller_id);
       if (!p.offers_enabled) fail("offers_disabled", "El vendedor no acepta ofertas en este artículo.");
       if (p.is_demo && !s.test_mode) fail("demo_item", "Este es un producto de ejemplo.");
       const qty = a.p_quantity ?? 1;

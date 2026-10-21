@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dir = join(root, "supabase/migrations");
 const files = readdirSync(dir).filter((f) => f.endsWith(".sql")).sort();
-const groups = [["0100", "0200"], ["0300"], ["0400"], ["0500", "0600", "0700", "0800", "0900"]];
+const groups = [["0100", "0200"], ["0300"], ["0400"], ["0500", "0600", "0700", "0800", "0900"], ["1000"]];
 const parts = groups.map((g, i) => {
   const fs = files.filter((f) => g.some((n) => f.includes(`_${n}`.replace("_", "00") ) || f.split("_")[0].endsWith(n)));
   return { n: i + 1, files: fs, sql: fs.map((f) => `-- ===== ${f}\n` + readFileSync(join(dir, f), "utf8")).join("\n\n") };
@@ -36,12 +36,12 @@ code{background:#141418;padding:2px 6px;border-radius:6px}
 </style>
 <main>
 <h1>MARKET<b>ZONE</b> · instalar base de datos</h1>
-<p>Cuatro partes. Pega y ejecuta cada una <b>en orden</b>, una sola vez.</p>
+<p>Pega y ejecuta cada parte <b>en orden</b>, una sola vez. <b>Si ya instalaste las partes 1 a 4, ejecuta solo la parte 5</b> (eliminar cuenta y bloquear usuarios).</p>
 <div class="card"><ol>
 <li>En Supabase abre <b>SQL Editor</b> → <b>New query</b>.</li>
 <li>Aquí toca <b>Copiar parte 1</b>.</li>
 <li>En el SQL Editor mantén pulsado → <b>Pegar</b> → <b>Run</b>. Debe decir <i>Success</i>.</li>
-<li>Borra el texto del editor y repite con las partes 2, 3 y 4.</li>
+<li>Abre otra pestaña con <b>+</b> y repite con las siguientes partes.</li>
 </ol></div>
 ${parts.map((p) => `<div class="card"><div class="row"><div><h2>Parte ${p.n} de ${parts.length}</h2><small>${(p.sql.length / 1024).toFixed(0)} KB</small></div><button data-part="${p.n}">Copiar parte ${p.n}</button></div><textarea readonly id="t${p.n}" aria-label="SQL parte ${p.n}">${esc(p.sql)}</textarea></div>`).join("\n")}
 <div class="card"><div class="row"><div><h2>Comprobar</h2><small>Opcional: debe mostrar un número mayor que 20.</small></div><button data-part="v">Copiar</button></div><textarea readonly id="tv">${esc(verify)}</textarea></div>

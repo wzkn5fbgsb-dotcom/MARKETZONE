@@ -54,6 +54,8 @@ const P: Record<string, string> = {
   moon: "M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z",
   auto: "M12 3a9 9 0 1 0 0 18zM12 3a9 9 0 0 1 0 18",
   categories: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z",
+  block: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM5.6 5.6l12.8 12.8",
+  doc: "M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6",
 };
 
 export type IconName = keyof typeof P;

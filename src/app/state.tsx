@@ -32,6 +32,10 @@ export function AppProvider({ config, backend, demo, children }: { config: AppCo
   useEffect(() => backend.auth.onChange((s) => { clearCache(); setSession(s); }), [backend]);
   const uid = session?.user.id ?? null;
   const acc = useQuery(uid ? `account:${uid}` : null, () => api.account(), { staleMs: 5000 });
+  // Una cuenta eliminada puede conservar una sesión vieja en el teléfono: se cierra sola.
+  useEffect(() => {
+    if ((acc.error as { code?: string } | null)?.code === "account_deleted") void backend.auth.signOut().catch(() => undefined);
+  }, [acc.error, backend]);
   const settings = useQuery("settings", () => api.settings(), { staleMs: 60000 });
   const cats = useQuery("categories", () => api.categories(), { staleMs: 60000 });
   const sessionId = useMemo(() => {

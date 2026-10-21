@@ -11,17 +11,23 @@
     "typecheck": "tsc --noEmit -p .",
     "test": "bun test tests/contract/demo.test.ts",
     "test:supabase": "bun test tests/contract/supabase.test.ts tests/contract/supabase-extra.test.ts tests/functions",
-    "db:setup-sql": "node scripts/make-setup-sql.mjs"
+    "db:setup-sql": "node scripts/make-setup-sql.mjs",
+    "build:native": "MZ_ROUTER=hash node scripts/build.mjs web && npx cap sync"
   },
   "dependencies": {
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "@capacitor/core": "^7.4.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "esbuild": "^0.28.0",
     "playwright": "^1.56.0",
-    "typescript": "^6.0.0"
+    "typescript": "^6.0.0",
+    "@capacitor/cli": "^7.4.0",
+    "@capacitor/android": "^7.4.0",
+    "@capacitor/ios": "^7.4.0",
+    "@capacitor/assets": "^3.0.5"
   }
 }

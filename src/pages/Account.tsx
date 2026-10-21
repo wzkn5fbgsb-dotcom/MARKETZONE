@@ -37,7 +37,7 @@ export function Profile() {
     ["/panel", "chart", "Panel de vendedor", "Catálogo, inventario, pedidos y estadísticas"],
     ["/publicar", "plus", "Publicar un producto"],
     ["/promociona", "megaphone", "Promociona tu negocio"],
-    ["/ajustes", "settings", "Ajustes", "Perfil, direcciones, tienda y contraseña"],
+    ["/ajustes", "settings", "Ajustes", "Perfil, direcciones, apariencia, bloqueos y eliminar cuenta"],
   ];
   if (account.is_admin) links.push(["/admin", "shield", "Administración"]);
   links.push(["/estado", "info", "Estado del proyecto"]);
@@ -160,6 +160,8 @@ export function Settings() {
         <Addresses />
         <StoreSettings />
         <PasswordForm />
+        <BlockedUsers />
+        <DeleteAccount />
       </div>
     </Page>
   );
@@ -279,12 +281,61 @@ function PasswordForm() {
   const save = useAction(() => backend.auth.updatePassword(pw), { onSuccess: () => { setPw(""); toast("Contraseña actualizada", "ok"); } });
   return (
     <section className="stack">
-      <span className="eyebrow">Seguridad</span>
+      <h2 className="h3">Contraseña</h2>
       <form className="panel stack" onSubmit={(e) => { e.preventDefault(); void save.run(); }}>
         <Field label="Nueva contraseña" hint="Mínimo 8 caracteres."><Input type="password" autoComplete="new-password" minLength={8} value={pw} onChange={(e) => setPw(e.target.value)} /></Field>
         <ErrorBox error={save.error} />
         <div><Button variant="dark" type="submit" loading={save.pending} disabled={pw.length < 8}>Cambiar contraseña</Button></div>
       </form>
+    </section>
+  );
+}
+
+function BlockedUsers() {
+  const { api } = useApp();
+  const toast = useToast();
+  const res = useQuery("blocks", () => api.blocks());
+  const unblock = useAction((id: string) => api.toggleBlock(id), { invalidates: ["blocks"], onSuccess: () => toast("Usuario desbloqueado", "ok") });
+  return (
+    <section className="stack">
+      <h2 className="h3">Usuarios bloqueados</h2>
+      {res.data && res.data.length === 0 && <span className="small muted">No has bloqueado a nadie. Puedes bloquear a alguien desde su tienda o desde uno de sus productos.</span>}
+      {res.data && res.data.length > 0 && (
+        <div className="panel stack" style={{ gap: 0, padding: "4px 16px" }}>
+          {res.data.map((u) => (
+            <div key={u.id} className="row between" style={{ padding: "10px 0", borderBottom: "1px solid var(--line-soft)" }}>
+              <span className="row-nw"><Avatar name={u.display_name} src={u.avatar_url} /><span className="stack" style={{ gap: 0 }}><b>{u.display_name}</b><span className="small dim">@{u.username}</span></span></span>
+              <Button size="sm" variant="outline" loading={unblock.pending} onClick={() => void unblock.run(u.id)}>Desbloquear</Button>
+            </div>
+          ))}
+        </div>
+      )}
+      <ErrorBox error={res.error ?? unblock.error} />
+    </section>
+  );
+}
+
+function DeleteAccount() {
+  const { api, backend } = useApp();
+  const toast = useToast();
+  const [confirm, setConfirm] = useState("");
+  const del = useAction(() => api.deleteAccount(confirm), {
+    onSuccess: async () => {
+      try { await backend.auth.signOut(); } catch { /* la sesión ya no es válida */ }
+      toast("Tu cuenta fue eliminada.", "ok");
+      navigate("/", { replace: true });
+    },
+  });
+  return (
+    <section className="stack">
+      <h2 className="h3">Eliminar mi cuenta</h2>
+      <div className="panel stack" style={{ borderColor: "rgba(220, 20, 60, 0.35)" }}>
+        <span className="small muted">Se borran tu perfil, tus direcciones, favoritos y notificaciones, y se retiran tus publicaciones y tu tienda. No se puede deshacer.</span>
+        <span className="small muted">Si compraste o vendiste algo, esos pedidos se conservan sin tu nombre ni tus datos, porque son el comprobante de la otra persona. Si tienes ventas o compras pagadas en camino, termínalas antes.</span>
+        <Field label="Escribe ELIMINAR para confirmar"><Input value={confirm} autoCapitalize="characters" autoComplete="off" onChange={(e) => setConfirm(e.target.value)} /></Field>
+        <ErrorBox error={del.error} />
+        <div><Button variant="danger" loading={del.pending} disabled={confirm.trim().toUpperCase() !== "ELIMINAR"} onClick={() => void del.run()}>Eliminar mi cuenta para siempre</Button></div>
+      </div>
     </section>
   );
 }
