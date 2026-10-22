@@ -5,6 +5,8 @@ import { ApiError } from "../api/backend";
 import type { AiProvider } from "../api/demo/backend";
 import { JSON_SHAPE_HINT, listingPrompt, marketingPrompt, normalizeListingResult, normalizeMarketing,
   type ListingAiInput, type ListingAiResult, type MarketingInput } from "../../supabase/functions/_shared/listing-ai";
+import { auctionPrompt, normalizeAuctionResult, type AuctionAiInput } from "../../supabase/functions/_shared/auction-ai";
+import { supportPrompt } from "../../supabase/functions/_shared/support-ai";
 import { blobFor, compressImage, toBase64 } from "../app/images";
 import { t } from "../i18n";
 
@@ -85,6 +87,14 @@ export const artifactAi: AiProvider = {
         const input = body.input as ListingAiInput;
         const raw = await s.json(listingPrompt(input, body.blobs.length) + "\n\n" + JSON_SHAPE_HINT, { images: body.blobs, modelTier: "default" });
         return { proposal: normalizeListingResult(raw, input.categories.map((c) => c.id)), provider: "claude-viewer" };
+      }
+      if (name === "ai-auction") {
+        const input = body.input as AuctionAiInput;
+        const raw = await s.json(auctionPrompt(input, body.blobs.length), { images: body.blobs, modelTier: "default" });
+        return { proposal: normalizeAuctionResult(raw, input.categories.map((c) => c.id)), provider: "claude-viewer" };
+      }
+      if (name === "ai-support") {
+        return await s.json(supportPrompt(body.input), { modelTier: "default", cache: false });
       }
       if (name === "ai-marketing") {
         const raw = await s.json(marketingPrompt(body as MarketingInput), { modelTier: "quick", cache: false });

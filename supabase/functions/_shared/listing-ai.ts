@@ -1,4 +1,4 @@
-// Lógica compartida de IA para MARKETZONE (Edge Functions y versión de prueba).
+// Lógica compartida de IA para MARKETXONE (Edge Functions y versión de prueba).
 // Reglas: no inventar modelos, tallas, materiales, autenticidad, defectos ni ventas comparables.
 
 export interface ListingAiInput {
@@ -63,7 +63,7 @@ export function listingPrompt(input: ListingAiInput, imageCount: number): string
   const cats = input.categories.filter((c) => c.parent_id).map((c) => `${c.id} (${c.name})`).join(", ");
   const known = input.known ?? {};
   return [
-    `Eres el asistente de publicaciones de MARKETZONE, un marketplace de moda, sneakers, streetwear, accesorios, bolsos y belleza.`,
+    `Eres el asistente de publicaciones de MARKETXONE, un marketplace de moda, sneakers, streetwear, accesorios, bolsos y belleza.`,
     `Analiza ${imageCount} fotografía(s) de UN artículo y propone una publicación en español para que el vendedor la revise.`,
     ``,
     `REGLAS OBLIGATORIAS:`,
@@ -150,7 +150,7 @@ export interface MarketingInput {
 
 export function marketingPrompt(i: MarketingInput): string {
   const base = [
-    `Eres el asistente de marketing de MARKETZONE. Responde en español, con tono claro y comercial pero honesto.`,
+    `Eres el asistente de marketing de MARKETXONE. Responde en español, con tono claro y comercial pero honesto.`,
     `REGLAS: no inventes descuentos, precios, testimonios, reseñas, cifras de ventas ni resultados. No prometas resultados.`,
     `Si faltan datos, dilo en "notes". Todo será revisado y editado por el negocio antes de usarse.`,
     `Responde SOLO con JSON: {"suggestions":[{"title":"","text":""}],"notes":""}`,

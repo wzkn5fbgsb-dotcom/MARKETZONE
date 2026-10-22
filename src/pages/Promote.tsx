@@ -42,7 +42,7 @@ export function PromoteHome() {
           <h2 className="h2">{t("Cómo funciona y qué cuesta")}</h2>
           <div className="grid-3">
             <div className="panel stack" style={{ gap: 6 }}><span className="h3">{t("1. Configura")}</span><span className="small muted">{t("Eliges qué promocionar, el tipo de espacio, la duración y el presupuesto. Ves una vista previa.")}</span></div>
-            <div className="panel stack" style={{ gap: 6 }}><span className="h3">{t("2. Revisión")}</span><span className="small muted">{t("El equipo de MARKETZONE revisa que el anuncio cumpla las normas (sin descuentos ni testimonios inventados).")}</span></div>
+            <div className="panel stack" style={{ gap: 6 }}><span className="h3">{t("2. Revisión")}</span><span className="small muted">{t("El equipo de MARKETXONE revisa que el anuncio cumpla las normas (sin descuentos ni testimonios inventados).")}</span></div>
             <div className="panel stack" style={{ gap: 6 }}><span className="h3">{t("3. Pago y activación")}</span><span className="small muted">{t("Pagas exactamente el presupuesto indicado (mínimo")}{" "}{money(settings?.min_campaign_cents ?? 500)}{t("). La campaña se activa solo cuando el pago está confirmado.")}</span></div>
           </div>
           {settings?.test_mode && <Callout kind="warn">{t("Modo de prueba: los pagos de campañas son simulados y no se cobra dinero real. Las campañas así activadas se marcan como “prueba”.")}</Callout>}

@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 0700 · Permisos de ejecución de funciones
+-- MARKETXONE · 0700 · Permisos de ejecución de funciones
 -- Supabase concede EXECUTE por defecto a anon/authenticated sobre funciones
 -- nuevas: aquí se revoca todo y se concede solo la API pública prevista.
 -- IMPORTANTE: cualquier función nueva debe añadirse explícitamente aquí.

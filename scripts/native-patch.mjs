@@ -18,9 +18,9 @@ function edit(path, fn) {
 
 if (platform === "ios") {
   const keys = {
-    NSCameraUsageDescription: "MARKETZONE usa la cámara para que tomes fotos de los artículos que vendes.",
-    NSPhotoLibraryUsageDescription: "MARKETZONE accede a tus fotos para que elijas las imágenes de tus publicaciones.",
-    NSPhotoLibraryAddUsageDescription: "MARKETZONE puede guardar imágenes en tus fotos cuando lo pidas.",
+    NSCameraUsageDescription: "MARKETXONE usa la cámara para que tomes fotos de los artículos que vendes.",
+    NSPhotoLibraryUsageDescription: "MARKETXONE accede a tus fotos para que elijas las imágenes de tus publicaciones.",
+    NSPhotoLibraryAddUsageDescription: "MARKETXONE puede guardar imágenes en tus fotos cuando lo pidas.",
   };
   edit("ios/App/App/Info.plist", (s) => {
     let out = s;
@@ -30,7 +30,7 @@ if (platform === "ios") {
     if (!out.includes("ITSAppUsesNonExemptEncryption")) {
       out = out.replace(/<dict>/, "<dict>\n\t<key>ITSAppUsesNonExemptEncryption</key>\n\t<false/>");
     }
-    out = out.replace(/(<key>CFBundleDisplayName<\/key>\s*<string>)[^<]*(<\/string>)/, "$1MARKETZONE$2");
+    out = out.replace(/(<key>CFBundleDisplayName<\/key>\s*<string>)[^<]*(<\/string>)/, "$1MARKETXONE$2");
     return out;
   });
   edit("ios/App/App.xcodeproj/project.pbxproj", (s) => s

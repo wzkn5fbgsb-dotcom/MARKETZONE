@@ -2,6 +2,8 @@
 // (mismos nombres, parámetros, reglas y respuestas). Cada llamada es atómica: si falla,
 // el estado vuelve exactamente a como estaba.
 import { ApiError } from "../backend";
+import { __mxAuctionInstall, __mxAuctionSweep } from "../../mx/engine.js";
+import { __mxSupportInstall } from "../../mx/support_engine.js";
 import { uuid, type CampaignRow, type DemoDB, type OfferRow, type OrderRow, type ProductRow, type SellerOrderRow, type StoreRow, type BusinessRow, type VariantRow } from "./db";
 
 type Args = Record<string, any>;
@@ -27,6 +29,8 @@ export class DemoEngine {
 
   constructor(public db: DemoDB, private onChange?: (db: DemoDB) => void) {
     this.handlers = this.buildHandlers();
+    __mxAuctionInstall(this);
+    __mxSupportInstall(this);
   }
 
   now() { return new Date(Date.now() + this.clockOffsetMs); }
@@ -256,6 +260,7 @@ export class DemoEngine {
   }
   /** Equivalente a mz_expire_due(): se ejecuta antes de cada operación. */
   expireDue() {
+    __mxAuctionSweep(this);
     const now = this.now().getTime();
     for (const o of this.db.orders.filter((x) => x.status === "pending_payment" && this.t(x.payment_due_at) <= now)) this.expireOrder(o.id);
     for (const of of this.db.offers.filter((x) => (x.status === "pending" || x.status === "countered") && this.t(x.expires_at) <= now)) {
@@ -836,7 +841,7 @@ export class DemoEngine {
       if (new Set(combos).size !== combos.length) fail("validation", "Hay variantes repetidas (misma talla y color).", { field: "variants" });
       const images: any[] = Array.isArray(p.images) ? p.images : [];
       if (images.length > 12) fail("validation", "Puedes subir hasta 12 fotografías.", { field: "images" });
-      if (images.some((i) => !/^(https?:|mzimg:|art:|data:image\/)/.test(String(i?.url ?? "")))) fail("validation", "Las fotografías deben subirse al almacenamiento de MARKETZONE.", { field: "images" });
+      if (images.some((i) => !/^(https?:|mzimg:|art:|data:image\/)/.test(String(i?.url ?? "")))) fail("validation", "Las fotografías deben subirse al almacenamiento de MARKETXONE.", { field: "images" });
       const brand = trimOrNull(p.brand) as string | null;
       if (status === "active") {
         if (!images.length) fail("validation", "Añade al menos una fotografía para publicar.", { field: "images" });

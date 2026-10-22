@@ -113,7 +113,7 @@ export function OrdersPage() {
               <div className="mini-thumbs">{(o.preview ?? []).slice(0, 3).map((u, i) => <div key={i}><Img src={u} alt="" /></div>)}</div>
               <div className="stack" style={{ gap: 3, minWidth: 0 }}>
                 <span className="row" style={{ gap: 8 }}><b className="mono">#{o.number}</b><StatusBadge status={o.status} label={ORDER_STATUS[o.status]} />{o.is_test && <Badge kind="demo">{t("Prueba")}</Badge>}</span>
-                <span className="small dim">{o.items_count} {" "}{t("artículo(s) ·")}{" "}{dateTime(o.created_at)}{o.source === "offer" ? t(" · desde oferta") : ""}</span>
+                <span className="small dim">{o.items_count} {" "}{t("artículo(s) ·")}{" "}{dateTime(o.created_at)}{o.source === "offer" ? t(" · desde oferta") : o.source === "auction" ? t(" · desde subasta") : ""}</span>
                 {o.status === "pending_payment" && <Countdown to={o.payment_due_at} prefix={t("Paga antes de")} />}
               </div>
               <span className="price">{money(o.total_cents)}</span>
@@ -147,7 +147,7 @@ export function OrderPage({ id }: { id: string }) {
         <Link to={isBuyer ? "/pedidos" : "/panel/pedidos"} className="row-nw small muted" style={{ gap: 4 }}><Icon name="back" size={16} />{isBuyer ? t("Mis pedidos") : t("Pedidos de mi tienda")}</Link>
         <div className="row between">
           <div className="stack" style={{ gap: 4 }}>
-            <span className="eyebrow">{t("Pedido")}{" "}{o.source === "offer" ? t("desde oferta aceptada") : ""}</span>
+            <span className="eyebrow">{t("Pedido")}{" "}{o.source === "offer" ? t("desde oferta aceptada") : o.source === "auction" ? t("desde subasta") : ""}</span>
             <h1 className="h1 mono" style={{ fontFamily: "var(--font-mono)" }}>#{o.number}</h1>
             <span className="small dim">{dateTime(o.created_at)}</span>
           </div>

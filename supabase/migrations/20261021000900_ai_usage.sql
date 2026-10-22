@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 0900 · Cuotas de uso de IA (las llama solo la Edge Function)
+-- MARKETXONE · 0900 · Cuotas de uso de IA (las llama solo la Edge Function)
 -- =====================================================================
 create or replace function public.ai_usage_hit(p_user uuid, p_feature text, p_daily_limit integer) returns jsonb
 language plpgsql security definer set search_path = public, pg_temp as $$

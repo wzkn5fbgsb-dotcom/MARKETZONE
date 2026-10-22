@@ -127,4 +127,4 @@ Bun.serve({
     }
   },
 });
-console.log(`MARKETZONE local gateway en http://127.0.0.1:${PORT}`);
+console.log(`MARKETXONE local gateway en http://127.0.0.1:${PORT}`);

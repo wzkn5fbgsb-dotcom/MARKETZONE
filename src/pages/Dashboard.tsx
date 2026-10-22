@@ -56,7 +56,7 @@ function Overview() {
   const rows: [keyof MoneyBlock, string, string][] = [
     ["gross_cents", t("Ingresos brutos"), t("Valor de los artículos vendidos y pagados (incluye los reembolsados).")],
     ["refunds_cents", t("Reembolsos"), t("Importe devuelto a compradores.")],
-    ["commission_cents", t("Comisiones MARKETZONE"), t("Tarifa del {0} sobre ventas no reembolsadas.", [pct(d.settings.commission_bps)])],
+    ["commission_cents", t("Comisiones MARKETXONE"), t("Tarifa del {0} sobre ventas no reembolsadas.", [pct(d.settings.commission_bps)])],
     ["net_estimated_cents", t("Ingresos netos estimados"), t("Brutos − reembolsos − comisiones. No es dinero recibido.")],
     ["pending_settlement_cents", t("Pendiente de liquidación"), t("Neto de ventas pagadas que aún no se ha transferido.")],
     ["paid_out_cents", t("Liquidado"), t("Dinero ya transferido a tu cuenta.")],

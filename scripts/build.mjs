@@ -1,4 +1,4 @@
-// Compilación de MARKETZONE con esbuild (sin Vite ni dependencias adicionales).
+// Compilación de MARKETXONE con esbuild (sin Vite ni dependencias adicionales).
 //   node scripts/build.mjs web        -> dist/ (index.html + assets) para cualquier hosting estático
 //   node scripts/build.mjs artifact   -> dist-artifact/index.html (un solo archivo, modo demo)
 //   node scripts/build.mjs web --serve   servidor local con recarga en http://localhost:5173
@@ -33,7 +33,7 @@ function fontFaces(inline) {
 }
 // Aplica el tema guardado antes del primer pintado (mismo algoritmo que src/app/theme.ts).
 const THEME_BOOT = `<script>(function(){try{var p=localStorage.getItem("mz.theme")||"dark";var t=p==="auto"?(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"):p;document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme="dark";}})();</script>`;
-const DESCRIPTION = "MARKETZONE: marketplace de moda, sneakers y streetwear con inventario por talla, ofertas y herramientas para negocios.";
+const DESCRIPTION = "MARKETXONE: marketplace de moda, sneakers y streetwear con inventario por talla, ofertas y herramientas para negocios.";
 
 const options = {
   entryPoints: [join(root, "src/main.tsx")],
@@ -56,13 +56,13 @@ function htmlShell({ head, body }) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MARKETZONE</title>
+<title>MARKETXONE</title>
 <meta name="description" content="${DESCRIPTION}">
 <meta name="theme-color" content="#0B0B0D">
 ${THEME_BOOT}
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="MARKETZONE">
+<meta name="apple-mobile-web-app-title" content="MARKETXONE">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -102,7 +102,7 @@ async function buildArtifact(outdir) {
   const js = res.outputFiles.find((f) => f.path.endsWith(".js")).text.replace(/<\/script/gi, "<\\/script");
   const css = res.outputFiles.find((f) => f.path.endsWith(".css")).text.replace(/<\/style/gi, "<\\/style");
   // Formato de página de Artifact: sin <html>/<head>/<body> (el visor añade el esqueleto).
-  const page = `<title>MARKETZONE</title>
+  const page = `<title>MARKETXONE</title>
 ${THEME_BOOT}
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="${DESCRIPTION}">
@@ -123,7 +123,7 @@ if (serve) {
   const ctx = await esbuild.context({ ...options, outfile: join(outdir, "assets/app.js") });
   await ctx.watch();
   const { port } = await ctx.serve({ servedir: outdir, port: 5173, fallback: join(outdir, "index.html") });
-  console.log(`MARKETZONE dev en http://localhost:${port}`);
+  console.log(`MARKETXONE dev en http://localhost:${port}`);
 } else if (target === "artifact") {
   await buildArtifact(join(root, "dist-artifact"));
 } else {

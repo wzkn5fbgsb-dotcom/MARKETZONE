@@ -18,7 +18,7 @@ const looksText = (s) => {
   if (/^(\/|#|https?:|var\(|rgba|data:|art:|mz\.|\.)/.test(t)) return false;
   if (/^[a-z0-9_.:-]+$/.test(t)) return false;              // códigos, claves, clases sueltas
   if (/^[a-z0-9_ -]+$/.test(t) && /(^| )(btn|row|stack|small|link|chip|muted|dim|tiny|h[1-3]|panel|card|grow|between|num|mono|price|zone|eyebrow|ellipsis|clamp-2|center|seg|on)( |$)/.test(t)) return false; // clases CSS
-  if (/^[A-Z0-9 _]+$/.test(t) && t.length < 14) return false; // MARKETZONE, siglas
+  if (/^[A-Z0-9 _]+$/.test(t) && t.length < 14) return false; // MARKETXONE, siglas
   if (/^(SELECT|INSERT|UPDATE|application\/|image\/|multipart|Bearer|ApiError|currentColor)/.test(t) || t.includes("<svg")) return false;
   return true;
 };

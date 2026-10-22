@@ -1,11 +1,19 @@
-// API tipada de MARKETZONE. Cada método llama a una función del servidor con los mismos
+// API tipada de MARKETXONE. Cada método llama a una función del servidor con los mismos
 // nombres de parámetros en Supabase y en el motor de demostración.
 import type { Backend } from "./backend";
 import type * as T from "./types";
 
+/** Ganchos opcionales después de cada llamada exitosa (p. ej., sonido de monedas al comprar o vender). */
+export const apiHooks: { after: ((fn: string, args: Record<string, unknown>, result: unknown) => void) | null } = { after: null };
+
 export class MarketApi {
   constructor(readonly backend: Backend) {}
-  private call<R>(fn: string, args: Record<string, unknown> = {}) { return this.backend.rpc<R>(fn, args); }
+  call<R>(fn: string, args: Record<string, unknown> = {}): Promise<R> {
+    return this.backend.rpc<R>(fn, args).then((r) => {
+      try { apiHooks.after?.(fn, args, r); } catch { /* un efecto visual nunca rompe la llamada */ }
+      return r;
+    });
+  }
 
   // Público
   settings() { return this.call<T.PublicSettings>("public_settings"); }

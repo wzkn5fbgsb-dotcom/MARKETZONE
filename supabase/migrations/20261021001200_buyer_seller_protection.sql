@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 1200 · Protección contra estafas sin castigar a inocentes
+-- MARKETXONE · 1200 · Protección contra estafas sin castigar a inocentes
 --
 -- - El vendedor ya NO puede marcar un pedido como entregado: lo confirma
 --   el comprador, o se confirma solo si el comprador no reporta un

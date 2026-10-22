@@ -31,7 +31,7 @@ function Contact() {
 export function Privacy() {
   return (
     <Doc title={t("Aviso de privacidad")}>
-      <p>{t("Este aviso explica qué datos guarda MARKETZONE, para qué los usa y qué puedes hacer con ellos. No vendemos tus datos.")}</p>
+      <p>{t("Este aviso explica qué datos guarda MARKETXONE, para qué los usa y qué puedes hacer con ellos. No vendemos tus datos.")}</p>
 
       <section className="stack">
         <h2 className="h3">{t("Qué datos guardamos")}</h2>
@@ -60,8 +60,8 @@ export function Privacy() {
           <li><b>{t("Otros usuarios")}</b> {" "}{t("ven tu nombre de usuario, tu tienda, tus productos y tus reseñas. Tu correo y tus direcciones no son públicos.")}</li>
           <li><b>{t("Supabase")}</b> {" "}{t("aloja la base de datos, las cuentas y las fotos.")}</li>
           <li><b>{t("GitHub Pages")}</b> {" "}{t("aloja la página web.")}</li>
-          <li><b>{t("Anthropic (Claude)")}</b> {" "}{t("recibe las fotos y datos que envíes al usar \"Publicar con IA\", solo para generar la propuesta.")}</li>
-          <li><b>{t("Un proveedor de pagos")}</b> {" "}{t("(por ejemplo, Stripe) procesará los pagos cuando se activen. MARKETZONE nunca guarda números de tarjeta.")}</li>
+          <li><b>{t("Anthropic (Claude)")}</b> {" "}{t("recibe las fotos y datos que envíes al usar \"Publicar con IA\" o la IA de subastas, solo para generar la propuesta, y los mensajes del chat de soporte junto con tus pedidos, ofertas y subastas, solo para responderte. Las conversaciones de soporte se guardan para resolver tu caso y mejorar las respuestas aprobadas por el equipo.")}</li>
+          <li><b>{t("Un proveedor de pagos")}</b> {" "}{t("(por ejemplo, Stripe) procesará los pagos cuando se activen. MARKETXONE nunca guarda números de tarjeta.")}</li>
           <li><b>{t("Autoridades")}</b>{t(", solo cuando la ley lo exija.")}</li>
         </ul>
       </section>
@@ -78,7 +78,7 @@ export function Privacy() {
 
       <section className="stack">
         <h2 className="h3">{t("Menores de edad")}</h2>
-        <p>{t("MARKETZONE es para mayores de 18 años. Si detectamos una cuenta de un menor, la eliminamos.")}</p>
+        <p>{t("MARKETXONE es para mayores de 18 años. Si detectamos una cuenta de un menor, la eliminamos.")}</p>
       </section>
 
       <section className="stack">
@@ -93,11 +93,11 @@ export function Terms() {
   const { settings } = useApp();
   return (
     <Doc title={t("Términos de uso")}>
-      <p>{t("Al crear una cuenta o usar MARKETZONE aceptas estos términos. Si no estás de acuerdo, no uses la app.")}</p>
+      <p>{t("Al crear una cuenta o usar MARKETXONE aceptas estos términos. Si no estás de acuerdo, no uses la app.")}</p>
 
       <section className="stack">
-        <h2 className="h3">{t("Qué es MARKETZONE")}</h2>
-        <p>{t("Un lugar donde personas y negocios publican artículos de moda, sneakers, streetwear, accesorios, bolsos y belleza, y donde otras personas los compran o hacen ofertas. MARKETZONE no es dueño de los artículos ni el vendedor de ellos.")}</p>
+        <h2 className="h3">{t("Qué es MARKETXONE")}</h2>
+        <p>{t("Un lugar donde personas y negocios publican artículos de moda, sneakers, streetwear, accesorios, bolsos y belleza, y donde otras personas los compran o hacen ofertas. MARKETXONE no es dueño de los artículos ni el vendedor de ellos.")}</p>
       </section>
 
       <section className="stack">
@@ -115,7 +115,7 @@ export function Terms() {
           <li>{t("Solo publica artículos que tengas y puedas enviar. Describe su estado con honestidad e incluye fotos reales de cualquier defecto.")}</li>
           <li>{t("Prohibido: falsificaciones o réplicas, artículos robados, armas, drogas, contenido sexual, productos de belleza abiertos o vencidos, y cualquier artículo cuya venta sea ilegal.")}</li>
           <li>{t("Cuando aceptas una oferta o alguien compra, la venta queda cerrada y te comprometes a enviar el artículo por ese precio. Recibes tu dinero cuando el comprador recibe el artículo.")}</li>
-          <li>{t("MARKETZONE cobra una comisión")}{settings ? t(" del {0}", [pct(settings.commission_bps)]) : ""} {" "}{t("sobre cada venta completada. Siempre la ves antes de publicar y antes de aceptar una oferta.")}</li>
+          <li>{t("MARKETXONE cobra una comisión")}{settings ? t(" del {0}", [pct(settings.commission_bps)]) : ""} {" "}{t("sobre cada venta completada. Siempre la ves antes de publicar y antes de aceptar una oferta.")}</li>
         </ul>
       </section>
 
@@ -131,8 +131,8 @@ export function Terms() {
       <section className="stack">
         <h2 className="h3">{t("Pagos")}</h2>
         <p>{settings?.test_mode
-          ? t("Por ahora MARKETZONE funciona en modo de prueba: los pagos son simulados y no se cobra dinero. Cuando se activen los pagos reales, se procesarán con un proveedor autorizado y se actualizarán estos términos.")
-          : t("Los pagos se procesan con un proveedor autorizado. MARKETZONE nunca guarda números de tarjeta.")}</p>
+          ? t("Por ahora MARKETXONE funciona en modo de prueba: los pagos son simulados y no se cobra dinero. Cuando se activen los pagos reales, se procesarán con un proveedor autorizado y se actualizarán estos términos.")
+          : t("Los pagos se procesan con un proveedor autorizado. MARKETXONE nunca guarda números de tarjeta.")}</p>
       </section>
 
       <section className="stack">
@@ -147,7 +147,7 @@ export function Terms() {
 
       <section className="stack">
         <h2 className="h3">{t("Responsabilidad")}</h2>
-        <p>{t("Cada vendedor responde por sus artículos y por lo que dice de ellos. MARKETZONE se ofrece tal como está y hace lo razonable para que funcione bien y de forma segura, pero no garantiza que nunca falle.")}</p>
+        <p>{t("Cada vendedor responde por sus artículos y por lo que dice de ellos. MARKETXONE se ofrece tal como está y hace lo razonable para que funcione bien y de forma segura, pero no garantiza que nunca falle.")}</p>
       </section>
 
       <section className="stack">

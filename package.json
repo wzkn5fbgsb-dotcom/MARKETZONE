@@ -1,8 +1,8 @@
 {
-  "name": "marketzone",
+  "name": "marketxone",
   "version": "0.1.0",
   "private": true,
-  "description": "MARKETZONE — marketplace de moda, sneakers y streetwear con inventario por talla, ofertas, IA y promoción de negocios.",
+  "description": "MARKETXONE — marketplace de moda, sneakers y streetwear con inventario por talla, ofertas, IA y promoción de negocios.",
   "type": "module",
   "scripts": {
     "dev": "node scripts/build.mjs web --serve",

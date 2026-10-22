@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 0300 · Funciones base: utilidades, cuentas, tiendas,
+-- MARKETXONE · 0300 · Funciones base: utilidades, cuentas, tiendas,
 -- catálogo público y gestión de publicaciones con inventario por variante.
 -- Convención de errores: RAISE con message = código estable (p. ej.
 -- 'out_of_stock'), hint = mensaje en español para la persona usuaria y
@@ -772,7 +772,7 @@ begin
     perform public.mz_fail('validation', 'Puedes subir hasta 12 fotografías.', '{"field":"images"}');
   end if;
   if exists (select 1 from jsonb_array_elements(v_images) i where coalesce(i ->> 'url', '') !~ '^https?://') then
-    perform public.mz_fail('validation', 'Las fotografías deben subirse al almacenamiento de MARKETZONE.', '{"field":"images"}');
+    perform public.mz_fail('validation', 'Las fotografías deben subirse al almacenamiento de MARKETXONE.', '{"field":"images"}');
   end if;
 
   -- Validación adicional para publicar

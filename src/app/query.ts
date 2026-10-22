@@ -65,7 +65,14 @@ export function invalidate(...prefixes: string[]) {
   }
 }
 
-export function clearCache() { cache.clear(); for (const k of subs.keys()) emit(k); }
+/** Vacía la caché (al entrar o salir de la cuenta) y vuelve a pedir lo que está en pantalla. */
+export function clearCache() {
+  for (const [key, e] of cache) {
+    e.data = undefined; e.error = null; e.at = 0; e.promise = null;
+    if (subs.get(key)?.size) load(key, true); else cache.delete(key);
+  }
+  for (const k of subs.keys()) emit(k);
+}
 
 /** Ejecuta una acción con estado de carga y error, e invalida claves al terminar. */
 export function useAction<A extends unknown[], R>(fn: (...args: A) => Promise<R>, opts: { invalidates?: string[]; onSuccess?: (r: R) => void; onError?: (e: ApiError) => void } = {}) {

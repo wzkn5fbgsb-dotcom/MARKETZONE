@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 0400 · Carrito, checkout, reservas, pagos, pedidos y ofertas
+-- MARKETXONE · 0400 · Carrito, checkout, reservas, pagos, pedidos y ofertas
 --
 -- Orden de bloqueos (evita interbloqueos):
 --   1) fila del pedido (orders)  2) variantes ordenadas por id

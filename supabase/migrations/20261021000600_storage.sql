@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 0600 · Almacenamiento de imágenes (Supabase Storage)
+-- MARKETXONE · 0600 · Almacenamiento de imágenes (Supabase Storage)
 -- Cada usuario solo puede escribir dentro de su carpeta: <auth.uid()>/...
 -- Los buckets son públicos para lectura (imágenes de catálogo).
 -- =====================================================================

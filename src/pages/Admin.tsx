@@ -21,7 +21,7 @@ export default function Admin({ tab }: { tab?: string }) {
   return (
     <Page>
       <div className="stack-lg">
-        <div className="stack" style={{ gap: 4 }}><span className="eyebrow">Administración</span><h1 className="h1">Panel de MARKETZONE</h1></div>
+        <div className="stack" style={{ gap: 4 }}><span className="eyebrow">Administración</span><h1 className="h1">Panel de MARKETXONE</h1></div>
         <Tabs value={t} onChange={(v) => navigate(`/admin/${v}`, { keepScroll: true })} items={TABS.map((id) => ({ id, label: LABEL[id] }))} />
         {t === "resumen" && <Overview />}
         {t === "ajustes" && <SettingsForm />}

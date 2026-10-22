@@ -272,7 +272,7 @@ function ListingEditor({ initial }: { initial?: any }) {
           <span className="h3">{t("4. Precio y ofertas")}</span>
           <Field label={t("Precio")} required error={err("price_cents")}><MoneyInput cents={f.price_cents} onChange={(c) => set("price_cents", c)} /></Field>
           {f.price_cents ? (
-            <Callout>{t("Tarifa de MARKETZONE:")}{" "}<b>{pct(commission)}</b> {" "}{t("del precio cuando se complete la venta (≈")}{" "}{money(Math.round(f.price_cents * commission / 10000))}{t("). Recibirías ≈")}{" "}<b>{money(f.price_cents - Math.round(f.price_cents * commission / 10000))}</b> {" "}{t("por unidad. El envío (")}{money(settings?.shipping_flat_cents ?? 799)}{t(") lo paga el comprador.")}</Callout>
+            <Callout>{t("Tarifa de MARKETXONE:")}{" "}<b>{pct(commission)}</b> {" "}{t("del precio cuando se complete la venta (≈")}{" "}{money(Math.round(f.price_cents * commission / 10000))}{t("). Recibirías ≈")}{" "}<b>{money(f.price_cents - Math.round(f.price_cents * commission / 10000))}</b> {" "}{t("por unidad. El envío (")}{money(settings?.shipping_flat_cents ?? 799)}{t(") lo paga el comprador.")}</Callout>
           ) : null}
           {isEdit && initial.status === "active" && initial.price_cents && f.price_cents && f.price_cents < initial.price_cents && (
             <span className="small" style={{ color: "var(--ok)" }}>{t("Al bajar el precio, el anterior (")}{money(initial.price_cents)}{t(") se mostrará tachado como descuento real.")}</span>

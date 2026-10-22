@@ -10,6 +10,7 @@ import { Avatar, Badge, Button, Callout, Countdown, ErrorBox, Field, Img, MoneyI
 import { Icon } from "../ui/icons";
 import { BlockButton } from "../components/block";
 import { t } from "../i18n";
+import { mxCurrentPath, mxShare } from "../mx/fx.js";
 
 export default function Product({ id }: { id: string }) {
   const { api, sessionId } = useApp();
@@ -47,10 +48,7 @@ function ProductView({ d }: { d: ProductDetail }) {
     onError: (e) => toast(e.message, "bad"),
   });
   const scrollTo = (i: number) => { setImgIdx(i); gal.current?.scrollTo({ left: i * gal.current.clientWidth, behavior: "smooth" }); };
-  const share = async () => {
-    const url = location.href;
-    try { await navigator.clipboard.writeText(url); toast(t("Enlace copiado"), "ok"); } catch { toast(url); }
-  };
+  const share = () => mxShare({ title: p.title, text: p.title, path: mxCurrentPath(), toast });
   const net = Math.round(p.price_cents * (1 - d.fees.commission_bps / 10000));
 
   return (
@@ -189,7 +187,7 @@ function ProductView({ d }: { d: ProductDetail }) {
 
           <Callout icon="shield">
             <span>{t("Envío:")}{" "}{money(d.fees.shipping_flat_cents)} {" "}{t("por vendedor. Pago verificado por el servidor;")}{" "}{d.fees.test_mode ? <b>{t("modo de prueba activo (no se cobra dinero real)")}</b> : t("pago seguro")}.
-              {d.is_owner && <> {" "}{t("Tarifa de MARKETZONE:")}{" "}{pct(d.fees.commission_bps)} {" "}{t("al venderse (recibirías aprox.")}{" "}{money(net)}).</>}</span>
+              {d.is_owner && <> {" "}{t("Tarifa de MARKETXONE:")}{" "}{pct(d.fees.commission_bps)} {" "}{t("al venderse (recibirías aprox.")}{" "}{money(net)}).</>}</span>
           </Callout>
 
           <div className="row">

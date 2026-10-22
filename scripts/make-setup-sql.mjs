@@ -1,12 +1,12 @@
 // Genera la página de instalación de la base de datos (para pegar en el SQL Editor de Supabase desde el móvil)
-// y un archivo SQL único. Salida: dist-setup/index.html y dist-setup/marketzone-setup.sql
+// y un archivo SQL único. Salida: dist-setup/index.html y dist-setup/marketxone-setup.sql
 import { readFileSync, readdirSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dir = join(root, "supabase/migrations");
 const files = readdirSync(dir).filter((f) => f.endsWith(".sql")).sort();
-const groups = [["0100", "0200"], ["0300"], ["0400"], ["0500", "0600", "0700", "0800", "0900"], ["1000"], ["1100", "1200"]];
+const groups = [["0100", "0200"], ["0300"], ["0400"], ["0500", "0600", "0700", "0800", "0900"], ["1000"], ["1100", "1200"], ["1300"], ["1400"]];
 const parts = groups.map((g, i) => {
   const fs = files.filter((f) => g.some((n) => f.includes(`_${n}`.replace("_", "00") ) || f.split("_")[0].endsWith(n)));
   return { n: i + 1, files: fs, sql: fs.map((f) => `-- ===== ${f}\n` + readFileSync(join(dir, f), "utf8")).join("\n\n") };
@@ -14,10 +14,10 @@ const parts = groups.map((g, i) => {
 const used = parts.flatMap((p) => p.files);
 if (used.length !== files.length) { console.error("Faltan migraciones:", files.filter((f) => !used.includes(f))); process.exit(1); }
 const out = join(root, "dist-setup"); mkdirSync(out, { recursive: true });
-writeFileSync(join(out, "marketzone-setup.sql"), parts.map((p) => p.sql).join("\n\n"));
+writeFileSync(join(out, "marketxone-setup.sql"), parts.map((p) => p.sql).join("\n\n"));
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 const verify = `select count(*) as tablas from information_schema.tables where table_schema = 'public';`;
-const html = `<title>MARKETZONE · Base de datos</title>
+const html = `<title>MARKETXONE · Base de datos</title>
 <style>
 :root{--bg:#0B0B0D;--s:#1C1C22;--line:#303038;--t:#fff;--m:#B8B8C2;--c:#DC143C;--ok:#3DD68C;color-scheme:dark}
 body{margin:0;background:var(--bg);color:var(--t);font:16px/1.5 system-ui,-apple-system,sans-serif}
@@ -35,8 +35,8 @@ textarea{width:100%;box-sizing:border-box;height:90px;margin-top:10px;background
 code{background:#141418;padding:2px 6px;border-radius:6px}
 </style>
 <main>
-<h1>MARKET<b>ZONE</b> · instalar base de datos</h1>
-<p>Pega y ejecuta cada parte <b>en orden</b>, una sola vez. <b>Si ya instalaste las partes 1 a 5, ejecuta solo la parte 6</b> (ofertas con pago al ofertar, comisión del 7 % y protección contra estafas).</p>
+<h1>MARKET<b>XONE</b> · instalar base de datos</h1>
+<p>Pega y ejecuta cada parte <b>en orden</b>, una sola vez. <b>Si ya instalaste las partes 1 a 7, ejecuta solo la parte 8</b> (subastas desde 1 foto y soporte con IA).</p>
 <div class="card"><ol>
 <li>En Supabase abre <b>SQL Editor</b> → <b>New query</b>.</li>
 <li>Aquí toca <b>Copiar parte 1</b>.</li>

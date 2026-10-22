@@ -12,6 +12,7 @@ import { compressImage } from "../app/images";
 import { DemoBackend } from "../api/demo/backend";
 import { DEMO_ACCOUNTS } from "../api/demo/seed";
 import { t } from "../i18n";
+import { MxSoundSetting } from "../mx/fx.js";
 
 export function NeedLogin({ next }: { next: string }) {
   return (
@@ -31,16 +32,17 @@ export function Profile() {
   const store = account.stores[0];
   const links: [string, IconName, string, string?][] = [
     ["/pedidos", "box", t("Mis pedidos")],
-    ["/ofertas", "offer", t("Mis ofertas"), t("Enviadas y recibidas")],
+    ["/ofertas", "offer", t("Mis ofertas")],
+    ["/mis-subastas", "gavel", t("Mis subastas")],
     ["/favoritos", "heart", t("Favoritos")],
     ["/notificaciones", "bell", t("Notificaciones"), account.unread_notifications ? t("{0} sin leer", [account.unread_notifications]) : undefined],
-    ["/panel", "chart", t("Panel de vendedor"), t("Catálogo, inventario, pedidos y estadísticas")],
-    ["/publicar", "plus", t("Publicar un producto")],
+    ["/panel", "chart", t("Panel de vendedor")],
     ["/promociona", "megaphone", t("Promociona tu negocio")],
-    ["/ajustes", "settings", t("Ajustes"), t("Perfil, direcciones, apariencia, bloqueos y eliminar cuenta")],
+    ["/ayuda", "chat", t("Ayuda y soporte")],
+    ["/ajustes", "settings", t("Ajustes")],
   ];
-  if (account.is_admin) links.push(["/admin", "shield", t("Administración")]);
-  links.push(["/estado", "info", t("Estado del proyecto")]);
+  if (account.is_admin) links.push(["/admin", "shield", t("Administración")], ["/admin/soporte", "chat", t("Soporte al cliente")]);
+  links.push(["/terminos", "doc", t("Términos")], ["/privacidad", "shield", t("Privacidad")]);
   const switchTo = (email: string) => {
     if (!(backend instanceof DemoBackend)) return;
     const c = backend.engine.db.credentials.find((x) => x.email === email);
@@ -160,6 +162,7 @@ export function Settings() {
           <h2 className="h3"><label htmlFor="lang-settings">{t("Idioma")}</label></h2>
           <LangPicker id="lang-settings" />
         </section>
+        <MxSoundSetting />
         <ProfileForm />
         <Addresses />
         <StoreSettings />
@@ -258,7 +261,7 @@ export function StoreSettings() {
         <Field label={t("Nombre comercial")} required><Input value={f.name} maxLength={60} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
         <Field label={t("Dirección de la tienda")} hint={t("Tu tienda estará en …/tienda/{0}", [f.slug || "tu-tienda"])}><Input value={f.slug} onChange={(e) => setF({ ...f, slug: slugify(e.target.value) })} /></Field>
         <Field label={t("Biografía")}><TextArea value={f.bio} maxLength={1000} onChange={(e) => setF({ ...f, bio: e.target.value })} /></Field>
-        <Field label={t("Color de acento")} hint={t("Personaliza tu portada dentro de la identidad MARKETZONE.")}>
+        <Field label={t("Color de acento")} hint={t("Personaliza tu portada dentro de la identidad MARKETXONE.")}>
           <div className="segmented">{(["crimson", "ember", "steel", "ivory"] as const).map((a) => (
             <button type="button" key={a} className={`seg ${f.accent === a ? "on" : ""} accent-${a}`} onClick={() => setF({ ...f, accent: a })}>
               <span style={{ width: 14, height: 14, borderRadius: 7, background: "var(--acc)" }} />{{ crimson: t("Carmesí"), ember: t("Brasa"), steel: t("Acero"), ivory: t("Marfil") }[a]}</button>))}</div>

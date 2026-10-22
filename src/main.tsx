@@ -46,5 +46,5 @@ async function boot() {
 
 boot().catch((e) => {
   const root = document.getElementById("root");
-  if (root) root.innerHTML = `<div style="padding:24px;font-family:system-ui;color:#fff;background:#0B0B0D">No se pudo iniciar MARKETZONE: ${String(e?.message ?? e)}</div>`;
+  if (root) root.innerHTML = `<div style="padding:24px;font-family:system-ui;color:#fff;background:#0B0B0D">No se pudo iniciar MARKETXONE: ${String(e?.message ?? e)}</div>`;
 });

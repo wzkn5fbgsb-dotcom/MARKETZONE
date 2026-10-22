@@ -11,6 +11,7 @@ import { Icon } from "../ui/icons";
 import { ReportSheet } from "./Product";
 import { BlockButton } from "../components/block";
 import { t } from "../i18n";
+import { mxCurrentPath, mxShare } from "../mx/fx.js";
 
 function SocialLinks({ links }: { links: Record<string, string> }) {
   const entries = Object.entries(links ?? {}).filter(([, v]) => v && /^https?:\/\//.test(v));
@@ -36,7 +37,7 @@ export function StorePage({ slug }: { slug: string }) {
   const { store: s, products, reviews, business } = res.data;
   const isFollowing = following ?? res.data.is_following;
   const sorted = [...products].sort((a, b) => sort === "price_asc" ? a.price_cents - b.price_cents : sort === "price_desc" ? b.price_cents - a.price_cents : 0);
-  const share = async () => { try { await navigator.clipboard.writeText(location.href); toast(t("Enlace de la tienda copiado"), "ok"); } catch { toast(location.href); } };
+  const share = () => mxShare({ title: s.name, text: s.name, path: mxCurrentPath(), toast, okMsg: t("Enlace de la tienda copiado. Pégalo donde quieras.") });
 
   return (
     <Page>

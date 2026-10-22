@@ -50,7 +50,7 @@ export interface OfferRow {
 }
 export interface OfferEventRow { id: number; offer_id: string; actor_id: string | null; actor_role: string; kind: string; amount_cents: number | null; note: string | null; created_at: string }
 export interface OrderRow {
-  id: string; number: number; buyer_id: string; source: "cart" | "offer"; offer_id: string | null; status: string; is_test: boolean;
+  id: string; number: number; buyer_id: string; source: "cart" | "offer" | "auction"; offer_id: string | null; status: string; is_test: boolean;
   currency: string; subtotal_cents: number; shipping_cents: number; tax_cents: number; total_cents: number;
   shipping_address: Record<string, string | null>; payment_due_at: string; paid_at: string | null; cancelled_at: string | null;
   created_at: string; updated_at: string;

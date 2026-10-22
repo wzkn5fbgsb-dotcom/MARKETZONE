@@ -1,4 +1,4 @@
-# Publica MARKETZONE en GitHub Pages en cada push a main.
+# Publica MARKETXONE en GitHub Pages en cada push a main.
 # Requisito único: Settings → Pages → Source: "GitHub Actions".
 name: Publicar web
 on:
@@ -20,7 +20,7 @@ jobs:
       # Valores PÚBLICOS (la seguridad la aplican RLS y las funciones del servidor).
       # Nunca pongas aquí la service_role / secret key.
       MZ_SUPABASE_URL: ${{ vars.MZ_SUPABASE_URL || 'https://jjhcbsqsnoohyxjnnhjc.supabase.co' }}
-      MZ_SUPABASE_ANON_KEY: ${{ vars.MZ_SUPABASE_ANON_KEY || 'sb_publishable_cAc4HlpqtwGIaMXLzhtINw_m65MLixk' }}
+      MZ_SUPABASE_ANON_KEY: ${{ vars.MZ_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqaGNic3Fzbm9vaHl4am5uaGpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1NTA3MTQsImV4cCI6MjEwODEyNjcxNH0.siCm-vpDOcDbmBcn1aBy-iKnIyDS0ap3VRslaqOTxGc' }}
       MZ_MODE: supabase
     steps:
       - uses: actions/checkout@v4

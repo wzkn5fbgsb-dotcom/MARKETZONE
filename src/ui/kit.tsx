@@ -1,4 +1,4 @@
-// Componentes base del sistema de diseño MARKETZONE.
+// Componentes base del sistema de diseño MARKETXONE.
 import { Children, cloneElement, isValidElement, type ReactElement, createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ButtonHTMLAttributes, type InputHTMLAttributes,
   type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react";
 import { Icon, type IconName } from "./icons";

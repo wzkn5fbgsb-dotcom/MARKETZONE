@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 0100 · Esquema principal
+-- MARKETXONE · 0100 · Esquema principal
 -- Tablas, índices, restricciones y disparadores básicos.
 -- Toda escritura crítica (inventario, pedidos, ofertas, pagos) se hace
 -- mediante funciones SECURITY DEFINER definidas en migraciones posteriores.

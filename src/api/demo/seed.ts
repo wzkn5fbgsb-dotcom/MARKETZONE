@@ -5,11 +5,11 @@ import { DemoEngine } from "./engine";
 import { emptyDB, uuid, type DemoDB, type ProductRow } from "./db";
 import { hashPassword } from "./backend";
 
-export const DEMO_PASSWORD = "demo-marketzone";
+export const DEMO_PASSWORD = "demo-marketxone";
 export const DEMO_ACCOUNTS = {
-  buyer: { email: "comprador@demo.marketzone", name: "Comprador demo", username: "comprador_demo" },
-  seller: { email: "vendedor@demo.marketzone", name: "Vendedor demo", username: "vendedor_demo" },
-  admin: { email: "admin@demo.marketzone", name: "Admin demo", username: "admin_demo" },
+  buyer: { email: "comprador@demo.marketxone", name: "Comprador demo", username: "comprador_demo" },
+  seller: { email: "vendedor@demo.marketxone", name: "Vendedor demo", username: "vendedor_demo" },
+  admin: { email: "admin@demo.marketxone", name: "Admin demo", username: "admin_demo" },
 };
 
 interface SeedProduct {
@@ -108,7 +108,7 @@ export async function buildSeedDB(now = new Date()): Promise<DemoDB> {
   }
   for (const s of STORES) {
     if (s.owner === "seller") continue;
-    ids[s.owner] = engine.registerUser({ email: `${s.owner}@demo.marketzone`, ...(await hash()), username: s.owner, display_name: s.name, created_at: iso(30) });
+    ids[s.owner] = engine.registerUser({ email: `${s.owner}@demo.marketxone`, ...(await hash()), username: s.owner, display_name: s.name, created_at: iso(30) });
   }
   const storeIds: Record<string, string> = {};
   for (const s of STORES) {
@@ -158,7 +158,7 @@ export async function buildSeedDB(now = new Date()): Promise<DemoDB> {
     const id = uuid();
     bizIds[b.key] = id;
     db.businesses.push({ id, owner_id: ids[b.owner], store_id: storeIds[b.store], slug: b.slug, name: b.name, logo_url: null, cover_url: null,
-      description: b.description, category: b.category, location: b.location, contact: { email: `${b.owner}@demo.marketzone` }, hours: b.hours,
+      description: b.description, category: b.category, location: b.location, contact: { email: `${b.owner}@demo.marketxone` }, hours: b.hours,
       social_links: { instagram: "" }, customer_info: "Datos de demostración: no es un negocio real.", status: "active", is_demo: true,
       created_at: iso(20), updated_at: iso(20) });
   }

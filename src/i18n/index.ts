@@ -1,4 +1,4 @@
-// Idiomas de MARKETZONE: español (texto original), inglés, francés y chino simplificado.
+// Idiomas de MARKETXONE: español (texto original), inglés, francés y chino simplificado.
 // La clave de cada traducción es el texto en español; si falta una traducción se muestra el español.
 // Cambiar de idioma recarga la página para que todos los textos (incluidas las tablas de etiquetas) se regeneren.
 import { en } from "./en";

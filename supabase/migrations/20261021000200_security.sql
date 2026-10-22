@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 0200 · Seguridad a nivel de tabla
+-- MARKETXONE · 0200 · Seguridad a nivel de tabla
 -- Row Level Security en todas las tablas + privilegios mínimos.
 -- Regla general: las tablas sensibles NO aceptan escrituras directas
 -- desde el navegador; todo cambio crítico pasa por funciones del servidor

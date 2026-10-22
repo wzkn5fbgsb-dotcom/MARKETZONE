@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 1000 · Eliminar cuenta y bloquear usuarios
+-- MARKETXONE · 1000 · Eliminar cuenta y bloquear usuarios
 -- Requisitos de App Store y Google Play para apps con cuentas y contenido
 -- publicado por usuarios.
 --

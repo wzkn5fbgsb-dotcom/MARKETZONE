@@ -3,7 +3,6 @@ import { match, navigate, useLocation } from "./app/router";
 import { useApp } from "./app/state";
 import { DemoBanner, Footer, Header, Page, TabBar } from "./components/layout";
 import { Callout, Empty } from "./ui/kit";
-import Home from "./pages/Home";
 import Explore from "./pages/Explore";
 import Categories from "./pages/Categories";
 import Product from "./pages/Product";
@@ -19,9 +18,12 @@ import Status from "./pages/Status";
 import { Privacy, Terms } from "./pages/Legal";
 import { Link } from "./app/router";
 import { t } from "./i18n";
+import { __mxRoutes } from "./mx/ui.js";
+import { MxGlobal } from "./mx/support.js";
 
+// Las rutas de subastas, soporte y el inicio vienen primero (src/mx).
 const ROUTES: [string, (p: Record<string, string>) => JSX.Element][] = [
-  ["/", () => <Home />],
+  ...__mxRoutes(),
   ["/categorias", () => <Categories />],
   ["/explorar", () => <Explore />],
   ["/p/:id", (p) => <Product key={p.id} id={p.id} />],
@@ -67,7 +69,7 @@ export default function App() {
     if (!/access_token=|error=/.test(h)) return;
     backend.auth.consumeRedirect(h).then((kind) => {
       navigate(kind === "recovery" ? "/restablecer" : "/", { replace: true });
-      if (kind === "signup") setAuthNotice(t("Correo confirmado. ¡Bienvenido a MARKETZONE!"));
+      if (kind === "signup") setAuthNotice(t("Correo confirmado. ¡Bienvenido a MARKETXONE!"));
     }).catch((e) => { setAuthNotice(e.message); navigate("/recuperar", { replace: true }); });
   }, [backend]);
 
@@ -84,6 +86,7 @@ export default function App() {
       {content ?? <Page><Empty icon="search" title={t("Página no encontrada")} action={<Link to="/" className="btn btn-primary">{t("Ir al inicio")}</Link>}>{t("La dirección no existe o se movió.")}</Empty></Page>}
       <Footer />
       <TabBar />
+      <MxGlobal />
     </div>
   );
 }

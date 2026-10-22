@@ -31,14 +31,13 @@ export function Header() {
         <div className="header-inner">
           <Link to="/" aria-label={t("Inicio")}><Logo size={30} /></Link>
           <nav className="nav-desktop" aria-label={t("Principal")}>
-            <Link to="/categorias" className={on("/categorias")}>{t("Categorías")}</Link>
             <Link to="/explorar" className={on("/explorar")}>{t("Explorar")}</Link>
-            <Link to="/negocios" className={on("/negocios")}>{t("Negocios")}</Link>
+            <Link to="/subastas" className={on("/subastas")}>{t("Subastas")}</Link>
             <Link to="/publicar" className={on("/publicar")}>{t("Vender")}</Link>
           </nav>
           <div className="header-search"><SearchBox key={loc.path === "/explorar" ? loc.query.get("q") ?? "" : "h"} initial={loc.path === "/explorar" ? loc.query.get("q") ?? "" : ""} /></div>
           <div className="header-actions">
-            <ThemeButton />
+            <Link to="/ayuda" className="icon-btn" aria-label={t("Ayuda y soporte")}><Icon name="chat" /></Link>
             {session && (
               <Link to="/notificaciones" className="icon-btn" aria-label={t("Notificaciones")}>
                 <Icon name="bell" />{!!account?.unread_notifications && <span className="dot">{account.unread_notifications}</span>}
@@ -74,8 +73,8 @@ export function TabBar() {
       {item("/", "home", t("Inicio"), p === "/")}
       {item("/categorias", "categories", t("Categorías"), p.startsWith("/categorias") || p.startsWith("/explorar") || p.startsWith("/p/"))}
       <Link to="/publicar" className={`sell ${p.startsWith("/publicar") ? "on" : ""}`} aria-current={p.startsWith("/publicar") ? "page" : undefined}><span className="sell-dot"><Icon name="plus" size={22} stroke={2.4} /></span>{t("Vender")}</Link>
-      {item("/favoritos", "heart", t("Favoritos"), p.startsWith("/favoritos"))}
-      {item("/perfil", "user", t("Perfil"), ["/perfil", "/panel", "/pedidos", "/ofertas", "/ajustes", "/admin"].some((x) => p.startsWith(x)))}
+      {item("/subastas", "gavel", t("Subastas"), p.startsWith("/subasta") || p.startsWith("/mis-subastas"))}
+      {item("/perfil", "user", t("Perfil"), ["/perfil", "/panel", "/pedidos", "/ofertas", "/ajustes", "/admin", "/favoritos", "/ayuda"].some((x) => p.startsWith(x)))}
     </nav>
   );
 }
@@ -88,11 +87,8 @@ export function DemoBanner() {
       <div className="wrap">
         <Icon name="info" size={16} />
         <span className="grow">
-          {config.mode === "demo"
-            ? <><b>{t("Demo.")}</b> {" "}{t("Los productos son de ejemplo, lo que publiques se guarda solo en este teléfono y no se cobra dinero.")}</>
-            : <><b>{t("Modo de prueba.")}</b> {" "}{t("Puedes comprar y vender, pero los pagos son simulados: no se cobra dinero.")}</>}
+          {config.mode === "demo" ? t("Demo: artículos de ejemplo, sin cobros reales.") : t("Modo de prueba: pagos simulados, sin cobros reales.")}
         </span>
-        <Link to="/estado" className="link small" style={{ whiteSpace: "nowrap" }}>{t("Qué funciona")}</Link>
       </div>
     </div>
   );
@@ -108,10 +104,10 @@ export function Footer() {
           <span style={{ maxWidth: "38ch" }}>{t("Compra y vende ropa, sneakers y streetwear. Haz ofertas y negocia el precio con el vendedor.")}</span>
         </div>
         <nav className="footer-links" aria-label={t("Pie de página")}>
-          <Link to="/categorias" className="link">{t("Categorías")}</Link>
+          <Link to="/explorar" className="link">{t("Explorar")}</Link>
+          <Link to="/subastas" className="link">{t("Subastas")}</Link>
           <Link to="/publicar" className="link">{t("Vender")}</Link>
           <Link to="/promociona" className="link">{t("Promociona tu negocio")}</Link>
-          <Link to="/estado" className="link">{t("Qué funciona")}</Link>
           <Link to="/terminos" className="link">{t("Términos")}</Link>
           <Link to="/privacidad" className="link">{t("Privacidad")}</Link>
         </nav>

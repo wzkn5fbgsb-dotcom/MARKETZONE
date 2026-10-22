@@ -4,8 +4,8 @@ import { buildSeedDB } from "./seed";
 import { memoryImageStore, type ImageStore } from "./backend";
 import type { DemoDB } from "./db";
 
-const DB_NAME = "marketzone-demo";
-const SEED_VERSION = 3;
+const DB_NAME = "marketxone-demo";
+const SEED_VERSION = 4;
 
 function idb(): Promise<IDBDatabase | null> {
   return new Promise((resolve) => {

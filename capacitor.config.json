@@ -1,6 +1,6 @@
 {
-  "appId": "com.marketzonestore.app",
-  "appName": "MARKETZONE",
+  "appId": "com.marketxonestore.app",
+  "appName": "MARKETXONE",
   "webDir": "dist",
   "backgroundColor": "#0B0B0D",
   "server": { "androidScheme": "https" },

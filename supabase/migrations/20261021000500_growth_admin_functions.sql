@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 0500 · Panel del vendedor, negocios, campañas, analítica,
+-- MARKETXONE · 0500 · Panel del vendedor, negocios, campañas, analítica,
 -- reseñas, reportes y administración.
 -- =====================================================================
 

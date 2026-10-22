@@ -1,5 +1,5 @@
 -- =====================================================================
--- MARKETZONE · 1100 · Ofertas con pago al ofertar + comisión del 7 %
+-- MARKETXONE · 1100 · Ofertas con pago al ofertar + comisión del 7 %
 --
 -- Regla de negocio: quien oferta paga en ese momento (el dinero queda
 -- retenido). Si el vendedor acepta, el trato está hecho: la venta se

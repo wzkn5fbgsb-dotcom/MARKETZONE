@@ -1,4 +1,4 @@
-# Compila la app nativa de MARKETZONE (Capacitor) para Android e iOS.
+# Compila la app nativa de MARKETXONE (Capacitor) para Android e iOS.
 # Se ejecuta en cada push a main o a mano (Actions → "App móvil" → Run workflow).
 #
 # Android: siempre genera un APK de prueba. Si existen los secretos de firma
@@ -19,7 +19,7 @@ concurrency:
 env:
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
   MZ_SUPABASE_URL: ${{ vars.MZ_SUPABASE_URL || 'https://jjhcbsqsnoohyxjnnhjc.supabase.co' }}
-  MZ_SUPABASE_ANON_KEY: ${{ vars.MZ_SUPABASE_ANON_KEY || 'sb_publishable_cAc4HlpqtwGIaMXLzhtINw_m65MLixk' }}
+  MZ_SUPABASE_ANON_KEY: ${{ vars.MZ_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqaGNic3Fzbm9vaHl4am5uaGpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1NTA3MTQsImV4cCI6MjEwODEyNjcxNH0.siCm-vpDOcDbmBcn1aBy-iKnIyDS0ap3VRslaqOTxGc' }}
   MZ_MODE: supabase
   MZ_ROUTER: hash
 
@@ -48,7 +48,7 @@ jobs:
         run: ./gradlew assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
-          name: marketzone-android-prueba
+          name: marketxone-android-prueba
           path: android/app/build/outputs/apk/debug/*.apk
       - name: AAB firmado para Google Play
         if: env.HAS_KEYSTORE == 'true'
@@ -68,7 +68,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ hashFiles('android/app/build/outputs/bundle/release/*.aab') != '' }}
         with:
-          name: marketzone-google-play
+          name: marketxone-google-play
           path: android/app/build/outputs/bundle/release/*.aab
 
   ios:

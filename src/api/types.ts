@@ -1,4 +1,4 @@
-// Tipos compartidos de la API de MARKETZONE (espejo de las respuestas JSON de las funciones SQL).
+// Tipos compartidos de la API de MARKETXONE (espejo de las respuestas JSON de las funciones SQL).
 
 export type Condition = "new_with_tags" | "new_without_tags" | "used_excellent" | "used_good" | "used_flawed";
 export type ListingStatus = "draft" | "active" | "paused" | "removed";
@@ -262,7 +262,7 @@ export interface SellerOrder {
 }
 
 export interface Order {
-  id: string; number: number; status: OrderStatus; source: "cart" | "offer"; offer_id: string | null; is_test: boolean;
+  id: string; number: number; status: OrderStatus; source: "cart" | "offer" | "auction"; offer_id: string | null; is_test: boolean;
   currency: string; subtotal_cents: number | null; shipping_cents: number | null; tax_cents: number | null; total_cents: number | null;
   shipping_address: Record<string, string>; payment_due_at: string; paid_at: string | null; cancelled_at: string | null;
   created_at: string; viewer_role: "buyer" | "seller" | "admin"; buyer: { username: string; display_name: string };
